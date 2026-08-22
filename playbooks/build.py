@@ -18,6 +18,7 @@ Usage:  python playbooks/build.py [--fsrpb /path/to/fsrpb]
 import argparse
 import json
 import pathlib
+import os
 import re
 import subprocess
 import sys
@@ -209,6 +210,36 @@ def patch(doc):
     return doc
 
 
+def _freeze_timestamps(doc):
+    """Pin every ``lastModifyDate`` so a rebuild is byte-identical.
+
+    The compiler stamps each workflow with the wall-clock time of the build, so
+    two runs over an unchanged source produce two different files -- 54 lines of
+    diff across the 27 playbooks, carrying no information. That noise hides the
+    one-line change you actually made when reviewing, and makes it impossible to
+    tell from a diff whether the compiled artefact was rebuilt or edited.
+
+    The value tracks the YAML's own mtime, so it still moves when the source
+    genuinely changes. ``SOURCE_DATE_EPOCH`` overrides it, per the usual
+    reproducible-builds convention.
+    """
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    stamp = int(epoch) if epoch and epoch.isdigit() else int(YAML_IN.stat().st_mtime)
+
+    def walk(node):
+        if isinstance(node, dict):
+            if "lastModifyDate" in node:
+                node["lastModifyDate"] = stamp
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(doc)
+    return doc
+
+
 def _sync_collection_version(doc):
     """Retag the sample collection with the version from ``info.json``.
 
@@ -258,6 +289,7 @@ def main():
 
     doc = json.loads(JSON_OUT.read_text())
     doc = _sync_collection_version(doc)
+    doc = _freeze_timestamps(doc)
     JSON_OUT.write_text(json.dumps(patch(doc), indent=2) + "\n")
 
     total = sum(len(c.get("workflows", [])) for c in doc.get("data", []))

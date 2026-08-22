@@ -99,6 +99,7 @@ class TestAsyncClientBasics:
 
 class TestFieldMapping:
     def test_map_incident_basic(self, sample_incident):
+        from fortisiemv2 import field_mapping
         from fortisiemv2.field_mapping import map_incident_to_alert
 
         alert = map_incident_to_alert(sample_incident)
@@ -107,7 +108,13 @@ class TestFieldMapping:
         assert alert["alert_state"] == "Open"
         assert alert["severity"] == "Medium"
         assert alert["category"] == "Security"
-        assert alert["alert_type"] == "Anomaly Detection"
+        # "Anomaly Detection" is not a member of FortiSOAR's AlertType picklist,
+        # and this fixture's "Behavioral Anomaly" sub-category has no counterpart
+        # there either, so the mapper clamps to the default. Emitting the raw
+        # value instead makes the ingestion playbook's resolveRange miss and the
+        # alert POST fail with a picklist 400.
+        assert alert["alert_type"] == "Other / Unknown"
+        assert alert["alert_type"] in field_mapping.VALID_ALERT_TYPES
         assert alert["source_hostname"] == "qa-sys1"
         assert alert["target_user"] == "root"
         assert alert["dest_hostname"] == "qa-sys1"

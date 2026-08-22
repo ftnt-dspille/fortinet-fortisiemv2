@@ -100,12 +100,37 @@ def _import_connector_module(name):
 
 
 # Pre-load the commonly imported modules so tests can import them.
+#
+# A failure here used to be swallowed whole. That is worse than it sounds:
+# `module_from_spec` registers the module in `sys.modules` BEFORE `exec_module`
+# runs, so a module that raises partway through is left behind half-built. The
+# next `from fortisiemv2.operations import <name>` then finds that shell and
+# reports a missing NAME -- e.g. "cannot import name 'list_oauth_credentials'"
+# for a function that is plainly defined -- when the real cause was a missing
+# dependency several imports earlier. Drop the shell and keep the reason.
+_PRELOAD_ERRORS: dict[str, Exception] = {}
 for _mod in ["constants", "attributes_list", "connections", "utils", "schema",
              "field_mapping", "ingestion", "operations"]:
     try:
         _import_connector_module(_mod)
-    except Exception:
-        pass
+    except Exception as exc:  # noqa: BLE001 - recorded and re-raised on use
+        _PRELOAD_ERRORS[_mod] = exc
+        sys.modules.pop(f"{_PKG_NAME}.{_mod}", None)
+
+
+def preload_error(module: str) -> Exception | None:
+    """The exception that stopped ``module`` importing, if it did not import."""
+    return _PRELOAD_ERRORS.get(module)
+
+
+def require_connector_module(module: str):
+    """Return a pre-loaded connector module, or fail naming the real cause."""
+    import pytest
+
+    exc = _PRELOAD_ERRORS.get(module)
+    if exc is not None:
+        pytest.fail(f"{module} could not be imported: {type(exc).__name__}: {exc}")
+    return sys.modules[f"{_PKG_NAME}.{module}"]
 
 
 # ---------------------------------------------------------------------------

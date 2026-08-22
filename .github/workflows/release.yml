@@ -54,8 +54,11 @@ jobs:
           fi
 
       - run: pip install -r tests/requirements.txt
-      - run: pytest tests/test_offline.py -q
-        continue-on-error: true   # offline suite has known pre-existing failures
+      - name: Offline tests
+        # A real gate: a failing suite blocks the release. tests/requirements.txt
+        # pulls in the connector's own runtime deps, without which the modules
+        # raise partway through import.
+        run: pytest tests/test_offline.py -q
 
       - name: Build the bundle
         run: ./scripts/package.sh
