@@ -38,6 +38,25 @@ python playbooks/build.py          # needs the fsrpb compiler on PATH
 The build stamps the sample collection with the version from `info.json`.
 Note it mints fresh step UUIDs per run, so it is not byte-reproducible.
 
+## Releasing
+
+`scripts/package.sh` builds the bundle FortiSOAR installs -- the git-tracked
+files minus tests, `playbooks/build.py` and repo furniture, staged under a
+single `fortinet-fortisiemv2/` directory:
+
+```bash
+./scripts/package.sh        # -> dist/fortinet-fortisiemv2-<version>.tgz
+```
+
+Pushing a `v<version>` tag runs the same script in CI and attaches the result
+to a GitHub release. `info.json` stays the source of truth for the version; the
+workflow refuses a tag that disagrees with it, a `playbooks.json` still built
+for an older version, and any en/em dash.
+
+```bash
+git tag v6.0.4 && git push origin v6.0.4
+```
+
 ## Tests
 
 ```bash

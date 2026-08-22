@@ -22,3 +22,6 @@ dist/
 build/
 
 .DS_Store
+
+# scripts/package.sh output
+dist/
