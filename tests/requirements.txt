@@ -3,7 +3,7 @@
 # them the connector module raises partway through its import and the failure
 # surfaces as a confusing "cannot import name 'operations'" rather than as a
 # missing dependency.
--r ../fortinet-fortisiemv2/requirements.txt
+-r ../requirements.txt
 
 # Test-only additions.
 pytest>=8.0
