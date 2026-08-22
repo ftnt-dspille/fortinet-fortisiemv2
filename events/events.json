@@ -1,0 +1,304 @@
+[
+  {
+    "event_id": "fortinet-fortisiemv2.ingest_active_incidents",
+    "name": "Ingest Active Incidents",
+    "description": "Poll FortiSIEM for active incidents and ingest as FortiSOAR alerts with full field mapping, MITRE ATT&CK mapping, and triggering event enrichment",
+    "type": [
+      "PUSH"
+    ],
+    "connector_action": "ingest_incidents",
+    "connector_action_inputs": {
+      "from": "",
+      "to": "",
+      "incidentStatus": [
+        "Active"
+      ],
+      "incidentCategory": [],
+      "severity": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "include_events": true,
+      "event_count": 5,
+      "size": 100,
+      "use_query_lifecycle": false
+    },
+    "trigger_condition": {
+      "sort": [
+        {
+          "field": "last_observed_time",
+          "order": "desc"
+        }
+      ],
+      "limit": 100,
+      "logic": "AND",
+      "filters": []
+    },
+    "sample_data": [
+      {
+        "external_id": "3912",
+        "name": "Sudden logon volume increase for qa-sys1 to root on qa-sys1",
+        "alert_state": "Open",
+        "severity": "Medium",
+        "category": "Security",
+        "subcategory": "Behavioral Anomaly",
+        "alert_type": "Anomaly Detection",
+        "alert_generation_time": "2024-02-25T02:31:00Z",
+        "last_observed_time": "2024-02-25T20:31:00Z",
+        "source_hostname": "qa-sys1",
+        "dest_hostname": "qa-sys1",
+        "target_user": "root",
+        "rule_name": "PH_RULE_USER_MON_SUDDEN_LOGIN_VOLUME_CHANGE",
+        "rule_description": "Sudden Increase in User Login Volume",
+        "reporting_device": "HOST-10.10.10.10",
+        "reporting_ip": "10.10.10.10",
+        "description": "",
+        "event_count": 2,
+        "evidence": [
+          {
+            "eventId": "3912-0",
+            "eventType": "PH_RULE_USER_MON_SUDDEN_LOGIN_VOLUME_CHANGE",
+            "eventSeverity": 5,
+            "eventSeverityCat": "MEDIUM",
+            "srcIpAddr": "203.0.113.10",
+            "destIpAddr": "10.0.0.1",
+            "hostName": "host-3912",
+            "user": "alice"
+          }
+        ]
+      }
+    ],
+    "connector_mapping": {
+      "response": "{{data.data}}",
+      "datetime": {
+        "to": "to",
+        "from": "from"
+      }
+    }
+  },
+  {
+    "event_id": "fortinet-fortisiemv2.ingest_closed_incidents",
+    "name": "Ingest Closed Incidents",
+    "description": "Poll FortiSIEM for closed incidents and ingest as FortiSOAR alerts with full field mapping and event enrichment",
+    "type": [
+      "PUSH"
+    ],
+    "connector_action": "ingest_incidents",
+    "connector_action_inputs": {
+      "from": "",
+      "to": "",
+      "incidentStatus": [
+        "Manually Cleared",
+        "System Cleared",
+        "Auto Cleared"
+      ],
+      "incidentCategory": [],
+      "severity": [
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "include_events": true,
+      "event_count": 5,
+      "size": 100,
+      "use_query_lifecycle": false
+    },
+    "trigger_condition": {
+      "sort": [
+        {
+          "field": "last_observed_time",
+          "order": "desc"
+        }
+      ],
+      "limit": 100,
+      "logic": "AND",
+      "filters": []
+    },
+    "sample_data": [
+      {
+        "external_id": "3919",
+        "name": "High log receiving delay from monitored device 10.10.10.10",
+        "alert_state": "Resolved",
+        "severity": "Medium",
+        "category": "Availability",
+        "subcategory": "FortiSIEM",
+        "alert_type": "Availability",
+        "alert_generation_time": "2024-02-25T20:35:30Z",
+        "last_observed_time": "2024-02-25T20:35:30Z",
+        "target_ip": "10.10.10.10",
+        "rule_name": "PH_RULE_NO_LOGS_FROM_DEVICE",
+        "rule_description": "No logs from a device",
+        "reporting_device": "qa-fortisiem-collector4",
+        "reporting_ip": "10.10.10.10",
+        "description": "jobName:Syslog, ",
+        "event_count": 1,
+        "evidence": []
+      }
+    ],
+    "connector_mapping": {
+      "response": "{{data.data}}",
+      "datetime": {
+        "to": "to",
+        "from": "from"
+      }
+    }
+  },
+  {
+    "event_id": "fortinet-fortisiemv2.ingest_security_incidents",
+    "name": "Ingest Security Category Incidents",
+    "description": "Poll FortiSIEM for security-category incidents with MITRE ATT&CK mapping, event enrichment, and full field mapping for security operations",
+    "type": [
+      "PUSH"
+    ],
+    "connector_action": "ingest_incidents",
+    "connector_action_inputs": {
+      "from": "",
+      "to": "",
+      "incidentStatus": [
+        "Active"
+      ],
+      "incidentCategory": [
+        "Security"
+      ],
+      "severity": [
+        "High",
+        "Medium"
+      ],
+      "include_events": true,
+      "event_count": 10,
+      "size": 100,
+      "use_query_lifecycle": false
+    },
+    "trigger_condition": {
+      "sort": [
+        {
+          "field": "last_observed_time",
+          "order": "desc"
+        }
+      ],
+      "limit": 100,
+      "logic": "AND",
+      "filters": []
+    },
+    "sample_data": [
+      {
+        "external_id": "789012",
+        "name": "Suspicious PowerShell execution detected",
+        "alert_state": "Open",
+        "severity": "High",
+        "category": "Security",
+        "subcategory": "Malware Activity",
+        "alert_type": "Malware",
+        "alert_generation_time": "2024-02-26T00:13:20Z",
+        "last_observed_time": "2024-02-26T00:23:20Z",
+        "source_ip": "203.0.113.5",
+        "source_hostname": "workstation-01",
+        "dest_ip": "10.0.0.1",
+        "dest_hostname": "dc-01",
+        "target_user": "admin",
+        "rule_name": "PH_RULE_MALWARE_POWERSHELL_ENCODED",
+        "rule_description": "PowerShell Encoded Command Execution",
+        "reporting_device": "HOST-10.0.0.1",
+        "reporting_ip": "10.0.0.1",
+        "description": "PowerShell encoded command execution detected",
+        "event_count": 1,
+        "mitre_technique_id": "T1021",
+        "mitre_technique_name": "Remote Services",
+        "mitre_technique_ids": [
+          "T1021"
+        ],
+        "mitre_technique_names": [
+          "Remote Services"
+        ],
+        "evidence": [
+          {
+            "eventId": "789012-0",
+            "eventType": "PH_RULE_MALWARE_POWERSHELL_ENCODED",
+            "eventSeverity": 9,
+            "eventSeverityCat": "HIGH",
+            "srcIpAddr": "203.0.113.5",
+            "destIpAddr": "10.0.0.1",
+            "hostName": "workstation-01",
+            "user": "admin"
+          }
+        ]
+      }
+    ],
+    "connector_mapping": {
+      "response": "{{data.data}}",
+      "datetime": {
+        "to": "to",
+        "from": "from"
+      }
+    }
+  },
+  {
+    "event_id": "fortinet-fortisiemv2.ingest_high_severity_incidents",
+    "name": "Ingest High Severity Incidents",
+    "description": "Poll FortiSIEM for high-severity incidents only and ingest as FortiSOAR alerts with full field mapping and event enrichment",
+    "type": [
+      "PUSH"
+    ],
+    "connector_action": "ingest_incidents",
+    "connector_action_inputs": {
+      "from": "",
+      "to": "",
+      "incidentStatus": [
+        "Active"
+      ],
+      "incidentCategory": [],
+      "severity": [
+        "High"
+      ],
+      "include_events": true,
+      "event_count": 10,
+      "size": 50,
+      "use_query_lifecycle": false
+    },
+    "trigger_condition": {
+      "sort": [
+        {
+          "field": "last_observed_time",
+          "order": "desc"
+        }
+      ],
+      "limit": 50,
+      "logic": "AND",
+      "filters": []
+    },
+    "sample_data": [
+      {
+        "external_id": "789012",
+        "name": "Suspicious PowerShell execution detected",
+        "alert_state": "Open",
+        "severity": "High",
+        "category": "Security",
+        "subcategory": "Malware Activity",
+        "alert_type": "Malware",
+        "alert_generation_time": "2024-02-26T00:13:20Z",
+        "last_observed_time": "2024-02-26T00:23:20Z",
+        "source_ip": "203.0.113.5",
+        "source_hostname": "workstation-01",
+        "dest_ip": "10.0.0.1",
+        "dest_hostname": "dc-01",
+        "target_user": "admin",
+        "rule_name": "PH_RULE_MALWARE_POWERSHELL_ENCODED",
+        "reporting_device": "HOST-10.0.0.1",
+        "reporting_ip": "10.0.0.1",
+        "description": "PowerShell encoded command execution detected",
+        "event_count": 1,
+        "mitre_technique_id": "T1021",
+        "mitre_technique_name": "Remote Services",
+        "evidence": []
+      }
+    ],
+    "connector_mapping": {
+      "response": "{{data.data}}",
+      "datetime": {
+        "to": "to",
+        "from": "from"
+      }
+    }
+  }
+]

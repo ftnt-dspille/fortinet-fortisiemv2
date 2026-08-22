@@ -1,0 +1,10 @@
+# The suite imports the connector modules directly, so it needs everything the
+# connector needs at runtime -- xmltodict/aiohttp/requests included. Without
+# them the connector module raises partway through its import and the failure
+# surfaces as a confusing "cannot import name 'operations'" rather than as a
+# missing dependency.
+-r ../fortinet-fortisiemv2/requirements.txt
+
+# Test-only additions.
+pytest>=8.0
+pytest-asyncio>=0.23

@@ -1,0 +1,6 @@
+pyfortisiem>=0.1.0
+httpx>=0.27
+pydantic>=2
+xmltodict
+aiohttp
+requests

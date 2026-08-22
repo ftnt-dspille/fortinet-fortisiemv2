@@ -1,0 +1,1008 @@
+# FortiSIEM v2 connector sample playbooks.
+#
+# Most of these cover manual investigation, response, and utility operations.
+# The last three are the Data Ingestion Wizard chain (Init Macros / Fetch /
+# Ingest) -- see the block comment above them.
+#
+# Build with `python playbooks/build.py`, never by hand: the compiled JSON
+# carries wizard-contract fields (exported_tags, _configuration_schema, the
+# Ingest trigger's route/resources) that this YAML dialect cannot express.
+#
+# connectors: fortinet-fortisiemv2 (swap the config for your appliance)
+
+collection: Sample - Fortinet FortiSIEM v2 - 6.0.0
+description: >-
+  Sample playbooks for the "Fortinet FortiSIEM v2" connector. If you are planning
+  to use any of the sample playbooks in your environment, ensure that you clone
+  those playbooks and move them to a different collection, since the sample
+  playbook collection gets deleted during connector upgrade and delete.
+visible: true
+playbooks:
+
+# ---------------------------------------------------------------------------
+# Investigation (multi-step)
+# ---------------------------------------------------------------------------
+
+- name: Investigate Entity
+  description: >-
+    Full entity investigation: incidents by entity, entity context, and
+    threat-feed reputation in one playbook.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Incidents by Entity
+  - type: connector
+    name: Get Incidents by Entity
+    config: ''
+    params:
+      ip: ''
+      hostname: ''
+      username: ''
+      time_value: 24
+      time_unit: hours
+    connector: fortinet-fortisiemv2
+    operation: get_incidents_by_entity
+    operationTitle: Get Incidents by Entity
+    next: Get Entity Context
+  - type: connector
+    name: Get Entity Context
+    config: ''
+    params:
+      ip: ''
+      hostname: ''
+      username: ''
+    connector: fortinet-fortisiemv2
+    operation: get_entity_context
+    operationTitle: Get Entity Context
+    next: Get Entity Reputation
+  - type: connector
+    name: Get Entity Reputation
+    config: ''
+    params:
+      ip: []
+      url: []
+      domain: []
+      hash: []
+    connector: fortinet-fortisiemv2
+    operation: get_entity_reputation
+    operationTitle: Get Entity Reputation
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Investigate IP
+  description: 'Full IP investigation: context, incidents, and reputation.'
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get IP Context
+  - type: connector
+    name: Get IP Context
+    config: ''
+    params:
+      value: 1.1.1.1
+    connector: fortinet-fortisiemv2
+    operation: get_ip_context
+    operationTitle: Get IP Context
+    next: Get Incidents for IP
+  - type: connector
+    name: Get Incidents for IP
+    config: ''
+    params:
+      ip: ''
+      time_value: 24
+      time_unit: hours
+    connector: fortinet-fortisiemv2
+    operation: get_incidents_by_entity
+    operationTitle: Get Incidents by Entity
+    next: Get IP Reputation
+  - type: connector
+    name: Get IP Reputation
+    config: ''
+    params:
+      ip: []
+      url: []
+      domain: []
+      hash: []
+    connector: fortinet-fortisiemv2
+    operation: get_entity_reputation
+    operationTitle: Get Entity Reputation
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Risk Report
+  description: Get top-10 risky users and top-10 risky devices from FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Top Risky Users
+  - type: connector
+    name: Get Top Risky Users
+    config: ''
+    params: {}
+    connector: fortinet-fortisiemv2
+    operation: get_top_risky_users
+    operationTitle: Get Top 10 Risky Users
+    next: Get Top Risky Devices
+  - type: connector
+    name: Get Top Risky Devices
+    config: ''
+    params: {}
+    connector: fortinet-fortisiemv2
+    operation: get_top_risky_devices
+    operationTitle: Get Top 10 Risky Devices
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+# ---------------------------------------------------------------------------
+# Incident retrieval (single-step)
+# ---------------------------------------------------------------------------
+
+- name: Get Incident Details with Events
+  description: >-
+    Fetch a single FortiSIEM incident and its triggering events concurrently
+    in one call.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Incident With Events
+  - type: connector
+    name: Get Incident With Events
+    config: ''
+    params:
+      incident_id: '1'
+      event_count: 10
+      use_query_lifecycle: false
+    connector: fortinet-fortisiemv2
+    operation: get_incident_with_events
+    operationTitle: Get Incident Details with Events
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Get Incident IOCs
+  description: Retrieve IOCs across given FortiSIEM incidents.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get IOCs
+  - type: connector
+    name: Get IOCs
+    config: ''
+    params:
+      incident_ids: '1'
+    connector: fortinet-fortisiemv2
+    operation: get_iocs_for_incidents
+    operationTitle: Get Incident IOCs
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Get Related Incidents
+  description: Get FortiSIEM incidents sharing entities with a given incident.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Related Incidents
+  - type: connector
+    name: Get Related Incidents
+    config: ''
+    params:
+      incident_id: '1'
+    connector: fortinet-fortisiemv2
+    operation: get_related_incidents
+    operationTitle: Get Related Incidents
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Get Trigger Events
+  description: Get raw events that triggered a FortiSIEM incident (columnar).
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Trigger Events
+  - type: connector
+    name: Get Trigger Events
+    config: ''
+    params:
+      incident_id: '1'
+    connector: fortinet-fortisiemv2
+    operation: get_trigger_events
+    operationTitle: Get Trigger Events
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+# ---------------------------------------------------------------------------
+# Response (single-step, REST + MCP variants)
+# ---------------------------------------------------------------------------
+
+- name: Update Incident
+  description: Update a FortiSIEM incident's status, severity, and resolution.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Update Incident
+  - type: connector
+    name: Update Incident
+    config: ''
+    params:
+      incidentId: '1'
+      incidentStatus: Manually Cleared
+      severity: LOW
+      resolution: True Positive
+      comments: ''
+    connector: fortinet-fortisiemv2
+    operation: update_incident
+    operationTitle: Update Incident
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Comment Incident
+  description: Add a comment to a FortiSIEM incident.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Comment Incident
+  - type: connector
+    name: Comment Incident
+    config: ''
+    params:
+      id: '1'
+      comment_text: 'Sample comment'
+    connector: fortinet-fortisiemv2
+    operation: incident_comment
+    operationTitle: Comment Incident
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Clear Incident
+  description: Clear a FortiSIEM incident with a reason.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Clear Incident
+  - type: connector
+    name: Clear Incident
+    config: ''
+    params:
+      id: '1'
+      comment_text: 'Cleared via FortiSOAR'
+    connector: fortinet-fortisiemv2
+    operation: clear_incident
+    operationTitle: Clear Incident With Reason
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Update Incident Severity (MCP)
+  description: Update a FortiSIEM incident severity via MCP (LOW/MEDIUM/HIGH).
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Update Incident Severity
+  - type: connector
+    name: Update Incident Severity
+    config: ''
+    params:
+      incident_id: '1'
+      severity: HIGH
+    connector: fortinet-fortisiemv2
+    operation: update_incident_severity
+    operationTitle: Update Incident Severity
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Clear Incident (MCP)
+  description: Clear a FortiSIEM incident via MCP.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Clear Incident MCP
+  - type: connector
+    name: Clear Incident MCP
+    config: ''
+    params:
+      incident_id: '1'
+    connector: fortinet-fortisiemv2
+    operation: clear_incident_mcp
+    operationTitle: Clear Incident (MCP)
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+# ---------------------------------------------------------------------------
+# Utility (single-step)
+# ---------------------------------------------------------------------------
+
+- name: Run Advanced Search Query
+  description: Run an advanced search query on the FortiSIEM server.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Run Report
+  - type: connector
+    name: Run Report
+    config: ''
+    params:
+      cond: 'eventType = 1'
+      AttrList: phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg
+      orderby: phRecvTime DESC
+      start: 0
+      perPage: 50
+      time_selection: Relative Time
+    connector: fortinet-fortisiemv2
+    operation: run_report
+    operationTitle: Run Advanced Search Query
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Search Events
+  description: Search for events in the FortiSIEM server based on attributes.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Search Events
+  - type: connector
+    name: Search Events
+    config: ''
+    params:
+      attribute: Reporting IP
+      reporting_ip_value: 10.0.0.1
+      select_clause: phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg
+      start: 0
+      perPage: 50
+      time_selection: Relative Time
+    connector: fortinet-fortisiemv2
+    operation: search_events
+    operationTitle: Search Events
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Get Event Details
+  description: Get details of a specific event by event ID from FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Event Details
+  - type: connector
+    name: Get Event Details
+    config: ''
+    params:
+      event_id: '1'
+      from: ''
+      to: ''
+      select_clause: phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg
+    connector: fortinet-fortisiemv2
+    operation: get_event_details
+    operationTitle: Get Event Details
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Query Postgres
+  description: Run a read-only Postgres query against FortiSIEM's CMDB.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Query Postgres
+  - type: connector
+    name: Query Postgres
+    config: ''
+    params:
+      sql: SELECT * FROM ph_sys_version LIMIT 1
+    connector: fortinet-fortisiemv2
+    operation: query_postgres
+    operationTitle: Query Postgres
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Query ClickHouse
+  description: Run a read-only ClickHouse events query against FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Query ClickHouse
+  - type: connector
+    name: Query ClickHouse
+    config: ''
+    params:
+      sql: SELECT eventType, count(*) c FROM events GROUP BY eventType LIMIT 3
+    connector: fortinet-fortisiemv2
+    operation: query_clickhouse
+    operationTitle: Query ClickHouse
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: List Monitored Devices
+  description: Retrieve a list of all monitored devices from FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: List Monitored Devices
+  - type: connector
+    name: List Monitored Devices
+    config: ''
+    params: {}
+    connector: fortinet-fortisiemv2
+    operation: get_monitored_devices
+    operationTitle: List Monitored Devices and Attributes
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Get Device Info
+  description: Get detailed info for a monitored device by IP from FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Device Info
+  - type: connector
+    name: Get Device Info
+    config: ''
+    params:
+      ip: 1.1.1.1
+      org: ''
+    connector: fortinet-fortisiemv2
+    operation: get_device_info
+    operationTitle: Get Device Info
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Get Organization Details
+  description: Get details of a specific organization by domain ID from FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Organization Details
+  - type: connector
+    name: Get Organization Details
+    config: ''
+    params:
+      domain_id: '1'
+    connector: fortinet-fortisiemv2
+    operation: get_org_name_by_org_id
+    operationTitle: Get Organization Details
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Get Watch Lists
+  description: Retrieve all watch lists or a specific watch list from FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Watch Lists
+  - type: connector
+    name: Get Watch Lists
+    config: ''
+    params:
+      get_watch_list_by: Get All Watch Lists
+    connector: fortinet-fortisiemv2
+    operation: get_watch_lists
+    operationTitle: Get Watch Lists
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Get Monitored Organizations
+  description: Retrieve monitored organizations from FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Get Monitored Organizations
+  - type: connector
+    name: Get Monitored Organizations
+    config: ''
+    params: {}
+    connector: fortinet-fortisiemv2
+    operation: get_monitored_organizations
+    operationTitle: Get Monitored Organizations
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: List OAuth Credentials
+  description: List existing API-token credentials from FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: List OAuth Credentials
+  - type: connector
+    name: List OAuth Credentials
+    config: ''
+    params: {}
+    connector: fortinet-fortisiemv2
+    operation: list_oauth_credentials
+    operationTitle: List OAuth Credentials
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+- name: Create OAuth Credential
+  description: Create an API-token credential in FortiSIEM.
+  is_active: false
+  trigger_step_id: Start
+  steps:
+  - type: start
+    name: Start
+    next: Create OAuth Credential
+  - type: connector
+    name: Create OAuth Credential
+    config: ''
+    params:
+      name: 'sample-credential'
+    connector: fortinet-fortisiemv2
+    operation: create_oauth_credential
+    operationTitle: Create OAuth Credential
+    next: End
+  - type: connector
+    name: End
+    config: ''
+    params: []
+    connector: cyops_utilities
+    operation: no_op
+    operationTitle: 'Utils: No Operation'
+
+
+# ---------------------------------------------------------------------------
+# Data ingestion chain (Init Macros / Fetch / Ingest)
+#
+# Modeled on the shipping FortiSIEM v1 connector's ingestion playbooks, which
+# is the shape the Data Ingestion Wizard expects:
+#
+#   * the wizard discovers these three by their tags -- every one carries
+#     #dataingestion, and Fetch/Ingest additionally carry #fetch / #ingest;
+#   * Fetch's Start step carries `_configuration_schema`, the JSON that
+#     renders the wizard's configuration form;
+#   * Fetch ends in a set_variable ("Save Result") publishing `data` plus the
+#     carry-through vars -- Ingest reads them back as `vars.result.*`;
+#   * the incremental-pull watermark lives in a per-playbook dynamic variable
+#     (macro) that Init Macros creates, Fetch reads, and Ingest advances.
+#
+# Unlike v1 there is no async per-alert event-enrichment child workflow --
+# `ingest_incidents` already returns triggering events inline on each record.
+# ---------------------------------------------------------------------------
+
+- name: '>> FortiSIEM v2 > Init Macros'
+  description: >-
+    Creates the FortiSIEM last-pull-time macro if it does not already exist.
+    Called by Fetch during the wizard's environment-setup pass.
+  tag: '#fortinet-fortisiemv2 #dataingestion'
+  is_active: true
+  parameters:
+  - FortiSIEMMacroName
+  - FortiSIEMMacroValue
+  - overrideIfNoMatch
+  steps:
+  - name: Start
+    type: start
+    next: Get FortiSIEM Macros
+
+  - name: Get FortiSIEM Macros
+    type: connector
+    connector: cyops_utilities
+    operation: make_cyops_request
+    config: ''
+    params:
+      iri: /api/wf/api/dynamic-variable/?format=json&name={{vars.input.params.FortiSIEMMacroName}}
+      body: ''
+      method: GET
+    next: FortiSIEM Macro Exists
+
+  - name: FortiSIEM Macro Exists
+    type: decision
+    conditions:
+    - display: Not Exist
+      when: "{{ vars.steps.Get_FortiSIEM_Macros.data['hydra:totalItems'] == 0 }}"
+      next: Create FortiSIEM Macro
+    - display: Exist
+      default: true
+      next: Fetch Macro Current Value
+
+  - name: Create FortiSIEM Macro
+    type: connector
+    connector: cyops_utilities
+    operation: make_cyops_request
+    config: ''
+    params:
+      iri: /api/wf/api/dynamic-variable/?format=json
+      body: "{ 'name': '{{vars.input.params.FortiSIEMMacroName}}', 'value': '{{vars.input.params.FortiSIEMMacroValue}}' }"
+      method: POST
+
+  - name: Fetch Macro Current Value
+    type: set_variable
+    vars:
+      macroExistingRecord: "{{vars.steps.Get_FortiSIEM_Macros.data['hydra:member'][0]}}"
+    next: Update Macro If Required
+
+  - name: Update Macro If Required
+    type: connector
+    when: "{{ (vars.input.params.overrideIfNoMatch == true) and (vars.macroExistingRecord.value != vars.input.params.FortiSIEMMacroValue) }}"
+    connector: cyops_utilities
+    operation: make_cyops_request
+    config: ''
+    params:
+      iri: /api/wf/api/dynamic-variable/{{ vars.macroExistingRecord.id }}/
+      body: "{ 'name': '{{vars.input.params.FortiSIEMMacroName}}', 'value': '{{vars.input.params.FortiSIEMMacroValue}}' }"
+      method: PUT
+
+- name: '> FortiSIEM v2 > Fetch'
+  description: >-
+    Reads the last-pull-time watermark and fetches FortiSIEM incidents since
+    then, already mapped to FortiSOAR alert shape with triggering events.
+  tag: '#fortinet-fortisiemv2 #fetch #dataingestion'
+  is_active: true
+  steps:
+  - name: Start
+    type: start
+    next: Configuration
+
+  - name: Configuration
+    type: set_variable
+    comment: |
+      Wizard-editable defaults. `minutes` is the cold-start lookback used the
+      first time this ingestion runs (macro still '0'); after that the macro
+      supplies the window. The macro name is scoped to this playbook's UUID so
+      two ingestion configurations never share a watermark.
+    vars:
+      minutes: '10'
+      size: 100
+      event_count: 5
+      include_events: true
+      use_query_lifecycle: false
+      incidentStatus:
+      - Active
+      incidentCategory: []
+      severity:
+      - High
+      - Medium
+      - Low
+      FortiSIEMMacroName: "FortiSIEMLastPullTime_{{vars['audit_info']['cyops_playbook_iri'].split('/')[-1].replace('-','_')}}"
+    next: Get Macro Value
+
+  - name: Get Macro Value
+    type: connector
+    connector: cyops_utilities
+    operation: make_cyops_request
+    config: ''
+    params:
+      iri: /api/wf/api/dynamic-variable/?format=json&name={{vars.FortiSIEMMacroName}}
+      body: ''
+      method: GET
+    next: Environment Setup
+
+  - name: Environment Setup
+    type: workflow_reference
+    comment: |
+      Runs when the watermark macro does not exist yet -- not only on the
+      wizard's `vars.request.env_setup` first pass.
+
+      Keying solely off env_setup left ingestion permanently broken whenever
+      the macro was missing: `Update Last Alert Pull Time` only *updates*, it
+      does not create, so every run cold-started at `minutes` and the watermark
+      was never written. Live-verified on 8.0.0: 100 scheduled runs, all
+      `finished`, zero alerts created and no macro on the appliance -- a
+      silent failure, because nothing errors.
+
+      This step must therefore come AFTER Get Macro Value, so its absence can
+      be seen. The macro is primed to '0', which Set Time Configuration reads
+      as "cold start" for this one run.
+    when: '{{ vars.request.env_setup or not vars.steps.Get_Macro_Value.data["hydra:member"] }}'
+    target: '>> FortiSIEM v2 > Init Macros'
+    FortiSIEMMacroName: '{{vars.FortiSIEMMacroName}}'
+    FortiSIEMMacroValue: '0'
+    overrideIfNoMatch: 'false'
+    apply_async: false
+    pass_parent_env: false
+    pass_input_record: false
+    next: Set Time Configuration
+
+  - name: Set Time Configuration
+    type: set_variable
+    comment: |
+      `curr_timestamp` is captured before the fetch and only written back to
+      the macro after Ingest succeeds, so a failed run re-pulls its window
+      instead of silently skipping it.
+    vars:
+      curr_timestamp: "{{ arrow.utcnow().format('YYYY-MM-DDTHH:mm:ss') }}Z"
+      last_pull_time: "{% if not vars.steps.Get_Macro_Value.data['hydra:member'] or vars.steps.Get_Macro_Value.data['hydra:member'][0].value == '0' or vars.request.env_setup %}{{ arrow.utcnow().shift(minutes=-(vars.minutes | int)).format('YYYY-MM-DDTHH:mm:ss') }}Z{% else %}{{ vars.steps.Get_Macro_Value.data['hydra:member'][0].value }}{% endif %}"
+    next: Fetch Incidents
+
+  - name: Fetch Incidents
+    type: connector
+    connector: fortinet-fortisiemv2
+    operation: ingest_incidents
+    operationTitle: Ingest Incidents
+    config: ''
+    params:
+      from: '{{vars.last_pull_time}}'
+      to: '{{vars.curr_timestamp}}'
+      incidentStatus: '{{vars.incidentStatus}}'
+      incidentCategory: '{{vars.incidentCategory}}'
+      severity: '{{vars.severity}}'
+      include_events: '{{vars.include_events}}'
+      event_count: '{{vars.event_count}}'
+      size: '{{vars.size}}'
+      use_query_lifecycle: '{{vars.use_query_lifecycle}}'
+    next: Save Result
+
+  - name: Save Result
+    type: set_variable
+    comment: |
+      The Fetch -> Ingest contract. Ingest reads every one of these back as
+      `vars.result.<key>`.
+    vars:
+      data: '{{vars.steps.Fetch_Incidents.data}}'
+      current_time: '{{vars.curr_timestamp}}'
+      event_count: '{{vars.event_count}}'
+      FortiSIEMMacroName: '{{vars.FortiSIEMMacroName}}'
+
+- name: FortiSIEM v2 > Ingest
+  description: >-
+    Orchestrator: calls Fetch, creates the alerts, then advances the
+    last-pull-time watermark.
+  tag: '#fortinet-fortisiemv2 #ingest #dataingestion #create'
+  is_active: true
+  steps:
+  - name: Start
+    type: start
+    next: List Incident
+
+  - name: List Incident
+    type: workflow_reference
+    target: '> FortiSIEM v2 > Fetch'
+    apply_async: false
+    pass_parent_env: false
+    pass_input_record: false
+    next: Configuration
+
+  - name: Configuration
+    type: set_variable
+    comment: |
+      Severity/status/type maps are keyed on the values `field_mapping.py` emits
+      and cover every one of them -- an unmapped value would make `resolveRange`
+      miss and the alert POST fail with a picklist 400. `field_mapping` clamps
+      alert_type to VALID_ALERT_TYPES for exactly this reason, so the two lists
+      have to be changed together.
+    vars:
+      incident_source_data: '{{ vars.result.data }}'
+      event_count: '{{ vars.result.event_count }}'
+      FortiSIEMMacroName: '{{ vars.result.FortiSIEMMacroName }}'
+      alerts_severity_map: "{'Minimal': {{'Severity'| picklist('Minimal')}}, 'Low': {{'Severity'| picklist('Low')}}, 'Medium': {{'Severity'| picklist('Medium')}}, 'High': {{'Severity'| picklist('High')}}, 'Critical': {{'Severity'| picklist('Critical')}}}"
+      alerts_status_map: "{'Open': {{'AlertStatus'| picklist('Open')}}, 'Resolved': {{'AlertStatus'| picklist('Closed')}}, 'Closed': {{'AlertStatus'| picklist('Closed')}}}"
+      alerts_type_map: "{'Actionable Threat Feeds': {{'AlertType'| picklist('Actionable Threat Feeds')}}, 'Brute Force Attempts': {{'AlertType'| picklist('Brute Force Attempts')}}, 'Command and Control': {{'AlertType'| picklist('Command and Control')}}, 'Concurrent Login': {{'AlertType'| picklist('Concurrent Login')}}, 'Data Exfiltration': {{'AlertType'| picklist('Data Exfiltration')}}, 'Denial of Service': {{'AlertType'| picklist('Denial of Service')}}, 'Lateral Movement': {{'AlertType'| picklist('Lateral Movement')}}, 'MITRE ATT&CK': {{'AlertType'| picklist('MITRE ATT&CK')}}, 'Malware': {{'AlertType'| picklist('Malware')}}, 'Other / Unknown': {{'AlertType'| picklist('Other / Unknown')}}, 'Phishing': {{'AlertType'| picklist('Phishing')}}, 'Policy Violation': {{'AlertType'| picklist('Policy Violation')}}, 'Ransomware': {{'AlertType'| picklist('Ransomware')}}, 'Reconnaissance': {{'AlertType'| picklist('Reconnaissance')}}}"
+    next: Create Alerts
+
+  - name: Create Alerts
+    type: create_record
+    module: alerts
+    operation: Overwrite
+    is_upsert: true
+    comment: |
+      `is_upsert` routes this at /api/3/upsert/alerts, keyed on `sourceId`, so a
+      re-ingest updates the existing alert. Without it the plain insert path
+      409s on the sourceid uniqueness constraint the moment a window overlaps a
+      previous run -- which every incremental pull does.
+    for_each:
+      item: '{{ vars.incident_source_data }}'
+      __bulk: true
+      batch_size: 100
+      condition: ''
+    fields:
+      name: '{{ vars.item.name }}'
+      source: Fortinet FortiSIEM
+      sourceId: '{{ vars.item.external_id }}'
+      severity: '{{ vars.item.severity | resolveRange(vars.alerts_severity_map) }}'
+      alert_state: '{{ "AlertState" | picklist("New") }}'
+      status: '{{ vars.item.alert_state | resolveRange(vars.alerts_status_map) }}'
+      type: '{{ vars.item.alert_type | resolveRange(vars.alerts_type_map) }}'
+      # Without these the alert carries only its ingest time, so the grid sorts
+      # and the SLA clocks run on when FortiSOAR happened to poll rather than on
+      # when FortiSIEM saw the activity.
+      alertDetectionDate: '{{ vars.item.alert_generation_epoch }}'
+      eventTime: '{{ vars.item.last_observed_epoch }}'
+      sourceIp: '{{ vars.item.source_ip }}'
+      destinationIp: '{{ vars.item.dest_ip }}'
+      destinationPort: '{{ vars.item.dest_port }}'
+      hostName: '{{ vars.item.target_hostname or vars.item.dest_hostname }}'
+      hostIPAddress: '{{ vars.item.target_ip or vars.item.reporting_ip }}'
+      userName: '{{ vars.item.target_user or vars.item.source_user }}'
+      rule: '{{ vars.item.rule_name }}'
+      mitreattackid: '{{ vars.item.mitre_technique_ids | join(", ") }}'
+      mitreTechnique: '{{ vars.item.mitre_technique_names | join(", ") }}'
+      description: '{{ vars.item.description }}'
+      # The full mapped incident, triggering events included, is kept here as
+      # JSON rather than linked into the Events module -- one self-contained
+      # record, no relationship to maintain. `source_payload` is the mapped
+      # alert minus the rendered description, so `| toJSON` does not store that
+      # HTML a second time. It must stay `| toJSON`: a bare `{{ }}` on
+      # already-serialised JSON is stored as the literal string "Array".
+      sourcedata: '{{ vars.item.source_payload | toJSON }}'
+      __replace: 'true'
+    next: Update Last Alert Pull Time
+
+  - name: Update Last Alert Pull Time
+    type: connector
+    comment: |
+      Advances the watermark only after the alerts are written, so a failed
+      Create Alerts leaves the window to be retried.
+    connector: cyops_utilities
+    operation: updatemacro
+    operationTitle: 'FSR: Update Global Variables'
+    config: ''
+    params:
+      macro: '{{vars.FortiSIEMMacroName}}'
+      value: '{{vars.steps.List_Incident.current_time}}'

@@ -1,0 +1,3737 @@
+{
+  "type": "workflow_collections",
+  "macros": [],
+  "exported_tags": [
+    "fortinet-fortisiemv2",
+    "Fortinet",
+    "dataingestion",
+    "fetch",
+    "create",
+    "ingest"
+  ],
+  "data": [
+    {
+      "@type": "WorkflowCollection",
+      "name": "Sample - Fortinet FortiSIEM v2 - 6.0.4",
+      "description": "Sample playbooks for the \"Fortinet FortiSIEM v2\" connector. If you are planning to use any of the sample playbooks in your environment, ensure that you clone those playbooks and move them to a different collection, since the sample playbook collection gets deleted during connector upgrade and delete.",
+      "visible": true,
+      "image": null,
+      "uuid": "a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+      "recordTags": [],
+      "workflows": [
+        {
+          "@type": "Workflow",
+          "name": "Investigate Entity",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Full entity investigation: incidents by entity, entity context, and threat-feed reputation in one playbook.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/0d04b2f9-d99c-532c-88bc-92276e0fa558",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "0d04b2f9-d99c-532c-88bc-92276e0fa558"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Incidents by Entity",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "ip": "",
+                  "hostname": "",
+                  "username": "",
+                  "time_value": 24,
+                  "time_unit": "hours"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_incidents_by_entity",
+                "operationTitle": "Get Incidents by Entity",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "af7e2aeb-df93-5e02-82cc-06c2c3b8df4e"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Entity Context",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "ip": "",
+                  "hostname": "",
+                  "username": ""
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_entity_context",
+                "operationTitle": "Get Entity Context",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "5510896b-bec0-58c5-9359-e7397049951a"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Entity Reputation",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "ip": [],
+                  "url": [],
+                  "domain": [],
+                  "hash": []
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_entity_reputation",
+                "operationTitle": "Get Entity Reputation",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "510",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "be667e46-2c11-5c2a-8bba-fd42bbcb6a0f"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "640",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "778d4af0-41de-512b-822b-40a3b195dea9"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Incidents by Entity",
+              "targetStep": "/api/3/workflow_steps/af7e2aeb-df93-5e02-82cc-06c2c3b8df4e",
+              "sourceStep": "/api/3/workflow_steps/0d04b2f9-d99c-532c-88bc-92276e0fa558",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "e9bbfe3d-9ea0-5ef5-a65e-b7a49a5fdcbf"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Incidents by Entity -> Get Entity Context",
+              "targetStep": "/api/3/workflow_steps/5510896b-bec0-58c5-9359-e7397049951a",
+              "sourceStep": "/api/3/workflow_steps/af7e2aeb-df93-5e02-82cc-06c2c3b8df4e",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "a4d893e7-d0b0-502c-848f-9efd41b202c7"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Entity Context -> Get Entity Reputation",
+              "targetStep": "/api/3/workflow_steps/be667e46-2c11-5c2a-8bba-fd42bbcb6a0f",
+              "sourceStep": "/api/3/workflow_steps/5510896b-bec0-58c5-9359-e7397049951a",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "87d63c25-25ec-5f22-8ad7-5b693d4565a0"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Entity Reputation -> End",
+              "targetStep": "/api/3/workflow_steps/778d4af0-41de-512b-822b-40a3b195dea9",
+              "sourceStep": "/api/3/workflow_steps/be667e46-2c11-5c2a-8bba-fd42bbcb6a0f",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "354962e6-92cf-5ea7-a47e-04d3bdbeaa9a"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "5f0cab91-b87b-5eac-901e-2048d4c1a232",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Investigate IP",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Full IP investigation: context, incidents, and reputation.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/1fb47736-bc06-5185-8e13-1206a32c719d",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "1fb47736-bc06-5185-8e13-1206a32c719d"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get IP Context",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "value": "1.1.1.1"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_ip_context",
+                "operationTitle": "Get IP Context",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "cb5ef96e-89a2-58b0-a710-662e86bdd77a"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Incidents for IP",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "ip": "",
+                  "time_value": 24,
+                  "time_unit": "hours"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_incidents_by_entity",
+                "operationTitle": "Get Incidents by Entity",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "1ad61368-1b44-5733-9de1-526fb944d371"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get IP Reputation",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "ip": [],
+                  "url": [],
+                  "domain": [],
+                  "hash": []
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_entity_reputation",
+                "operationTitle": "Get Entity Reputation",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "510",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "9baf1ecf-feaa-5b40-842a-f63df518bf11"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "640",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "6cd952bb-b6b3-53ab-8f7e-5476a34b3da5"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get IP Context",
+              "targetStep": "/api/3/workflow_steps/cb5ef96e-89a2-58b0-a710-662e86bdd77a",
+              "sourceStep": "/api/3/workflow_steps/1fb47736-bc06-5185-8e13-1206a32c719d",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "fd150727-298b-56bf-bcc9-d393e3426b37"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get IP Context -> Get Incidents for IP",
+              "targetStep": "/api/3/workflow_steps/1ad61368-1b44-5733-9de1-526fb944d371",
+              "sourceStep": "/api/3/workflow_steps/cb5ef96e-89a2-58b0-a710-662e86bdd77a",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "80ccefd0-fc13-5eab-a3d7-d3d67142a057"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Incidents for IP -> Get IP Reputation",
+              "targetStep": "/api/3/workflow_steps/9baf1ecf-feaa-5b40-842a-f63df518bf11",
+              "sourceStep": "/api/3/workflow_steps/1ad61368-1b44-5733-9de1-526fb944d371",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "e4fcfc07-d0b6-52bd-91cb-525b271baba9"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get IP Reputation -> End",
+              "targetStep": "/api/3/workflow_steps/6cd952bb-b6b3-53ab-8f7e-5476a34b3da5",
+              "sourceStep": "/api/3/workflow_steps/9baf1ecf-feaa-5b40-842a-f63df518bf11",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "1557c7d0-1ac3-5361-a46c-d43a52c37eb5"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "5d031bab-879a-5efc-8752-fea68d03794c",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Risk Report",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Get top-10 risky users and top-10 risky devices from FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/8f211cd9-4974-5e2a-8f53-44da4a07cc66",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "8f211cd9-4974-5e2a-8f53-44da4a07cc66"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Top Risky Users",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {},
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_top_risky_users",
+                "operationTitle": "Get Top 10 Risky Users",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "56202664-45de-507d-881b-76bfc1705de2"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Top Risky Devices",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {},
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_top_risky_devices",
+                "operationTitle": "Get Top 10 Risky Devices",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "25a7f9aa-46c3-5761-b5cf-89b992a244b5"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "510",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "a971a96b-715d-5aaf-8b05-bfd46ade7151"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Top Risky Users",
+              "targetStep": "/api/3/workflow_steps/56202664-45de-507d-881b-76bfc1705de2",
+              "sourceStep": "/api/3/workflow_steps/8f211cd9-4974-5e2a-8f53-44da4a07cc66",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "b4cad3c6-f69a-56ff-8a64-21b0bb919ac0"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Top Risky Users -> Get Top Risky Devices",
+              "targetStep": "/api/3/workflow_steps/25a7f9aa-46c3-5761-b5cf-89b992a244b5",
+              "sourceStep": "/api/3/workflow_steps/56202664-45de-507d-881b-76bfc1705de2",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "0850842e-ed8b-5c1f-94a7-bc39d02a221a"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Top Risky Devices -> End",
+              "targetStep": "/api/3/workflow_steps/a971a96b-715d-5aaf-8b05-bfd46ade7151",
+              "sourceStep": "/api/3/workflow_steps/25a7f9aa-46c3-5761-b5cf-89b992a244b5",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "373e3433-4c5d-5748-9004-a7aa51d1fea5"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "155ac615-5e5d-51b8-8ac3-07ad79d6cce9",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Incident Details with Events",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Fetch a single FortiSIEM incident and its triggering events concurrently in one call.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/ae704acc-9ecd-5158-a263-34d70905bfa4",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "ae704acc-9ecd-5158-a263-34d70905bfa4"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Incident With Events",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "incident_id": "1",
+                  "event_count": 10,
+                  "use_query_lifecycle": false
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_incident_with_events",
+                "operationTitle": "Get Incident Details with Events",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "4e8ed668-2bfb-535d-afcf-b76373ced1e5"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "e27514cb-fcd1-5fd1-9327-b5be45a98607"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Incident With Events",
+              "targetStep": "/api/3/workflow_steps/4e8ed668-2bfb-535d-afcf-b76373ced1e5",
+              "sourceStep": "/api/3/workflow_steps/ae704acc-9ecd-5158-a263-34d70905bfa4",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "a22ccd86-419b-55cc-83c6-72385a144c25"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Incident With Events -> End",
+              "targetStep": "/api/3/workflow_steps/e27514cb-fcd1-5fd1-9327-b5be45a98607",
+              "sourceStep": "/api/3/workflow_steps/4e8ed668-2bfb-535d-afcf-b76373ced1e5",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "e6196132-9746-5607-97fc-a929fcfa29c7"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "47ade503-ba57-5775-979c-9f36a53207aa",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Incident IOCs",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Retrieve IOCs across given FortiSIEM incidents.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/e6d57b9d-d204-5d06-bc90-f4f56cf32444",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "e6d57b9d-d204-5d06-bc90-f4f56cf32444"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get IOCs",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "incident_ids": "1"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_iocs_for_incidents",
+                "operationTitle": "Get Incident IOCs",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "9439b697-54ef-5bfe-bd3b-f78216013f10"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "65050d2a-cc07-5e83-9d7f-8f2f9c954cdd"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get IOCs",
+              "targetStep": "/api/3/workflow_steps/9439b697-54ef-5bfe-bd3b-f78216013f10",
+              "sourceStep": "/api/3/workflow_steps/e6d57b9d-d204-5d06-bc90-f4f56cf32444",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "8dab6e29-7752-5c4a-8270-5dc36fffc66e"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get IOCs -> End",
+              "targetStep": "/api/3/workflow_steps/65050d2a-cc07-5e83-9d7f-8f2f9c954cdd",
+              "sourceStep": "/api/3/workflow_steps/9439b697-54ef-5bfe-bd3b-f78216013f10",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "4b6d3da5-c688-5c5a-a216-99ef6b8b8779"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "3e52b40c-3eb5-5ac3-8ea0-8f7f84e25ca4",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Related Incidents",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Get FortiSIEM incidents sharing entities with a given incident.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/105ee19b-6fbd-5862-b2d7-22a6f066df25",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "105ee19b-6fbd-5862-b2d7-22a6f066df25"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Related Incidents",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "incident_id": "1"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_related_incidents",
+                "operationTitle": "Get Related Incidents",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "7588608f-62e8-5d23-b1b6-7537ad9cd1bb"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "a5ac1464-4a72-525f-8fbf-a46d33195a19"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Related Incidents",
+              "targetStep": "/api/3/workflow_steps/7588608f-62e8-5d23-b1b6-7537ad9cd1bb",
+              "sourceStep": "/api/3/workflow_steps/105ee19b-6fbd-5862-b2d7-22a6f066df25",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "c485bba2-3443-5bd6-9019-fac44274a978"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Related Incidents -> End",
+              "targetStep": "/api/3/workflow_steps/a5ac1464-4a72-525f-8fbf-a46d33195a19",
+              "sourceStep": "/api/3/workflow_steps/7588608f-62e8-5d23-b1b6-7537ad9cd1bb",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "e5cdb8af-a1b1-5bc2-9303-83158596730b"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "7595ae77-170c-5cbd-911b-180481d161cd",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Trigger Events",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Get raw events that triggered a FortiSIEM incident (columnar).",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/4c39a404-e382-500f-aea6-cd08dfddd8a9",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "4c39a404-e382-500f-aea6-cd08dfddd8a9"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Trigger Events",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "incident_id": "1"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_trigger_events",
+                "operationTitle": "Get Trigger Events",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "bb0a3542-8db4-5d14-a9f3-24bb876de1a2"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "45ced15e-b39c-5f79-bd88-a284fd4a1812"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Trigger Events",
+              "targetStep": "/api/3/workflow_steps/bb0a3542-8db4-5d14-a9f3-24bb876de1a2",
+              "sourceStep": "/api/3/workflow_steps/4c39a404-e382-500f-aea6-cd08dfddd8a9",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "1baed749-6c02-5bfd-a1cc-786ddc2419b6"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Trigger Events -> End",
+              "targetStep": "/api/3/workflow_steps/45ced15e-b39c-5f79-bd88-a284fd4a1812",
+              "sourceStep": "/api/3/workflow_steps/bb0a3542-8db4-5d14-a9f3-24bb876de1a2",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "31c340ba-65cd-5990-a86a-e36a64c5b7b1"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "af1abae3-61f9-5190-9b6d-e560f8bd9a56",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Update Incident",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Update a FortiSIEM incident's status, severity, and resolution.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/24026b94-fca1-5cfc-ab65-81867a500b1b",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "24026b94-fca1-5cfc-ab65-81867a500b1b"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Update Incident",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "incidentId": "1",
+                  "incidentStatus": "Manually Cleared",
+                  "severity": "LOW",
+                  "resolution": "True Positive",
+                  "comments": ""
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "update_incident",
+                "operationTitle": "Update Incident",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "b46defee-f8c5-58c3-9248-d741c4b41189"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "57bbe241-90c6-5ae3-abc2-32b2c9421a9f"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Update Incident",
+              "targetStep": "/api/3/workflow_steps/b46defee-f8c5-58c3-9248-d741c4b41189",
+              "sourceStep": "/api/3/workflow_steps/24026b94-fca1-5cfc-ab65-81867a500b1b",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "7009277e-6a01-591f-be13-0ec447f25d0b"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Update Incident -> End",
+              "targetStep": "/api/3/workflow_steps/57bbe241-90c6-5ae3-abc2-32b2c9421a9f",
+              "sourceStep": "/api/3/workflow_steps/b46defee-f8c5-58c3-9248-d741c4b41189",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "30cf4fb8-a5e5-5b0f-b225-8170367c3e84"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "97da473f-5a67-54a7-b056-af396c410382",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Comment Incident",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Add a comment to a FortiSIEM incident.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/73f6dd82-4255-541f-bf6f-fb575d820dea",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "73f6dd82-4255-541f-bf6f-fb575d820dea"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Comment Incident",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "id": "1",
+                  "comment_text": "Sample comment"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "incident_comment",
+                "operationTitle": "Comment Incident",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "e79704e7-4e7e-571b-b02a-a03eb9f7c4db"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "6f28c083-0e83-5b5e-9a5c-7a94baabbe18"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Comment Incident",
+              "targetStep": "/api/3/workflow_steps/e79704e7-4e7e-571b-b02a-a03eb9f7c4db",
+              "sourceStep": "/api/3/workflow_steps/73f6dd82-4255-541f-bf6f-fb575d820dea",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "4ef40f8f-b177-5aec-841e-68ca539019c1"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Comment Incident -> End",
+              "targetStep": "/api/3/workflow_steps/6f28c083-0e83-5b5e-9a5c-7a94baabbe18",
+              "sourceStep": "/api/3/workflow_steps/e79704e7-4e7e-571b-b02a-a03eb9f7c4db",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "66e90855-49d8-5d0c-8079-65fdcb47fa87"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "9969f901-321d-5b1d-a228-a59c9b478f9d",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Clear Incident",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Clear a FortiSIEM incident with a reason.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/630df6cf-f5d4-5dee-a68e-1aab49e6bdce",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "630df6cf-f5d4-5dee-a68e-1aab49e6bdce"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Clear Incident",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "id": "1",
+                  "comment_text": "Cleared via FortiSOAR"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "clear_incident",
+                "operationTitle": "Clear Incident With Reason",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "ed44a691-e595-5e39-8b58-5c55177bf273"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "d31d1b35-d160-5b03-a174-a794b86eef30"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Clear Incident",
+              "targetStep": "/api/3/workflow_steps/ed44a691-e595-5e39-8b58-5c55177bf273",
+              "sourceStep": "/api/3/workflow_steps/630df6cf-f5d4-5dee-a68e-1aab49e6bdce",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "271d1c04-4f38-509c-86bb-d28ea3cbffbc"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Clear Incident -> End",
+              "targetStep": "/api/3/workflow_steps/d31d1b35-d160-5b03-a174-a794b86eef30",
+              "sourceStep": "/api/3/workflow_steps/ed44a691-e595-5e39-8b58-5c55177bf273",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "55e73b10-2674-5fee-a853-b974464f5001"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "37acd008-8705-58e9-90d3-4cf68dfe950f",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Update Incident Severity (MCP)",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Update a FortiSIEM incident severity via MCP (LOW/MEDIUM/HIGH).",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/068ccdd5-98ab-5a64-8d12-a2979ac0bc1b",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "068ccdd5-98ab-5a64-8d12-a2979ac0bc1b"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Update Incident Severity",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "incident_id": "1",
+                  "severity": "HIGH"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "update_incident_severity",
+                "operationTitle": "Update Incident Severity",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "ed3928b2-d126-5063-9336-b93e2b02b989"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "6423ec55-bf32-56d7-9234-2e52d579b5c3"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Update Incident Severity",
+              "targetStep": "/api/3/workflow_steps/ed3928b2-d126-5063-9336-b93e2b02b989",
+              "sourceStep": "/api/3/workflow_steps/068ccdd5-98ab-5a64-8d12-a2979ac0bc1b",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "489a7564-3281-5e32-aa05-74b5041e98ce"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Update Incident Severity -> End",
+              "targetStep": "/api/3/workflow_steps/6423ec55-bf32-56d7-9234-2e52d579b5c3",
+              "sourceStep": "/api/3/workflow_steps/ed3928b2-d126-5063-9336-b93e2b02b989",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "2ef437be-ebdf-5f7d-b694-0512d6221e36"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "b8b17fff-c1c7-5568-a30b-928f96dece41",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Clear Incident (MCP)",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Clear a FortiSIEM incident via MCP.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/b2fd6875-356f-56b6-a458-7829b151bd92",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "b2fd6875-356f-56b6-a458-7829b151bd92"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Clear Incident MCP",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "incident_id": "1"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "clear_incident_mcp",
+                "operationTitle": "Clear Incident (MCP)",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "bd9326b0-c12c-5c08-b909-6f9a197765ba"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "7c5fdc1e-15de-5bf2-a809-b7507652d669"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Clear Incident MCP",
+              "targetStep": "/api/3/workflow_steps/bd9326b0-c12c-5c08-b909-6f9a197765ba",
+              "sourceStep": "/api/3/workflow_steps/b2fd6875-356f-56b6-a458-7829b151bd92",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "43ffec0b-8520-5016-b611-b9d9d8ee9c23"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Clear Incident MCP -> End",
+              "targetStep": "/api/3/workflow_steps/7c5fdc1e-15de-5bf2-a809-b7507652d669",
+              "sourceStep": "/api/3/workflow_steps/bd9326b0-c12c-5c08-b909-6f9a197765ba",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "5042a1c7-5f12-5b6a-9d72-352600305374"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "c959c549-0ff2-5d0b-821f-2865996ffb4b",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Run Advanced Search Query",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Run an advanced search query on the FortiSIEM server.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/da171d75-e720-5652-a9c7-5298b27e1e76",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "da171d75-e720-5652-a9c7-5298b27e1e76"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Run Report",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "cond": "eventType = 1",
+                  "AttrList": "phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
+                  "orderby": "phRecvTime DESC",
+                  "start": 0,
+                  "perPage": 50,
+                  "time_selection": "Relative Time"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "run_report",
+                "operationTitle": "Run Advanced Search Query",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "1bb93d74-570c-5a32-9cba-62a258379dd3"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "74d073d1-6e3d-5cfd-b22f-87afe0fd43d8"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Run Report",
+              "targetStep": "/api/3/workflow_steps/1bb93d74-570c-5a32-9cba-62a258379dd3",
+              "sourceStep": "/api/3/workflow_steps/da171d75-e720-5652-a9c7-5298b27e1e76",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "479079a1-9702-54b4-bc59-5a13810a8d5f"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Run Report -> End",
+              "targetStep": "/api/3/workflow_steps/74d073d1-6e3d-5cfd-b22f-87afe0fd43d8",
+              "sourceStep": "/api/3/workflow_steps/1bb93d74-570c-5a32-9cba-62a258379dd3",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "370a0564-b8d7-5f00-8f5a-2013c2711a74"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "6a5f0420-9065-5843-9008-35d9d14c81d7",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Search Events",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Search for events in the FortiSIEM server based on attributes.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/284c56f5-04a1-5fd3-8f10-da8c0989c384",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "284c56f5-04a1-5fd3-8f10-da8c0989c384"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Search Events",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "attribute": "Reporting IP",
+                  "reporting_ip_value": "10.0.0.1",
+                  "select_clause": "phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
+                  "start": 0,
+                  "perPage": 50,
+                  "time_selection": "Relative Time"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "search_events",
+                "operationTitle": "Search Events",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "1407ccd3-e395-5ba7-adae-065b3a76bf19"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "1132eff3-4157-5f16-b3ba-86d339e7107a"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Search Events",
+              "targetStep": "/api/3/workflow_steps/1407ccd3-e395-5ba7-adae-065b3a76bf19",
+              "sourceStep": "/api/3/workflow_steps/284c56f5-04a1-5fd3-8f10-da8c0989c384",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "ebbef855-c3a1-5ce9-9e35-4edf80282da6"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Search Events -> End",
+              "targetStep": "/api/3/workflow_steps/1132eff3-4157-5f16-b3ba-86d339e7107a",
+              "sourceStep": "/api/3/workflow_steps/1407ccd3-e395-5ba7-adae-065b3a76bf19",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "ed5946eb-ca94-52a8-822b-76a14681bab7"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "bcf2a11e-3dc2-5d5e-bef0-b4713dd24eee",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Event Details",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Get details of a specific event by event ID from FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/a6ac0a6c-668b-5563-84e4-d50d9fe7dbe7",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "a6ac0a6c-668b-5563-84e4-d50d9fe7dbe7"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Event Details",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "event_id": "1",
+                  "from": "",
+                  "to": "",
+                  "select_clause": "phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_event_details",
+                "operationTitle": "Get Event Details",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "ff2eedf7-3399-5098-aa2a-1a0db1d1c4d9"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "d13a397d-032c-5073-ba58-db0675bcbbcf"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Event Details",
+              "targetStep": "/api/3/workflow_steps/ff2eedf7-3399-5098-aa2a-1a0db1d1c4d9",
+              "sourceStep": "/api/3/workflow_steps/a6ac0a6c-668b-5563-84e4-d50d9fe7dbe7",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "7f46ac6e-eb9b-53ae-b7fa-5129b83913b3"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Event Details -> End",
+              "targetStep": "/api/3/workflow_steps/d13a397d-032c-5073-ba58-db0675bcbbcf",
+              "sourceStep": "/api/3/workflow_steps/ff2eedf7-3399-5098-aa2a-1a0db1d1c4d9",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "4d9368b8-c819-5054-897d-7255a38a78ac"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "65646753-b535-5a2a-bf8c-5079069717c5",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Query Postgres",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Run a read-only Postgres query against FortiSIEM's CMDB.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/4f681f52-3058-5daa-83ac-1e3fd91f0986",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "4f681f52-3058-5daa-83ac-1e3fd91f0986"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Query Postgres",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "sql": "SELECT * FROM ph_sys_version LIMIT 1"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "query_postgres",
+                "operationTitle": "Query Postgres",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "372c387f-0bc5-557d-897b-3d6d67fecaa1"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "c0404d56-35f4-5a56-9223-1fc9b60fe409"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Query Postgres",
+              "targetStep": "/api/3/workflow_steps/372c387f-0bc5-557d-897b-3d6d67fecaa1",
+              "sourceStep": "/api/3/workflow_steps/4f681f52-3058-5daa-83ac-1e3fd91f0986",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "b54f5df2-43f2-52e0-9a81-43af814be635"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Query Postgres -> End",
+              "targetStep": "/api/3/workflow_steps/c0404d56-35f4-5a56-9223-1fc9b60fe409",
+              "sourceStep": "/api/3/workflow_steps/372c387f-0bc5-557d-897b-3d6d67fecaa1",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "0b6dfd52-1e80-5e9c-b1ff-992867b5f942"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "786f64ea-992d-567c-81aa-d285cee70332",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Query ClickHouse",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Run a read-only ClickHouse events query against FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/4cfcf167-a61c-57f5-b45c-e8067028cfe1",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "4cfcf167-a61c-57f5-b45c-e8067028cfe1"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Query ClickHouse",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "sql": "SELECT eventType, count(*) c FROM events GROUP BY eventType LIMIT 3"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "query_clickhouse",
+                "operationTitle": "Query ClickHouse",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "9592ae21-c6ee-5d78-92a9-bc49ecfed7d0"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "07019987-641f-5b09-b35c-2abec1b8d4f8"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Query ClickHouse",
+              "targetStep": "/api/3/workflow_steps/9592ae21-c6ee-5d78-92a9-bc49ecfed7d0",
+              "sourceStep": "/api/3/workflow_steps/4cfcf167-a61c-57f5-b45c-e8067028cfe1",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f18741fc-1708-5b9a-afcf-9d68f9328b1d"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Query ClickHouse -> End",
+              "targetStep": "/api/3/workflow_steps/07019987-641f-5b09-b35c-2abec1b8d4f8",
+              "sourceStep": "/api/3/workflow_steps/9592ae21-c6ee-5d78-92a9-bc49ecfed7d0",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "16433dac-d21b-5e5c-a0e2-dc19bc38ae3f"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "11698496-df70-5486-ade7-ed7c015febfe",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "List Monitored Devices",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Retrieve a list of all monitored devices from FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/537ce526-d6e3-5945-b57c-8ece748d1972",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "537ce526-d6e3-5945-b57c-8ece748d1972"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "List Monitored Devices",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {},
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_monitored_devices",
+                "operationTitle": "List Monitored Devices and Attributes",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "0b435e69-8129-5d0e-bbf7-fe30d350e807"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "8d8ed188-7a7a-5619-b6d1-d1ab72b4378b"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> List Monitored Devices",
+              "targetStep": "/api/3/workflow_steps/0b435e69-8129-5d0e-bbf7-fe30d350e807",
+              "sourceStep": "/api/3/workflow_steps/537ce526-d6e3-5945-b57c-8ece748d1972",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "54a05ce3-da62-5628-8dd4-3b3ec8a12f13"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "List Monitored Devices -> End",
+              "targetStep": "/api/3/workflow_steps/8d8ed188-7a7a-5619-b6d1-d1ab72b4378b",
+              "sourceStep": "/api/3/workflow_steps/0b435e69-8129-5d0e-bbf7-fe30d350e807",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "45b195e7-d46c-5ee0-b65d-107bfdf2db16"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "ee7b16de-25c9-535a-8f74-cd27be8a5695",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Device Info",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Get detailed info for a monitored device by IP from FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/f2c76f0b-01ec-530e-95ee-7a4b7b0e33fb",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "f2c76f0b-01ec-530e-95ee-7a4b7b0e33fb"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Device Info",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "ip": "1.1.1.1",
+                  "org": ""
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_device_info",
+                "operationTitle": "Get Device Info",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "b434d451-3f33-5010-94f8-ac7ffa5faf5b"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "30b0de65-aace-5038-8583-5109a9638584"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Device Info",
+              "targetStep": "/api/3/workflow_steps/b434d451-3f33-5010-94f8-ac7ffa5faf5b",
+              "sourceStep": "/api/3/workflow_steps/f2c76f0b-01ec-530e-95ee-7a4b7b0e33fb",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "8c46e49c-7d26-5abf-b717-951a9a0c7320"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Device Info -> End",
+              "targetStep": "/api/3/workflow_steps/30b0de65-aace-5038-8583-5109a9638584",
+              "sourceStep": "/api/3/workflow_steps/b434d451-3f33-5010-94f8-ac7ffa5faf5b",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "0b36ad58-37cd-5b31-8279-5f7fe1d95e8d"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "142dc22a-2cd8-5cd0-9c22-3a47654f19ce",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Organization Details",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Get details of a specific organization by domain ID from FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/c2017b09-716e-5692-b4e2-6b5d7289a46a",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "c2017b09-716e-5692-b4e2-6b5d7289a46a"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Organization Details",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "domain_id": "1"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_org_name_by_org_id",
+                "operationTitle": "Get Organization Details",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "d4f8cadb-b35f-5bc4-b41a-8d9ebfeb3d4d"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "e484b915-0720-592d-b328-cc0d196189e5"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Organization Details",
+              "targetStep": "/api/3/workflow_steps/d4f8cadb-b35f-5bc4-b41a-8d9ebfeb3d4d",
+              "sourceStep": "/api/3/workflow_steps/c2017b09-716e-5692-b4e2-6b5d7289a46a",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "84b0aa80-ef32-59ec-89e7-39d584c54af4"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Organization Details -> End",
+              "targetStep": "/api/3/workflow_steps/e484b915-0720-592d-b328-cc0d196189e5",
+              "sourceStep": "/api/3/workflow_steps/d4f8cadb-b35f-5bc4-b41a-8d9ebfeb3d4d",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "0262797e-c843-59d9-bda0-ae5a079d3af6"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "edc82d22-ea76-5470-be6b-cc5a26d45f0b",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Watch Lists",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Retrieve all watch lists or a specific watch list from FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/c5dcc8c7-97ee-5712-a502-02eb0b0ad206",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "c5dcc8c7-97ee-5712-a502-02eb0b0ad206"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Watch Lists",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "get_watch_list_by": "Get All Watch Lists"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_watch_lists",
+                "operationTitle": "Get Watch Lists",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "e9fdf736-c124-5def-bd1d-15be96625c63"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "2931b34e-5083-5f76-8d11-93298dac11c6"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Watch Lists",
+              "targetStep": "/api/3/workflow_steps/e9fdf736-c124-5def-bd1d-15be96625c63",
+              "sourceStep": "/api/3/workflow_steps/c5dcc8c7-97ee-5712-a502-02eb0b0ad206",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f078d93a-91d3-5ec4-b9e5-1a842a5e70b5"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Watch Lists -> End",
+              "targetStep": "/api/3/workflow_steps/2931b34e-5083-5f76-8d11-93298dac11c6",
+              "sourceStep": "/api/3/workflow_steps/e9fdf736-c124-5def-bd1d-15be96625c63",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "d4b75206-2543-5451-a740-8affdec55a00"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "365baf8b-8ddd-51ae-8d58-1298bd5ae43e",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Get Monitored Organizations",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Retrieve monitored organizations from FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/410e1ecd-a791-59ac-90dd-4a75fdd61907",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "410e1ecd-a791-59ac-90dd-4a75fdd61907"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Monitored Organizations",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {},
+                "connector": "fortinet-fortisiemv2",
+                "operation": "get_monitored_organizations",
+                "operationTitle": "Get Monitored Organizations",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "8b4bbae6-882f-51bb-8276-3c54ebe9c870"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "6531848f-d027-57b1-94dc-852974fa2d62"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Monitored Organizations",
+              "targetStep": "/api/3/workflow_steps/8b4bbae6-882f-51bb-8276-3c54ebe9c870",
+              "sourceStep": "/api/3/workflow_steps/410e1ecd-a791-59ac-90dd-4a75fdd61907",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "ec8218ae-a0e5-55fe-b22f-c2bd6793d591"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Monitored Organizations -> End",
+              "targetStep": "/api/3/workflow_steps/6531848f-d027-57b1-94dc-852974fa2d62",
+              "sourceStep": "/api/3/workflow_steps/8b4bbae6-882f-51bb-8276-3c54ebe9c870",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "5c73fe4f-3a47-5212-8085-92c5d47da392"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "218506d0-6c46-5ec5-a90e-9181fe7a67b4",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "List OAuth Credentials",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "List existing API-token credentials from FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/ab2f465a-fe3c-5384-9720-381d7d3caef0",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "ab2f465a-fe3c-5384-9720-381d7d3caef0"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "List OAuth Credentials",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {},
+                "connector": "fortinet-fortisiemv2",
+                "operation": "list_oauth_credentials",
+                "operationTitle": "List OAuth Credentials",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "bab21763-8b32-57d7-8c08-e154b63516d6"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "026939bd-9619-52ee-b966-92b1f458fb36"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> List OAuth Credentials",
+              "targetStep": "/api/3/workflow_steps/bab21763-8b32-57d7-8c08-e154b63516d6",
+              "sourceStep": "/api/3/workflow_steps/ab2f465a-fe3c-5384-9720-381d7d3caef0",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "a1745ff4-cc62-5668-bcce-d55e62d4681a"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "List OAuth Credentials -> End",
+              "targetStep": "/api/3/workflow_steps/026939bd-9619-52ee-b966-92b1f458fb36",
+              "sourceStep": "/api/3/workflow_steps/bab21763-8b32-57d7-8c08-e154b63516d6",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f077b72d-8afe-5617-bad9-b9d481eccb6f"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "5ff2bc23-3b4e-5832-9319-944c28b7ca4d",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "Create OAuth Credential",
+          "aliasName": null,
+          "tag": "",
+          "recordTags": [],
+          "description": "Create an API-token credential in FortiSIEM.",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/f21c9a31-1524-5ecf-a1db-9aca45540029",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "f21c9a31-1524-5ecf-a1db-9aca45540029"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Create OAuth Credential",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": {
+                  "name": "sample-credential"
+                },
+                "connector": "fortinet-fortisiemv2",
+                "operation": "create_oauth_credential",
+                "operationTitle": "Create OAuth Credential",
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "bea971df-3f25-559e-bd83-3b9359e0624a"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "End",
+              "description": null,
+              "arguments": {
+                "config": "",
+                "params": [],
+                "connector": "cyops_utilities",
+                "operation": "no_op",
+                "operationTitle": "Utils: No Operation",
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "94d67f16-296a-5d1d-919d-60d630263256"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Create OAuth Credential",
+              "targetStep": "/api/3/workflow_steps/bea971df-3f25-559e-bd83-3b9359e0624a",
+              "sourceStep": "/api/3/workflow_steps/f21c9a31-1524-5ecf-a1db-9aca45540029",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "7cdbd2fa-b785-54e9-9362-676a35864faf"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Create OAuth Credential -> End",
+              "targetStep": "/api/3/workflow_steps/94d67f16-296a-5d1d-919d-60d630263256",
+              "sourceStep": "/api/3/workflow_steps/bea971df-3f25-559e-bd83-3b9359e0624a",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "2c32df04-4bdb-533a-9f53-72ff6a4a68af"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "db1dfc72-afa6-5320-bccd-e657853fc67b",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": ">> FortiSIEM v2 > Init Macros",
+          "aliasName": null,
+          "tag": "#fortinet-fortisiemv2 #dataingestion",
+          "recordTags": [],
+          "description": "Creates the FortiSIEM last-pull-time macro if it does not already exist. Called by Fetch during the wizard's environment-setup pass.",
+          "isActive": true,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [
+            "FortiSIEMMacroName",
+            "FortiSIEMMacroValue",
+            "overrideIfNoMatch"
+          ],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/94870a8d-3bac-560f-9e1c-1c746cfc093c",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "94870a8d-3bac-560f-9e1c-1c746cfc093c"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get FortiSIEM Macros",
+              "description": null,
+              "arguments": {
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "config": "",
+                "params": {
+                  "iri": "/api/wf/api/dynamic-variable/?format=json&name={{vars.input.params.FortiSIEMMacroName}}",
+                  "body": "",
+                  "method": "GET"
+                },
+                "version": "3.7.2",
+                "name": "Utilities",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "b262e9a1-1be4-5d5f-b1cd-5e5fc62402b9"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "FortiSIEM Macro Exists",
+              "description": null,
+              "arguments": {
+                "conditions": [
+                  {
+                    "option": "Not Exist",
+                    "condition": "{{ vars.steps.Get_FortiSIEM_Macros.data['hydra:totalItems'] == 0 }}",
+                    "step_iri": "/api/3/workflow_steps/cdc80813-dab8-5a92-88e5-24c4b18cae05",
+                    "step_name": "Create FortiSIEM Macro"
+                  },
+                  {
+                    "option": "Exist",
+                    "default": true,
+                    "step_iri": "/api/3/workflow_steps/95e11713-e4c9-5c13-8770-e2ea02fdc1a3",
+                    "step_name": "Fetch Macro Current Value"
+                  }
+                ]
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+              "group": null,
+              "uuid": "76687624-ee39-5c60-ab1d-31d987f44a08"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Create FortiSIEM Macro",
+              "description": null,
+              "arguments": {
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "config": "",
+                "params": {
+                  "iri": "/api/wf/api/dynamic-variable/?format=json",
+                  "body": "{ 'name': '{{vars.input.params.FortiSIEMMacroName}}', 'value': '{{vars.input.params.FortiSIEMMacroValue}}' }",
+                  "method": "POST"
+                },
+                "version": "3.7.2",
+                "name": "Utilities",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "510",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "cdc80813-dab8-5a92-88e5-24c4b18cae05"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Fetch Macro Current Value",
+              "description": null,
+              "arguments": {
+                "macroExistingRecord": "{{vars.steps.Get_FortiSIEM_Macros.data['hydra:member'][0]}}"
+              },
+              "status": null,
+              "top": "510",
+              "left": "540",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "95e11713-e4c9-5c13-8770-e2ea02fdc1a3"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Update Macro If Required",
+              "description": null,
+              "arguments": {
+                "when": "{{ (vars.input.params.overrideIfNoMatch == true) and (vars.macroExistingRecord.value != vars.input.params.FortiSIEMMacroValue) }}",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "config": "",
+                "params": {
+                  "iri": "/api/wf/api/dynamic-variable/{{ vars.macroExistingRecord.id }}/",
+                  "body": "{ 'name': '{{vars.input.params.FortiSIEMMacroName}}', 'value': '{{vars.input.params.FortiSIEMMacroValue}}' }",
+                  "method": "PUT"
+                },
+                "version": "3.7.2",
+                "name": "Utilities",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "640",
+              "left": "540",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "7a5fa11f-e917-5a46-819a-2d04b1da466f"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get FortiSIEM Macros",
+              "targetStep": "/api/3/workflow_steps/b262e9a1-1be4-5d5f-b1cd-5e5fc62402b9",
+              "sourceStep": "/api/3/workflow_steps/94870a8d-3bac-560f-9e1c-1c746cfc093c",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "4157705a-88af-56ea-8ea4-73bae616ae83"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get FortiSIEM Macros -> FortiSIEM Macro Exists",
+              "targetStep": "/api/3/workflow_steps/76687624-ee39-5c60-ab1d-31d987f44a08",
+              "sourceStep": "/api/3/workflow_steps/b262e9a1-1be4-5d5f-b1cd-5e5fc62402b9",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "8878c727-77b6-5e76-93c4-d8c077e592c1"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "FortiSIEM Macro Exists -> Create FortiSIEM Macro",
+              "targetStep": "/api/3/workflow_steps/cdc80813-dab8-5a92-88e5-24c4b18cae05",
+              "sourceStep": "/api/3/workflow_steps/76687624-ee39-5c60-ab1d-31d987f44a08",
+              "label": "Not Exist",
+              "isExecuted": false,
+              "group": null,
+              "uuid": "2b7b7086-4be4-5445-8b7c-3399a5ebb6c4"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "FortiSIEM Macro Exists -> Fetch Macro Current Value",
+              "targetStep": "/api/3/workflow_steps/95e11713-e4c9-5c13-8770-e2ea02fdc1a3",
+              "sourceStep": "/api/3/workflow_steps/76687624-ee39-5c60-ab1d-31d987f44a08",
+              "label": "Exist",
+              "isExecuted": false,
+              "group": null,
+              "uuid": "695cc288-c8b8-518a-933e-089ff75d56b2"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Fetch Macro Current Value -> Update Macro If Required",
+              "targetStep": "/api/3/workflow_steps/7a5fa11f-e917-5a46-819a-2d04b1da466f",
+              "sourceStep": "/api/3/workflow_steps/95e11713-e4c9-5c13-8770-e2ea02fdc1a3",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f0978dc0-29fa-521f-9cc3-0d0a210a2d82"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "4837ceb8-6502-52ab-9516-c0e21ffcbfc3",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "> FortiSIEM v2 > Fetch",
+          "aliasName": null,
+          "tag": "#fortinet-fortisiemv2 #fetch #dataingestion",
+          "recordTags": [],
+          "description": "Reads the last-pull-time watermark and fetches FortiSIEM incidents since then, already mapped to FortiSOAR alert shape with triggering events.",
+          "isActive": true,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/78d39fe9-6338-5431-9410-037c515ab4a6",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  },
+                  "_configuration_schema": "[\n  {\n    \"title\": \"Fetch Mode\",\n    \"required\": true,\n    \"editable\": true,\n    \"visible\": true,\n    \"type\": \"select\",\n    \"name\": \"fetch_mode\",\n    \"options\": [\n      \"By Updates In Last X Minutes\",\n      \"By Sample Incident ID\"\n    ],\n    \"onchange\": {\n      \"By Updates In Last X Minutes\": [\n        {\n          \"title\": \"Pull Incidents Created/Updated In Last X Minutes\",\n          \"name\": \"minutes\",\n          \"type\": \"text\",\n          \"required\": true,\n          \"editable\": true,\n          \"visible\": true,\n          \"value\": 10,\n          \"tooltip\": \"Cold-start lookback used on the first run, before a last-pull-time watermark exists. e.g. 10\"\n        },\n        {\n          \"title\": \"Incident Status\",\n          \"name\": \"incidentStatus\",\n          \"type\": \"multiselect\",\n          \"required\": false,\n          \"editable\": true,\n          \"visible\": true,\n          \"value\": [\n            \"Active\"\n          ],\n          \"options\": [\n            \"Active\",\n            \"Auto Cleared\",\n            \"Manually Cleared\",\n            \"System Cleared\"\n          ]\n        },\n        {\n          \"title\": \"Severity\",\n          \"name\": \"severity\",\n          \"type\": \"multiselect\",\n          \"required\": false,\n          \"editable\": true,\n          \"visible\": true,\n          \"value\": [\n            \"High\",\n            \"Medium\",\n            \"Low\"\n          ],\n          \"options\": [\n            \"High\",\n            \"Medium\",\n            \"Low\"\n          ]\n        },\n        {\n          \"title\": \"Incident Category\",\n          \"name\": \"incidentCategory\",\n          \"type\": \"multiselect\",\n          \"required\": false,\n          \"editable\": true,\n          \"visible\": true,\n          \"options\": [\n            \"Availability\",\n            \"Performance\",\n            \"Change\",\n            \"Security\",\n            \"Other\"\n          ]\n        },\n        {\n          \"title\": \"Incidents Per Page\",\n          \"name\": \"size\",\n          \"type\": \"text\",\n          \"required\": false,\n          \"editable\": true,\n          \"visible\": true,\n          \"value\": 100,\n          \"tooltip\": \"Page size for the incident query. The run pages through the whole window, so this tunes request batching -- it is not a cap on incidents ingested.\"\n        },\n        {\n          \"title\": \"Fetch Triggering Events\",\n          \"name\": \"include_events\",\n          \"type\": \"checkbox\",\n          \"required\": false,\n          \"editable\": true,\n          \"visible\": true,\n          \"value\": true,\n          \"tooltip\": \"Enrich each incident with its triggering events. Adds roughly one FortiSIEM query per incident.\"\n        },\n        {\n          \"title\": \"Maximum Events To Pull Per Incident\",\n          \"name\": \"event_count\",\n          \"type\": \"text\",\n          \"required\": false,\n          \"editable\": true,\n          \"visible\": true,\n          \"value\": 5\n        }\n      ],\n      \"By Sample Incident ID\": [\n        {\n          \"title\": \"Incident ID\",\n          \"name\": \"incidentId\",\n          \"type\": \"text\",\n          \"required\": true,\n          \"editable\": true,\n          \"visible\": true,\n          \"tooltip\": \"Incident ID to use for building the field mapping\"\n        },\n        {\n          \"title\": \"From\",\n          \"name\": \"from\",\n          \"type\": \"datetime\",\n          \"required\": false,\n          \"editable\": true,\n          \"visible\": true\n        },\n        {\n          \"title\": \"To\",\n          \"name\": \"to\",\n          \"type\": \"datetime\",\n          \"required\": false,\n          \"editable\": true,\n          \"visible\": true\n        }\n      ]\n    }\n  }\n]"
+                }
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "78d39fe9-6338-5431-9410-037c515ab4a6"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Configuration",
+              "description": null,
+              "arguments": {
+                "minutes": "10",
+                "size": 100,
+                "event_count": 5,
+                "include_events": true,
+                "use_query_lifecycle": false,
+                "incidentStatus": [
+                  "Active"
+                ],
+                "incidentCategory": [],
+                "severity": [
+                  "High",
+                  "Medium",
+                  "Low"
+                ],
+                "FortiSIEMMacroName": "FortiSIEMLastPullTime_{{vars['audit_info']['cyops_playbook_iri'].split('/')[-1].replace('-','_')}}"
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "84769a9b-bda2-570e-93ba-122460a719c7"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Macro Value",
+              "description": null,
+              "arguments": {
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "config": "",
+                "params": {
+                  "iri": "/api/wf/api/dynamic-variable/?format=json&name={{vars.FortiSIEMMacroName}}",
+                  "body": "",
+                  "method": "GET"
+                },
+                "version": "3.7.2",
+                "name": "Utilities",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "23102064-c96e-575c-b7e2-a13154feb811"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Environment Setup",
+              "description": null,
+              "arguments": {
+                "when": "{{ vars.request.env_setup or not vars.steps.Get_Macro_Value.data[\"hydra:member\"] }}",
+                "FortiSIEMMacroName": "{{vars.FortiSIEMMacroName}}",
+                "FortiSIEMMacroValue": "0",
+                "overrideIfNoMatch": "false",
+                "apply_async": false,
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "arguments": {
+                  "FortiSIEMMacroName": "{{vars.FortiSIEMMacroName}}",
+                  "FortiSIEMMacroValue": "0",
+                  "overrideIfNoMatch": "false"
+                },
+                "workflowReference": "/api/3/workflows/4837ceb8-6502-52ab-9516-c0e21ffcbfc3"
+              },
+              "status": null,
+              "top": "510",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+              "group": null,
+              "uuid": "8647cccb-ccf5-5736-a970-a38f7c776dcc"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Set Time Configuration",
+              "description": null,
+              "arguments": {
+                "curr_timestamp": "{{ arrow.utcnow().format('YYYY-MM-DDTHH:mm:ss') }}Z",
+                "last_pull_time": "{% if not vars.steps.Get_Macro_Value.data['hydra:member'] or vars.steps.Get_Macro_Value.data['hydra:member'][0].value == '0' or vars.request.env_setup %}{{ arrow.utcnow().shift(minutes=-(vars.minutes | int)).format('YYYY-MM-DDTHH:mm:ss') }}Z{% else %}{{ vars.steps.Get_Macro_Value.data['hydra:member'][0].value }}{% endif %}"
+              },
+              "status": null,
+              "top": "640",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "f4922a7d-badf-548d-8b2f-2acc2bdfeb1a"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Fetch Incidents",
+              "description": null,
+              "arguments": {
+                "connector": "fortinet-fortisiemv2",
+                "operation": "ingest_incidents",
+                "operationTitle": "Ingest Incidents",
+                "config": "",
+                "params": {
+                  "from": "{{vars.last_pull_time}}",
+                  "to": "{{vars.curr_timestamp}}",
+                  "incidentStatus": "{{vars.incidentStatus}}",
+                  "incidentCategory": "{{vars.incidentCategory}}",
+                  "severity": "{{vars.severity}}",
+                  "include_events": "{{vars.include_events}}",
+                  "event_count": "{{vars.event_count}}",
+                  "size": "{{vars.size}}",
+                  "use_query_lifecycle": "{{vars.use_query_lifecycle}}"
+                },
+                "version": "6.0.0",
+                "name": "Fortinet FortiSIEM v2",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "770",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "78224236-abee-5d86-ab99-07708ccdcaeb"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Save Result",
+              "description": null,
+              "arguments": {
+                "data": "{{vars.steps.Fetch_Incidents.data}}",
+                "current_time": "{{vars.curr_timestamp}}",
+                "event_count": "{{vars.event_count}}",
+                "FortiSIEMMacroName": "{{vars.FortiSIEMMacroName}}"
+              },
+              "status": null,
+              "top": "900",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "b5458dfb-b7e5-5c26-b6a5-9d1b4421854e"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Configuration",
+              "targetStep": "/api/3/workflow_steps/84769a9b-bda2-570e-93ba-122460a719c7",
+              "sourceStep": "/api/3/workflow_steps/78d39fe9-6338-5431-9410-037c515ab4a6",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "e0482b80-8bf9-5d01-a3e8-018f10d5f95e"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Configuration -> Get Macro Value",
+              "targetStep": "/api/3/workflow_steps/23102064-c96e-575c-b7e2-a13154feb811",
+              "sourceStep": "/api/3/workflow_steps/84769a9b-bda2-570e-93ba-122460a719c7",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "723a6aab-b904-574c-b1af-98757177ed0a"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Macro Value -> Environment Setup",
+              "targetStep": "/api/3/workflow_steps/8647cccb-ccf5-5736-a970-a38f7c776dcc",
+              "sourceStep": "/api/3/workflow_steps/23102064-c96e-575c-b7e2-a13154feb811",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "b07d8760-0e35-59fb-9c6a-d645aa7d7915"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Environment Setup -> Set Time Configuration",
+              "targetStep": "/api/3/workflow_steps/f4922a7d-badf-548d-8b2f-2acc2bdfeb1a",
+              "sourceStep": "/api/3/workflow_steps/8647cccb-ccf5-5736-a970-a38f7c776dcc",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "4f44dbf0-f235-5c35-90c8-5b4b63330f4e"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Set Time Configuration -> Fetch Incidents",
+              "targetStep": "/api/3/workflow_steps/78224236-abee-5d86-ab99-07708ccdcaeb",
+              "sourceStep": "/api/3/workflow_steps/f4922a7d-badf-548d-8b2f-2acc2bdfeb1a",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "593fb318-7e49-54fa-9430-cce0c0483ff9"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Fetch Incidents -> Save Result",
+              "targetStep": "/api/3/workflow_steps/b5458dfb-b7e5-5c26-b6a5-9d1b4421854e",
+              "sourceStep": "/api/3/workflow_steps/78224236-abee-5d86-ab99-07708ccdcaeb",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "37e5f3e9-29bf-58d2-989b-680dcbd5e733"
+            }
+          ],
+          "groups": [
+            {
+              "@type": "WorkflowGroup",
+              "name": "Note: Configuration",
+              "description": "Wizard-editable defaults. `minutes` is the cold-start lookback used the\nfirst time this ingestion runs (macro still '0'); after that the macro\nsupplies the window. The macro name is scoped to this playbook's UUID so\ntwo ingestion configurations never share a watermark.\n",
+              "type": "note",
+              "isCollapsed": false,
+              "hasTriggerStep": false,
+              "hideInLogs": true,
+              "metadata": [],
+              "reusable": false,
+              "top": "250",
+              "left": "540",
+              "height": "204",
+              "width": "440",
+              "uuid": "d3e11ae4-0b8f-5e28-b7ad-54abb9730d27",
+              "recordTags": []
+            },
+            {
+              "@type": "WorkflowGroup",
+              "name": "Note: Environment Setup",
+              "description": "Runs when the watermark macro does not exist yet -- not only on the\nwizard's `vars.request.env_setup` first pass.\n\nKeying solely off env_setup left ingestion permanently broken whenever\nthe macro was missing: `Update Last Alert Pull Time` only *updates*, it\ndoes not create, so every run cold-started at `minutes` and the watermark\nwas never written. Live-verified on 8.0.0: 100 scheduled runs, all\n`finished`, zero alerts created and no macro on the appliance -- a\nsilent failure, because nothing errors.\n\nThis step must therefore come AFTER Get Macro Value, so its absence can\nbe seen. The macro is primed to '0', which Set Time Configuration reads\nas \"cold start\" for this one run.\n",
+              "type": "note",
+              "isCollapsed": false,
+              "hasTriggerStep": false,
+              "hideInLogs": true,
+              "metadata": [],
+              "reusable": false,
+              "top": "510",
+              "left": "540",
+              "height": "360",
+              "width": "440",
+              "uuid": "a74d5bcd-120b-5bb3-bedf-4fca7f99041d",
+              "recordTags": []
+            },
+            {
+              "@type": "WorkflowGroup",
+              "name": "Note: Set Time Configuration",
+              "description": "`curr_timestamp` is captured before the fetch and only written back to\nthe macro after Ingest succeeds, so a failed run re-pulls its window\ninstead of silently skipping it.\n",
+              "type": "note",
+              "isCollapsed": false,
+              "hasTriggerStep": false,
+              "hideInLogs": true,
+              "metadata": [],
+              "reusable": false,
+              "top": "890",
+              "left": "540",
+              "height": "160",
+              "width": "440",
+              "uuid": "bf0c8763-7dcb-5839-9446-17b7b8520614",
+              "recordTags": []
+            },
+            {
+              "@type": "WorkflowGroup",
+              "name": "Note: Save Result",
+              "description": "The Fetch -> Ingest contract. Ingest reads every one of these back as\n`vars.result.<key>`.\n",
+              "type": "note",
+              "isCollapsed": false,
+              "hasTriggerStep": false,
+              "hideInLogs": true,
+              "metadata": [],
+              "reusable": false,
+              "top": "1070",
+              "left": "540",
+              "height": "116",
+              "width": "440",
+              "uuid": "0e400858-67d4-5a2f-b54c-da92694ecf9a",
+              "recordTags": []
+            }
+          ],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "f5974baf-1ea4-5624-89b9-febb640cd479",
+          "owners": [],
+          "isPrivate": false
+        },
+        {
+          "@type": "Workflow",
+          "name": "FortiSIEM v2 > Ingest",
+          "aliasName": null,
+          "tag": "#fortinet-fortisiemv2 #ingest #dataingestion #create",
+          "recordTags": [],
+          "description": "Orchestrator: calls Fetch, creates the alerts, then advances the last-pull-time watermark.",
+          "isActive": true,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": 0,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1787365073,
+          "collection": "/api/3/workflow_collections/a4a84b1e-ea0c-5329-b124-2bd53fdc2755",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/ad266144-75bf-5e18-949c-bde1b6d6e1d6",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "records": "{{vars.input.records}}"
+                  }
+                },
+                "route": "59253073-b65d-5ada-b99b-00cf7653fec3",
+                "title": "FortiSIEM v2 > Ingest",
+                "resources": [
+                  "alerts"
+                ],
+                "inputVariables": [],
+                "displayConditions": {
+                  "alerts": {
+                    "sort": [],
+                    "limit": 30,
+                    "logic": "AND",
+                    "filters": []
+                  }
+                },
+                "executeButtonText": "Execute",
+                "noRecordExecution": true,
+                "singleRecordExecution": false
+              },
+              "status": null,
+              "top": "120",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "ad266144-75bf-5e18-949c-bde1b6d6e1d6"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "List Incident",
+              "description": null,
+              "arguments": {
+                "apply_async": false,
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "/api/3/workflows/f5974baf-1ea4-5624-89b9-febb640cd479"
+              },
+              "status": null,
+              "top": "250",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+              "group": null,
+              "uuid": "32885b6b-de41-539e-b2a4-08015accb4d4"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Configuration",
+              "description": null,
+              "arguments": {
+                "incident_source_data": "{{ vars.result.data }}",
+                "event_count": "{{ vars.result.event_count }}",
+                "FortiSIEMMacroName": "{{ vars.result.FortiSIEMMacroName }}",
+                "alerts_severity_map": "{'Minimal': {{'Severity'| picklist('Minimal')}}, 'Low': {{'Severity'| picklist('Low')}}, 'Medium': {{'Severity'| picklist('Medium')}}, 'High': {{'Severity'| picklist('High')}}, 'Critical': {{'Severity'| picklist('Critical')}}}",
+                "alerts_status_map": "{'Open': {{'AlertStatus'| picklist('Open')}}, 'Resolved': {{'AlertStatus'| picklist('Closed')}}, 'Closed': {{'AlertStatus'| picklist('Closed')}}}",
+                "alerts_type_map": "{'Actionable Threat Feeds': {{'AlertType'| picklist('Actionable Threat Feeds')}}, 'Brute Force Attempts': {{'AlertType'| picklist('Brute Force Attempts')}}, 'Command and Control': {{'AlertType'| picklist('Command and Control')}}, 'Concurrent Login': {{'AlertType'| picklist('Concurrent Login')}}, 'Data Exfiltration': {{'AlertType'| picklist('Data Exfiltration')}}, 'Denial of Service': {{'AlertType'| picklist('Denial of Service')}}, 'Lateral Movement': {{'AlertType'| picklist('Lateral Movement')}}, 'MITRE ATT&CK': {{'AlertType'| picklist('MITRE ATT&CK')}}, 'Malware': {{'AlertType'| picklist('Malware')}}, 'Other / Unknown': {{'AlertType'| picklist('Other / Unknown')}}, 'Phishing': {{'AlertType'| picklist('Phishing')}}, 'Policy Violation': {{'AlertType'| picklist('Policy Violation')}}, 'Ransomware': {{'AlertType'| picklist('Ransomware')}}, 'Reconnaissance': {{'AlertType'| picklist('Reconnaissance')}}}"
+              },
+              "status": null,
+              "top": "380",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "4fc68bfa-186e-5492-ada4-1c6791ddf53d"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Create Alerts",
+              "description": null,
+              "arguments": {
+                "operation": "Overwrite",
+                "resource": {
+                  "name": "{{ vars.item.name }}",
+                  "source": "Fortinet FortiSIEM",
+                  "sourceId": "{{ vars.item.external_id }}",
+                  "severity": "{{ vars.item.severity | resolveRange(vars.alerts_severity_map) }}",
+                  "alert_state": "{{ \"AlertState\" | picklist(\"New\") }}",
+                  "status": "{{ vars.item.alert_state | resolveRange(vars.alerts_status_map) }}",
+                  "type": "{{ vars.item.alert_type | resolveRange(vars.alerts_type_map) }}",
+                  "alertDetectionDate": "{{ vars.item.alert_generation_epoch }}",
+                  "eventTime": "{{ vars.item.last_observed_epoch }}",
+                  "sourceIp": "{{ vars.item.source_ip }}",
+                  "destinationIp": "{{ vars.item.dest_ip }}",
+                  "destinationPort": "{{ vars.item.dest_port }}",
+                  "hostName": "{{ vars.item.target_hostname or vars.item.dest_hostname }}",
+                  "hostIPAddress": "{{ vars.item.target_ip or vars.item.reporting_ip }}",
+                  "userName": "{{ vars.item.target_user or vars.item.source_user }}",
+                  "rule": "{{ vars.item.rule_name }}",
+                  "mitreattackid": "{{ vars.item.mitre_technique_ids | join(\", \") }}",
+                  "mitreTechnique": "{{ vars.item.mitre_technique_names | join(\", \") }}",
+                  "description": "{{ vars.item.description }}",
+                  "sourcedata": "{{ vars.item.source_payload | toJSON }}",
+                  "__replace": "true"
+                },
+                "collection": "/api/3/upsert/alerts",
+                "for_each": {
+                  "item": "{{ vars.incident_source_data }}",
+                  "condition": "",
+                  "__bulk": true,
+                  "batch_size": 100
+                }
+              },
+              "status": null,
+              "top": "510",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/2597053c-e718-44b4-8394-4d40fe26d357",
+              "group": null,
+              "uuid": "0e64d781-d7d7-58bc-be68-ea0aa0226073"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Update Last Alert Pull Time",
+              "description": null,
+              "arguments": {
+                "connector": "cyops_utilities",
+                "operation": "updatemacro",
+                "operationTitle": "FSR: Update Global Variables",
+                "config": "",
+                "params": {
+                  "macro": "{{vars.FortiSIEMMacroName}}",
+                  "value": "{{vars.steps.List_Incident.current_time}}"
+                },
+                "version": "3.7.2",
+                "name": "Utilities",
+                "step_variables": [],
+                "pickFromTenant": false
+              },
+              "status": null,
+              "top": "640",
+              "left": "200",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "86422f26-b220-5c51-a743-7749e912ef6c"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> List Incident",
+              "targetStep": "/api/3/workflow_steps/32885b6b-de41-539e-b2a4-08015accb4d4",
+              "sourceStep": "/api/3/workflow_steps/ad266144-75bf-5e18-949c-bde1b6d6e1d6",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "39635631-2491-5385-9258-7994471af2a7"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "List Incident -> Configuration",
+              "targetStep": "/api/3/workflow_steps/4fc68bfa-186e-5492-ada4-1c6791ddf53d",
+              "sourceStep": "/api/3/workflow_steps/32885b6b-de41-539e-b2a4-08015accb4d4",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "7f59509d-1e16-59a5-9516-572db4f3ed16"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Configuration -> Create Alerts",
+              "targetStep": "/api/3/workflow_steps/0e64d781-d7d7-58bc-be68-ea0aa0226073",
+              "sourceStep": "/api/3/workflow_steps/4fc68bfa-186e-5492-ada4-1c6791ddf53d",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "ebb1bfd1-544d-5770-8464-266ed5246ff1"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Create Alerts -> Update Last Alert Pull Time",
+              "targetStep": "/api/3/workflow_steps/86422f26-b220-5c51-a743-7749e912ef6c",
+              "sourceStep": "/api/3/workflow_steps/0e64d781-d7d7-58bc-be68-ea0aa0226073",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "9fceaac6-5612-59ce-a016-76a7a2956b34"
+            }
+          ],
+          "groups": [
+            {
+              "@type": "WorkflowGroup",
+              "name": "Note: Configuration",
+              "description": "Severity/status/type maps are keyed on the values `field_mapping.py` emits\nand cover every one of them -- an unmapped value would make `resolveRange`\nmiss and the alert POST fail with a picklist 400. `field_mapping` clamps\nalert_type to VALID_ALERT_TYPES for exactly this reason, so the two lists\nhave to be changed together.\n",
+              "type": "note",
+              "isCollapsed": false,
+              "hasTriggerStep": false,
+              "hideInLogs": true,
+              "metadata": [],
+              "reusable": false,
+              "top": "380",
+              "left": "540",
+              "height": "248",
+              "width": "440",
+              "uuid": "8c1f4402-3b8e-5626-99f9-ba50eb48da54",
+              "recordTags": []
+            },
+            {
+              "@type": "WorkflowGroup",
+              "name": "Note: Create Alerts",
+              "description": "`is_upsert` routes this at /api/3/upsert/alerts, keyed on `sourceId`, so a\nre-ingest updates the existing alert. Without it the plain insert path\n409s on the sourceid uniqueness constraint the moment a window overlaps a\nprevious run -- which every incremental pull does.\n",
+              "type": "note",
+              "isCollapsed": false,
+              "hasTriggerStep": false,
+              "hideInLogs": true,
+              "metadata": [],
+              "reusable": false,
+              "top": "648",
+              "left": "540",
+              "height": "204",
+              "width": "440",
+              "uuid": "8f9b86e0-ae9a-5dbd-a992-af4deb013d58",
+              "recordTags": []
+            },
+            {
+              "@type": "WorkflowGroup",
+              "name": "Note: Update Last Alert Pull Time",
+              "description": "Advances the watermark only after the alerts are written, so a failed\nCreate Alerts leaves the window to be retried.\n",
+              "type": "note",
+              "isCollapsed": false,
+              "hasTriggerStep": false,
+              "hideInLogs": true,
+              "metadata": [],
+              "reusable": false,
+              "top": "872",
+              "left": "540",
+              "height": "116",
+              "width": "440",
+              "uuid": "0255b140-5169-5466-86e0-625a54258458",
+              "recordTags": []
+            }
+          ],
+          "priority": "/api/3/picklists/9e8d41e4-8ada-4a2c-bd02-07f62c6d0a00",
+          "playbookOrigin": null,
+          "isEditable": true,
+          "uuid": "45453f08-be74-5c4b-8195-3a34feb53f2f",
+          "owners": [],
+          "isPrivate": false
+        }
+      ]
+    }
+  ]
+}

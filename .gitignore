@@ -1,0 +1,24 @@
+# Real credentials. tests/.env.example is the template and IS tracked.
+.env
+.env.*
+!.env.example
+tests/.env
+tests/.env.*
+!tests/.env.example
+
+# The connector bundle FortiSOAR installs is built from the tracked source;
+# a packed .venv is how a 92 KB bundle becomes 14 MB.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build output
+*.tgz
+dist/
+build/
+
+.DS_Store

@@ -1,0 +1,4155 @@
+{
+  "name": "fortinet-fortisiemv2",
+  "label": "Fortinet FortiSIEM v2",
+  "version": "6.0.4",
+  "description": "FortiSIEM v2 provides integrations that allow you to query and make changes to the CMDB, query events, and send incident notifications. This revamped connector adds async operations, MCP (Model Context Protocol) investigation tools, and native ingestion support, along with actions like get incidents, comment incident, clear incident, get device details, get monitored organizations, report-related actions, and get all associated events for an incident from FortiSIEM.",
+  "publisher": "Fortinet",
+  "cs_approved": true,
+  "cs_compatible": true,
+  "category": "Analytics and SIEM",
+  "icon_small_name": "fortisiem_small.png",
+  "icon_large_name": "fortisiem_large.png",
+  "ingestion_supported": true,
+  "ingestion_modes": [
+    "scheduled",
+    "polling"
+  ],
+  "help_online": "https://docs.fortinet.com/document/fortisoar/6.0.0/fortinet-fortisiemv2",
+  "configuration": {
+    "fields": [
+      {
+        "name": "server",
+        "title": "Server URL",
+        "type": "text",
+        "editable": true,
+        "visible": true,
+        "required": true,
+        "description": "Specify the URL of the Fortinet FortiSIEM server to which you will connect and perform the automated operations.",
+        "isOnChange": false,
+        "onchange": {}
+      },
+      {
+        "name": "username",
+        "title": "Username",
+        "type": "text",
+        "editable": true,
+        "visible": true,
+        "required": true,
+        "description": "Specify the username used to access the Fortinet FortiSIEM server to which you will connect and perform the automated operations.",
+        "isOnChange": false,
+        "onchange": {}
+      },
+      {
+        "name": "password",
+        "title": "Password",
+        "type": "password",
+        "editable": true,
+        "visible": true,
+        "required": true,
+        "description": "Specify the password used to access the Fortinet FortiSIEM server to which you will connect and perform the automated operations.",
+        "isOnChange": false,
+        "onchange": {}
+      },
+      {
+        "name": "organization",
+        "title": "Organization",
+        "type": "text",
+        "editable": true,
+        "visible": true,
+        "required": true,
+        "placeholder": "e.g Super",
+        "value": "Super",
+        "description": "Specify the name of the organization that you will access on the Fortinet FortiSIEM server to perform the automated operations.",
+        "isOnChange": false,
+        "onchange": {}
+      },
+      {
+        "name": "verify_ssl",
+        "title": "Verify SSL",
+        "type": "checkbox",
+        "editable": true,
+        "visible": true,
+        "required": false,
+        "value": true,
+        "description": "Specifies whether the SSL certificate for the server is to be verified or not. By default, this option is set as True.",
+        "isOnChange": false,
+        "onchange": {}
+      },
+      {
+        "name": "auth_mode",
+        "title": "Authentication Mode",
+        "type": "select",
+        "editable": true,
+        "visible": true,
+        "required": false,
+        "options": [
+          "Basic Auth",
+          "API Key (OAuth2)"
+        ],
+        "value": "Basic Auth",
+        "description": "Choose the authentication mode used to connect to the Fortinet FortiSIEM server. Select 'Basic Auth' to authenticate using the configured username and password, or 'API Key (OAuth2)' to authenticate using an OAuth2 client credential flow that exchanges a client ID and secret for an access token.",
+        "tooltip": "Choose the authentication mode used to connect to the Fortinet FortiSIEM server. Select 'Basic Auth' to use the username and password, or 'API Key (OAuth2)' to use an OAuth2 client credential flow.",
+        "isOnChange": false,
+        "onchange": {
+          "API Key (OAuth2)": [
+            {
+              "title": "Client ID",
+              "name": "client_id",
+              "type": "text",
+              "editable": true,
+              "visible": true,
+              "required": false,
+              "description": "Specify the OAuth2 client ID to use for the API Key (OAuth2) authentication mode. This is used together with the client secret to generate an access token from the Fortinet FortiSIEM server.",
+              "tooltip": "Specify the OAuth2 client ID to use for the API Key (OAuth2) authentication mode.",
+              "isOnChange": true,
+              "onChangeParam": "Authentication Mode",
+              "onChangeOption": "API Key (OAuth2)"
+            },
+            {
+              "title": "Client Secret",
+              "name": "client_secret",
+              "type": "password",
+              "editable": true,
+              "visible": true,
+              "required": false,
+              "description": "Specify the OAuth2 client secret to use for the API Key (OAuth2) authentication mode. This is used together with the client ID to generate an access token from the Fortinet FortiSIEM server.",
+              "tooltip": "Specify the OAuth2 client secret to use for the API Key (OAuth2) authentication mode.",
+              "isOnChange": true,
+              "onChangeParam": "Authentication Mode",
+              "onChangeOption": "API Key (OAuth2)"
+            }
+          ]
+        }
+      },
+      {
+        "name": "max_concurrency",
+        "title": "Maximum Concurrency",
+        "type": "integer",
+        "editable": true,
+        "visible": true,
+        "required": false,
+        "value": 10,
+        "description": "Maximum concurrent API requests to FortiSIEM",
+        "tooltip": "Maximum concurrent API requests to FortiSIEM",
+        "isOnChange": false,
+        "onchange": {}
+      }
+    ]
+  },
+  "operations": [
+    {
+      "operation": "async_get_incidents_rest",
+      "title": "Get Incident Details Async",
+      "description": "Get details of an incident from Fortinet FortiSIEM server based on the incident IDs you have specified.",
+      "enabled": true,
+      "annotation": "async_get_incidents_rest",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "From",
+          "type": "datetime",
+          "name": "from",
+          "tooltip": "Specify the start datetime to retrieves the incidents from Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify the start datetime to retrieves the incidents from Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "To",
+          "type": "datetime",
+          "name": "to",
+          "tooltip": "Specify the end datetime to retrieves the incidents from Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify the end datetime to retrieves the incidents from Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Number Of Items To Return In Response",
+          "name": "perPage",
+          "tooltip": "Helps in limiting response to a specified number of events",
+          "value": 50,
+          "type": "integer",
+          "description": "(Optional) Maximum number of incidents that you want this operation to return in the response. By default, the page size is set to 50 items.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        },
+        {
+          "title": "Offset",
+          "name": "start",
+          "type": "integer",
+          "tooltip": "Helpful if you want to get a subset of events, say events starting from the 10th event",
+          "description": "(Optional)Index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say incidents starting from the 10th incident. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 0
+        },
+        {
+          "title": "Include Events",
+          "name": "include_events",
+          "description": "Specifies whether you want this action to automatically return the related events. By default, this option is set as True.",
+          "type": "checkbox",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": true
+        },
+        {
+          "title": "Event Count",
+          "name": "event_count",
+          "type": "integer",
+          "tooltip": "Specify the number of events you wish to return with the incident. You only need to fill this out if you check the Include Events box",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 0
+        }
+      ],
+      "output_schema": {
+        "@start": "",
+        "events": [
+          {
+            "id": "",
+            "nid": "",
+            "index": "",
+            "custId": "",
+            "dataStr": "",
+            "eventType": "",
+            "attributes": {
+              "count": "",
+              "tagName": "",
+              "customer": "",
+              "procName": "",
+              "eventName": "",
+              "eventType": "",
+              "srcIpAddr": "",
+              "bizService": "",
+              "destGeoOrg": "",
+              "destIpAddr": "",
+              "incidentId": "",
+              "phRecvTime": "",
+              "destGeoCity": "",
+              "incidentSrc": "",
+              "activityName": "",
+              "attackTactic": "",
+              "destGeoState": "",
+              "incidentReso": "",
+              "eventSeverity": "",
+              "incidentRptIp": "",
+              "incidentTitle": "",
+              "destGeoCountry": "",
+              "incidentDetail": "",
+              "incidentStatus": "",
+              "incidentTarget": "",
+              "destGeoLatitude": "",
+              "incidentExtUser": "",
+              "phEventCategory": "",
+              "destGeoLongitude": "",
+              "eventSeverityCat": "",
+              "incidentComments": "",
+              "incidentLastSeen": "",
+              "incidentTicketId": "",
+              "attackTechniqueId": "",
+              "incidentFirstSeen": "",
+              "incidentViewUsers": "",
+              "phIncidentImpacts": "",
+              "incidentNotiStatus": "",
+              "incidentRptDevName": "",
+              "incidentTicketUser": "",
+              "incidentViewStatus": "",
+              "phIncidentCategory": "",
+              "phSubIncidentCategory": "",
+              "incidentClearedTime": "",
+              "incidentClearedUser": "",
+              "incidentExtTicketId": "",
+              "incidentRptDevStatus": "",
+              "incidentTicketStatus": "",
+              "incidentClearedReason": "",
+              "incidentExtTicketType": "",
+              "incidentExtClearedTime": "",
+              "incidentExtTicketState": "",
+              "incidentNotiRecipients": ""
+            },
+            "receiveTime": ""
+          }
+        ],
+        "@queryId": "",
+        "@errorCode": "",
+        "@totalCount": ""
+      }
+    },
+    {
+      "operation": "get_incidents",
+      "title": "List Incidents",
+      "description": "Retrieves a list and details of incidents from the Fortinet FortiSIEM server based on the time range, and other filter criteria you have specified. NOTE: The FortiSIEM API does not support filtering incidents in the \"List Incident\" action based on sub-categories.",
+      "enabled": true,
+      "annotation": "get_incidents",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "From",
+          "type": "datetime",
+          "name": "timeFrom",
+          "tooltip": "Specify the start DateTime to retrieve incidents from the Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify the start DateTime to retrieve incidents from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "To",
+          "type": "datetime",
+          "name": "timeTo",
+          "tooltip": "Specify the end DateTime to retrieve the incidents from the Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify the end DateTime to retrieve the incidents from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Incident Status",
+          "type": "multiselect",
+          "options": [
+            "Active",
+            "Manually Cleared",
+            "System Cleared",
+            "Auto Cleared"
+          ],
+          "name": "incidentStatus",
+          "description": "(Optional) Select one or more incident statuses from the following options to filter incidents: Active Auto Cleared, Manually Cleared System Cleared",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "Active",
+          "tooltip": "Select one or more incident statuses from the following options to filter incidents: Active Auto Cleared, Manually Cleared System Cleared"
+        },
+        {
+          "title": "Incident Category",
+          "type": "multiselect",
+          "options": [
+            "Availability",
+            "Performance",
+            "Change",
+            "Security",
+            "Other"
+          ],
+          "name": "incidentCategory",
+          "tooltip": "Select one or more incident categories from the following options to filter incidents: Availability Performance, Changed Security Other",
+          "description": "(Optional) Select one or more incident categories from the following options to filter incidents: Availability Performance, Changed Security Other",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Incident Sub Category",
+          "type": "text",
+          "name": "incidentSubCategory",
+          "placeholder": "e.g. ['Impact']",
+          "tooltip": "Specify the sub-category of the incident based on which you want to retrieve incidents from the Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify the sub-category of the incident based on which you want to retrieve incidents from the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Incident Severity",
+          "tooltip": "Select one or more incident severities from the following options to filter incidents: High Medium Low",
+          "type": "multiselect",
+          "name": "severity",
+          "options": [
+            "High",
+            "Medium",
+            "Low"
+          ],
+          "description": "(Optional) Select one or more incident severities from the following options to filter incidents: High Medium Low",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": [
+            "High",
+            "Medium"
+          ]
+        },
+        {
+          "title": "Event Type",
+          "type": "text",
+          "name": "eventType",
+          "placeholder": "e.g. ['PH_RULE_SERVER_CPU_CRIT']",
+          "tooltip": "Specify the event type of the incident based on which you want to retrieve incidents from the Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify the event type of the incident based on which you want to retrieve incidents from the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Other Filters",
+          "tooltip": "Specify the parameters in the JSON format using which you want to filter the incidents retrieved from the Fortinet FortiSIEM server. For example, { \"status\": [ 0 ], \"eventType\": [ \"PH_RULE_SERVER_CPU_WARN\" ], \"incidentRptIp\": [ \"10.7.12.156\" ] }",
+          "type": "json",
+          "name": "search",
+          "description": "(Optional) Specify the parameters in the JSON format using which you want to filter the incidents retrieved from the Fortinet FortiSIEM server. For example: { \"status\": [ 0 ], \"eventType\": [ \"PH_RULE_SERVER_CPU_WARN\" ], \"incidentRptIp\": [ \"10.7.12.156\" ] }",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "{\"incidentRptIp\": [\"10.7.12.156\"]}"
+        },
+        {
+          "title": "Number Of Items To Return In Response or Size Per Page",
+          "name": "size",
+          "tooltip": "For FortiSIEM 6.7.6: This parameter defines the maximum number of items that this operation will return, per page, in the response. For versions other than FortiSIEM 6.7.6: This parameter defines the maximum number of items that this operation will return in the response. By default, this parameter is set to 500 items.",
+          "value": 500,
+          "type": "integer",
+          "description": "(Optional) For FortiSIEM 6.7.6: This parameter defines the maximum number of items that this operation will return, per page, in the response. For versions other than FortiSIEM 6.7.6: This parameter defines the maximum number of items that this operation will return in the response. By default, this parameter is set to 500 items.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        },
+        {
+          "title": "Offset",
+          "name": "start",
+          "type": "integer",
+          "tooltip": "Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say incidents starting from the 10th incident. By default, this is set as 0.",
+          "description": "(Optional) Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say incidents starting from the 10th incident. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 0
+        },
+        {
+          "title": "Order By",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the field using which to sort the incidents retrieved from the Fortinet FortiSIEM server. You can also specify the sort direction of the specified field. For example, incidentLastSeen DESC",
+          "description": "(Optional) Specify the field using which to sort the incidents retrieved from the Fortinet FortiSIEM server. You can also specify the sort direction of the specified field. For example, incidentLastSeen DESC",
+          "type": "text",
+          "name": "orderBy",
+          "value": "incidentLastSeen DESC",
+          "placeholder": "e.g. incidentLastSeen DESC"
+        },
+        {
+          "title": "Event Fields To Show In Response",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the comma-separated list of event fields that you want to include in the list of incidents that you want to retrieve from the Fortinet FortiSIEM server.",
+          "placeholder": "e.g. eventSeverityCat, incidentLastSeen, incidentFirstSeen, incidentSrc, incidentTarget, incidentRptDevName",
+          "description": "(Optional) Specify the comma-separated list of event fields that you want to include in the list of incidents that you want to retrieve from the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "fields"
+        }
+      ],
+      "output_schema": {
+        "data": [
+          {
+            "count": "",
+            "tactic": "",
+            "customer": "",
+            "eventName": "",
+            "eventType": "",
+            "technique": "",
+            "incidentId": "",
+            "incidentSrc": {
+              "srcIpAddr": "",
+              "computer": ""
+            },
+            "attackTactic": "",
+            "incidentReso": "",
+            "eventSeverity": "",
+            "incidentRptIp": "",
+            "incidentTitle": "",
+            "incidentDetail": "",
+            "incidentStatus": "",
+            "incidentTarget": {
+              "user": "",
+              "domain": "",
+              "hostName": "",
+              "hostIpAddr": "",
+              "targetUser": "",
+              "targetDomain": "",
+              "destIpAddr": "",
+              "destIpPort": ""
+            },
+            "attackTechnique": [
+              {
+                "name": "",
+                "techniqueid": ""
+              }
+            ],
+            "eventSeverityCat": "",
+            "incidentLastSeen": "",
+            "incidentFirstSeen": "",
+            "incidentStatusStr": "",
+            "incidentRptDevName": "",
+            "phIncidentCategory": "",
+            "incidentClearedTime": "",
+            "incidentClearedReason": "",
+            "phSubIncidentCategory": "",
+            "destName": ""
+          }
+        ]
+      }
+    },
+    {
+      "operation": "get_incident_details",
+      "title": "Get Incident Details",
+      "description": "Retrieves details of an incident from the Fortinet FortiSIEM server based on the incident IDs you have specified.",
+      "enabled": true,
+      "annotation": "get_incident_details",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident IDs",
+          "tooltip": "Specify the IDs of incidents, in the CSV or list format, whose details you want to retrieve from the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "incidentId",
+          "description": "Specify the IDs of incidents, in the CSV or list format, whose details you want to retrieve from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "pages": "",
+        "total": "",
+        "queryId": "",
+        "sizePerPage": "",
+        "data": [
+          {
+            "incidentTitle": "",
+            "eventSeverity": "",
+            "incidentFirstSeen": "",
+            "incidentReso": "",
+            "incidentRptIp": "",
+            "incidentLastSeen": "",
+            "incidentSrc": "",
+            "count": "",
+            "attackTechnique": "",
+            "eventType": "",
+            "phIncidentCategory": "",
+            "incidentClearedTime": "",
+            "incidentTarget": "",
+            "attackTactic": "",
+            "phSubIncidentCategory": "",
+            "eventSeverityCat": "",
+            "incidentDetail": "",
+            "incidentRptDevName": "",
+            "eventName": "",
+            "incidentId": "",
+            "incidentStatus": "",
+            "customer": ""
+          }
+        ],
+        "start": ""
+      }
+    },
+    {
+      "operation": "update_incident",
+      "title": "Update Incident",
+      "description": "Updates the attributes of a specific incident on the Fortinet FortiSIEM server based on the incident ID and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "update_incident",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "tooltip": "Specify the ID of the incident you want to update on the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "incidentId",
+          "description": "Specify the ID of the incident you want to update on the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Comment Text",
+          "tooltip": "Specify the text of the comment that you want to add to the specified incident you want to update on the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "comments",
+          "description": "Specify the text of the comment that you want to add to the specified incident you want to update on the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        },
+        {
+          "title": "Incident Status",
+          "type": "select",
+          "options": [
+            "Active",
+            "Manually Cleared",
+            "System Cleared",
+            "Auto Cleared"
+          ],
+          "name": "incidentStatus",
+          "description": "(Optional) Select the incident status that you want to assign to the specified incident you want to update on the Fortinet FortiSIEM server. You can select one of the following options: Active Auto Cleared, Manually Cleared System Cleared",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "Manually Cleared",
+          "tooltip": "Select the incident status that you want to assign to the specified incident you want to update on the Fortinet FortiSIEM server. You can select one of the following options: Active Auto Cleared, Manually Cleared System Cleared"
+        },
+        {
+          "title": "Incident Severity",
+          "type": "select",
+          "name": "severity",
+          "options": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ],
+          "description": "(Optional) Select the incident severity that you want to assign to the specified incident you want to update on the Fortinet FortiSIEM server. You can select one of the following options: HIGH MEDIUM LOW",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "LOW",
+          "tooltip": "Select the incident severity that you want to assign to the specified incident you want to update on the Fortinet FortiSIEM server. You can select one of the following options: HIGH MEDIUM LOW"
+        },
+        {
+          "title": "Incident Resolution",
+          "type": "select",
+          "name": "resolution",
+          "options": [
+            "True Positive",
+            "False Positive"
+          ],
+          "description": "(Optional) Select the resolution that you want to assign to the specified incident you want to update on the Fortinet FortiSIEM server. You can choose between True Positive or False Positive.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "True Positive",
+          "tooltip": "Select the resolution that you want to assign to the specified incident you want to update on the Fortinet FortiSIEM server. You can choose between True Positive or False Positive."
+        },
+        {
+          "title": "External Ticket Type",
+          "type": "select",
+          "options": [
+            "Low",
+            "Medium",
+            "High"
+          ],
+          "name": "externalTicketType",
+          "description": "(Optional) Select the external ticket type of the specified incident you want to update on the Fortinet FortiSIEM server. You can select one of the following options: High Medium Low",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "Low",
+          "tooltip": "Select the external ticket type of the specified incident you want to update on the Fortinet FortiSIEM server. You can select one of the following options: High Medium Low"
+        },
+        {
+          "title": "External Ticket ID",
+          "type": "text",
+          "name": "externalTicketId",
+          "description": "(Optional) Specify the ID of the external ticket ID to update in the specified incident you want to update on the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the ID of the external ticket ID to update in the specified incident you want to update on the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "External Ticket State",
+          "type": "select",
+          "options": [
+            "New",
+            "Assigned",
+            "In Progress",
+            "Closed"
+          ],
+          "name": "externalTicketState",
+          "description": "(Optional) Select the external ticket state of the specified incident you want to update on the Fortinet FortiSIEM server. You can select one of the following options: New Assigned In Progress Closed",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "Closed",
+          "tooltip": "Select the external ticket state of the specified incident you want to update on the Fortinet FortiSIEM server. You can select one of the following options: New Assigned In Progress Closed"
+        },
+        {
+          "title": "External Assigned User",
+          "type": "text",
+          "name": "externalAssignedUser",
+          "description": "(Optional) Specify the assigned user of the external ticket to update in the specified incident you want to update on the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the assigned user of the external ticket to update in the specified incident you want to update on the Fortinet FortiSIEM server."
+        }
+      ],
+      "output_schema": {
+        "message": "",
+        "incident_id": ""
+      }
+    },
+    {
+      "operation": "incident_comment",
+      "title": "Comment Incident",
+      "description": "Adds a comment to a specific incident on the Fortinet FortiSIEM server based on the incident ID you have specified.",
+      "enabled": true,
+      "annotation": "incident_comment",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "id",
+          "description": "Specify the ID of the incident in which you want to add the comment on the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the ID of the incident in which you want to add the comment on the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "Comment Text",
+          "type": "text",
+          "name": "comment_text",
+          "description": "Specify the text of the comment that you want to add to the specified incident on the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the text of the comment that you want to add to the specified incident on the Fortinet FortiSIEM server."
+        }
+      ],
+      "output_schema": {
+        "message": "",
+        "incident_id": ""
+      }
+    },
+    {
+      "operation": "clear_incident",
+      "title": "Clear Incident With Reason",
+      "description": "Clears an incident with the reason you have specified on the Fortinet FortiSIEM server based on the incident ID you have specified.",
+      "enabled": true,
+      "annotation": "clear_incident",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "id",
+          "tooltip": "Specify the ID of the incident that you want to clear from the Fortinet FortiSIEM server.",
+          "description": "Specify the ID of the incident that you want to clear from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        },
+        {
+          "title": "Reason",
+          "type": "text",
+          "name": "comment_text",
+          "description": "Specify the text of the reason that you want to specify while clearing the specified incident from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the text of the reason that you want to specify while clearing the specified incident from the Fortinet FortiSIEM server."
+        }
+      ],
+      "output_schema": {
+        "message": "",
+        "incident_id": []
+      }
+    },
+    {
+      "operation": "get_associated_events",
+      "title": "Get Events For Incident",
+      "description": "Retrieves all associated events for a specified incident from the Fortinet FortiSIEM server, based on the incident ID and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "get_associated_events",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident for which you want to retrieve all associated events from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": "",
+          "tooltip": "Specify the ID of the incident for which you want to retrieve all associated events from the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "Time From",
+          "type": "datetime",
+          "name": "timeFrom",
+          "tooltip": "Select the start time range from when you want to search raw events for the given incident ID. NOTE: This parameter is supported only in the FortiSIEM 6.7.6 version. Also, note that the max interval between the Time To and Time From cannot exceed 24 hours.",
+          "description": "Select the start time range from when you want to search raw events for the given incident ID. NOTE: This parameter is supported only in the FortiSIEM 6.7.6 version. Also, note that the max interval between the Time To and Time From cannot exceed 24 hours.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        },
+        {
+          "title": "Time To",
+          "type": "datetime",
+          "name": "timeTo",
+          "tooltip": "Select the end time range till when you want to search raw events for the given incident ID. NOTE: This parameter is supported only in the FortiSIEM 6.7.6 version. Also, note that the max interval between the Time To and Time From cannot exceed 24 hours.",
+          "description": "Select the end time range till when you want to search raw events for the given incident ID. NOTE: This parameter is supported only in the FortiSIEM 6.7.6 version. Also, note that the max interval between the Time To and Time From cannot exceed 24 hours.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        },
+        {
+          "title": "Number Of Items To Return In Response",
+          "name": "per_page",
+          "tooltip": "The maximum number of events that you want this operation to return in the response. By default, this parameter is set to 10 items.",
+          "value": 10,
+          "type": "integer",
+          "description": "(Optional) The maximum number of events that you want this operation to return in the response. By default, this parameter is set to 10 items.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        }
+      ],
+      "output_schema": [
+        {
+          "id": "",
+          "nid": "",
+          "index": 0,
+          "custId": 2000,
+          "dataStr": {},
+          "eventType": "",
+          "attributes": {
+            "Count": "",
+            "Event ID": "",
+            "Source IP": "",
+            "Time skew": "",
+            "Event Type": "",
+            "Attack Name": "",
+            "Device Time": "",
+            "Relaying IP": "",
+            "Collector ID": "",
+            "Malware Name": "",
+            "Reporting IP": "",
+            "Raw Event Log": "",
+            "Destination IP": "",
+            "Event Severity": "",
+            "Organization ID": "",
+            "Reporting Model": "",
+            "Reporting Device": "",
+            "Reporting Vendor": "",
+            "Source Host Name": "",
+            "Virus/Malware ID": "",
+            "Event Parser Name": "",
+            "Organization Name": "",
+            "Event Parse Status": "",
+            "Event Receive Time": "",
+            "Event Rule Trigger": "",
+            "Source TCP/UDP Port": "",
+            "Destination Host Name": "",
+            "System Event Category": "",
+            "Event Severity Category": "",
+            "Destination TCP/UDP Port": "",
+            "External Event Receive Protocol": ""
+          },
+          "rawMessage": "",
+          "receiveTime": "",
+          "eventAttributes": []
+        }
+      ]
+    },
+    {
+      "operation": "search_events",
+      "title": "Search Events",
+      "description": "Searches for events in the Fortinet FortiSIEM server based on search attributes and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "search_events",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Search Attributes",
+          "tooltip": "Select one or multiple search attributes to prepare your search query",
+          "description": "Select attribute types using which you want to search for events in the Fortinet FortiSIEM server. You can choose one or more search attributes from the following options: Destination Port, Destination IP, Event ID, Event Action, Incident ID, File Name, Host Name, Organization Name, Process Name, Post-NAT Source IP, Raw Event Log, Relay IP, Reporting Ip, Source IP, Source Port, Source MAC, or User If you choose Destination Port, then in the Destination Port IN field, enter the value of the destination port for which you want to search for events in the Fortinet FortiSIEM server. If you choose Destination IP, then in the Destination IP IN field, enter a comma-separated list of destination IPs based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Event ID, then in the Event ID IN field, enter the value of the event ID for which you want to search for events in the Fortinet FortiSIEM server. If you choose Event Action, then from the Event Action IN drop-down list, choose the event action for which you want to search for events in the Fortinet FortiSIEM server. You can choose 1-Deny or 0-Permit. If you choose Incident ID, then in the Incident ID IN field, enter the value of the Incident ID for which you want to search for events in the Fortinet FortiSIEM server. If you choose File Name, then in the File Name CONTAINS field, enter the name of the file based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Host Name, then in the Host Name CONTAINS field, enter the name of the host using which you want to search for events in the Fortinet FortiSIEM server. If you choose Organization Name, then in the Organization Name CONTAINS field, enter the name of the organization based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Process Name, then in the Process Name CONTAINS field, enter the name of the process based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Post-NAT Source IP, then in the Post-NAT Source IP IN field, enter the Post-NAT source IP based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Raw Event Log, then in the Raw Event Log CONTAINS field, enter the search attribute for the raw event based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Relay IP, then in the Relay IP IN field, enter the relay IP based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Reporting IP, then in the Reporting IP IN field, enter the reporting IP based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Source IP, then in the Source IP IN field, enter the source IP based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Source Port, then in the Source Port IN field, enter the source port based on which you want to search for events in the Fortinet FortiSIEM server. If you choose Source MAC, then in the Source MAC CONTAINS field, enter the search attribute for the source MAC using which you want to search for events in the Fortinet FortiSIEM server. If you choose User, then in the User CONTAINS field, enter the search attribute for the user based on which you want to search for events in the Fortinet FortiSIEM server.",
+          "type": "multiselect",
+          "name": "attribute",
+          "options": [
+            "Destination Port",
+            "Destination IP",
+            "Event ID",
+            "Event Action",
+            "Incident ID",
+            "File Name",
+            "Host Name",
+            "Organization Name",
+            "Process Name",
+            "Post-NAT Source IP",
+            "Raw Event Log",
+            "Relay IP",
+            "Reporting IP",
+            "Source IP",
+            "Source Port",
+            "Source MAC",
+            "User"
+          ],
+          "onchange": {
+            "Destination Port": [
+              {
+                "title": "Destination Port IN",
+                "tooltip": "Comma separated port numbers to search",
+                "placeholder": "e.g 443",
+                "type": "text",
+                "name": "destination_port_value",
+                "description": "Enter value for attribute Destination Port",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Destination Port"
+              }
+            ],
+            "Destination IP": [
+              {
+                "title": "Destination IP IN",
+                "type": "text",
+                "tooltip": "Comma separated IP addresses to search",
+                "placeholder": "e.g 192.168.50.34, 192.168.60.83",
+                "name": "destination_ip_value",
+                "description": "Enter value for attribute Destination IP",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Destination IP"
+              }
+            ],
+            "Event ID": [
+              {
+                "title": "Event ID IN",
+                "placeholder": "e.g 7574069410985148729",
+                "type": "text",
+                "name": "event_id_value",
+                "tooltip": "Comma separated event IDs to search",
+                "description": "Enter value for attribute Event ID",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Event ID"
+              }
+            ],
+            "Event Action": [
+              {
+                "title": "Event Action =",
+                "type": "select",
+                "options": [
+                  "1-Deny",
+                  "0-Permit"
+                ],
+                "value": "1-Deny",
+                "name": "event_action_value",
+                "description": "Enter value for attribute Event Action",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Event Action"
+              }
+            ],
+            "Incident ID": [
+              {
+                "title": "Incident ID IN",
+                "type": "text",
+                "placeholder": "e.g. 19303",
+                "tooltip": "Comma separated incident ID values to search events",
+                "name": "incident_id_value",
+                "description": "Enter value for attribute Incident ID",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Incident ID"
+              }
+            ],
+            "File Name": [
+              {
+                "title": "File Name CONTAINS",
+                "placeholder": "e.g parserProcess",
+                "tooltip": "File name or part of file name to filter events",
+                "type": "text",
+                "name": "file_name_value",
+                "description": "Enter value for attribute File Name",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "File Name"
+              }
+            ],
+            "Host Name": [
+              {
+                "title": "Host Name CONTAINS",
+                "tooltip": "Host name or part of host name to filter events",
+                "placeholder": "e.g demohost",
+                "type": "text",
+                "name": "host_name_value",
+                "description": "Enter value for attribute Host Name",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Host Name"
+              }
+            ],
+            "Organization Name": [
+              {
+                "title": "Organization Name CONTAINS",
+                "tooltip": "Organization name or part of Organization name to filter events",
+                "placeholder": "e.g. super",
+                "type": "text",
+                "name": "organization_name_value",
+                "description": "Enter value for attribute Organization Name",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Organization Name"
+              }
+            ],
+            "Process Name": [
+              {
+                "title": "Process Name CONTAINS",
+                "tooltip": "Process name or part of Process name to filter events",
+                "type": "text",
+                "name": "process_name_value",
+                "description": "Enter value for attribute Process Name",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Process Name"
+              }
+            ],
+            "Post-NAT Source IP": [
+              {
+                "title": "Post-NAT Source IP IN",
+                "type": "text",
+                "tooltip": "comma separated values of Post-NAT Source IP to filter events",
+                "name": "post_nat_source_ip_value",
+                "description": "Enter value for attribute Post-NAT Source IP",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Post-NAT Source IP"
+              }
+            ],
+            "Raw Event Log": [
+              {
+                "title": "Raw Event Log CONTAINS",
+                "type": "text",
+                "tooltip": "Enter text to search into raw event logs",
+                "name": "raw_event_log_value",
+                "description": "Enter value for attribute Raw Event Log",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Raw Event Log"
+              }
+            ],
+            "Relay IP": [
+              {
+                "title": "Relay IP IN",
+                "tooltip": "comma separated values of Relay IP to filter events",
+                "type": "text",
+                "name": "relay_ip_value",
+                "description": "Enter value for attribute Relay IP",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Relay IP"
+              }
+            ],
+            "Reporting IP": [
+              {
+                "title": "Reporting IP IN",
+                "tooltip": "comma separated values of Reporting IP to filter events",
+                "type": "text",
+                "name": "reporting_ip_value",
+                "description": "Enter value for attribute Reporting IP",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Reporting IP"
+              }
+            ],
+            "Source IP": [
+              {
+                "title": "Source IP IN",
+                "tooltip": "comma separated values of Source IP to filter events",
+                "type": "text",
+                "name": "source_ip_value",
+                "description": "Enter value for attribute Source IP",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Source IP"
+              }
+            ],
+            "Source Port": [
+              {
+                "title": "Source Port IN",
+                "tooltip": "comma separated values of Source Port to filter events",
+                "type": "text",
+                "name": "source_port_value",
+                "description": "Enter value for attribute Source Port",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Source Port"
+              }
+            ],
+            "Source MAC": [
+              {
+                "title": "Source MAC CONTAINS",
+                "tooltip": "Enter source mac value or part of source mac value to filter events",
+                "type": "text",
+                "name": "source_mac_value",
+                "description": "Enter value for attribute Source MAC",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "Source MAC"
+              }
+            ],
+            "User": [
+              {
+                "title": "User CONTAINS",
+                "tooltip": "Enter user name or part of user name to filter events",
+                "type": "text",
+                "name": "user_value",
+                "description": "Enter value for attribute User",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Search Attributes",
+                "onChangeOption": "User"
+              }
+            ]
+          },
+          "value": "Reporting IP",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Event Fields To Show In Response",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
+          "placeholder": "e.g. phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
+          "description": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
+          "type": "text",
+          "name": "select_clause",
+          "value": "phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg"
+        },
+        {
+          "title": "Time Range",
+          "type": "select",
+          "name": "time_selection",
+          "description": "(Optional) Specify the time duration to search for reports to run on the Fortinet FortiSIEM server. By default, this is set as Relative Time. You can select from the following options: Relative Time: Specify values in the following fields: Relative Time: Select the unit of the duration from the following options: Minutes Hours Days Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours. Absolute Time: Specify values in the following fields: From: (Optional) Specify the start DateTime for which to get events from the Fortinet FortiSIEM server. To: (Optional) Specify the end DateTime for which to get events from the Fortinet FortiSIEM server.",
+          "options": [
+            "Relative Time",
+            "Absolute Time"
+          ],
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "Relative Time",
+          "onchange": {
+            "Relative Time": [
+              {
+                "title": "Relative Time",
+                "tooltip": "For example, if you choose Hours and provide the value 2, then this operation run report for last 2 hours, and return the response against the report from the Fortinet FortiSIEM server.",
+                "name": "rel_time",
+                "type": "select",
+                "description": "(Optional) Specify the time range for which you want to run report for the specified time span. For example, if you choose Hours and provide 2 in the value, then this operation run report for last 2 hours, and return the response against the report from the Fortinet FortiSIEM server.",
+                "options": [
+                  "Minutes",
+                  "Hours",
+                  "Days"
+                ],
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "value": "Hours",
+                "isOnChange": true,
+                "onChangeParam": "Time Range",
+                "onChangeOption": "Relative Time"
+              },
+              {
+                "title": "Last",
+                "name": "value",
+                "type": "integer",
+                "description": "",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "value": 2,
+                "isOnChange": true,
+                "onChangeParam": "Time Range",
+                "onChangeOption": "Relative Time"
+              }
+            ],
+            "Absolute Time": [
+              {
+                "title": "From",
+                "type": "datetime",
+                "name": "from",
+                "tooltip": "Provide the start datetime to get events",
+                "description": "(Optional) Specify the start datetime for which you want to get events on the Fortinet FortiSIEM server.",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "value": "",
+                "isOnChange": true,
+                "onChangeParam": "Time Range",
+                "onChangeOption": "Absolute Time"
+              },
+              {
+                "title": "To",
+                "type": "datetime",
+                "name": "to",
+                "tooltip": "Provide the end datetime to run report",
+                "description": "(Optional) Specify the end datetime for which you want to get events on the Fortinet FortiSIEM server.",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "value": "",
+                "isOnChange": true,
+                "onChangeParam": "Time Range",
+                "onChangeOption": "Absolute Time"
+              }
+            ]
+          },
+          "tooltip": "Specify the time duration to search for reports to run on the Fortinet FortiSIEM server. By default, this is set as Relative Time. You can select from the following options: Relative Time: Specify values in the following fields: Relative Time: Select the unit of the duration from the following options: Minutes Hours Days Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours. Absolute Time: Specify values in the following fields: From: Specify the start DateTime for which to get events from the Fortinet FortiSIEM server. To: Specify the end DateTime for which to get events from the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "Number Of Items To Return In Response",
+          "name": "perPage",
+          "tooltip": "Specify the maximum number of events that you want this operation to return in the response. By default, this parameter is set to 50 items.",
+          "value": 50,
+          "type": "integer",
+          "description": "(Optional) Specify the maximum number of events that you want this operation to return in the response. By default, this parameter is set to 50 items.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        },
+        {
+          "title": "Offset",
+          "name": "start",
+          "type": "integer",
+          "tooltip": "Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of events, say events starting from the 10th event. By default, this is set as 0.",
+          "description": "(Optional) Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of events, say events starting from the 10th event. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 0
+        }
+      ],
+      "output_schema": {
+        "@start": "",
+        "events": [
+          {
+            "id": "",
+            "nid": "",
+            "index": "",
+            "custId": "",
+            "dataStr": "",
+            "eventType": "",
+            "attributes": {
+              "type": "",
+              "uuid": "",
+              "vdom": "",
+              "count": "",
+              "fwRule": "",
+              "osType": "",
+              "eventId": "",
+              "ipProto": "",
+              "srcName": "",
+              "subtype": "",
+              "customer": "",
+              "destName": "",
+              "fwAction": "",
+              "logLevel": "",
+              "memberID": "",
+              "totFlows": "",
+              "trandisp": "",
+              "eventName": "",
+              "eventType": "",
+              "reptModel": "",
+              "sessionId": "",
+              "srcIpAddr": "",
+              "srcIpPort": "",
+              "totPkts64": "",
+              "destIpAddr": "",
+              "destIpPort": "",
+              "deviceTime": "",
+              "parserName": "",
+              "phRecvTime": "",
+              "recvPkts64": "",
+              "reptVendor": "",
+              "sentPkts64": "",
+              "srcMACAddr": "",
+              "totBytes64": "",
+              "collectorId": "",
+              "eventAction": "",
+              "rawEventMsg": "",
+              "recvBytes64": "",
+              "reptDevName": "",
+              "sentBytes64": "",
+              "serviceName": "",
+              "srcIntfName": "",
+              "timeSkewSec": "",
+              "appGroupName": "",
+              "destIntfName": "",
+              "durationMSec": "",
+              "eventParsedOk": "",
+              "eventSeverity": "",
+              "reptDevIpAddr": "",
+              "profileDetails": "",
+              "relayDevIpAddr": "",
+              "phEventCategory": "",
+              "eventRuleTrigger": "",
+              "eventSeverityCat": "",
+              "masterSrcMACAddr": "",
+              "postNATSrcIpAddr": "",
+              "postNATSrcIpPort": "",
+              "extEventRecvProto": ""
+            },
+            "receiveTime": ""
+          }
+        ],
+        "@queryId": "",
+        "@errorCode": "",
+        "@totalCount": ""
+      }
+    },
+    {
+      "operation": "get_event_details",
+      "title": "Get Event Details",
+      "description": "Retrieves details of a specific event from the Fortinet FortiSIEM server based on the event ID you have specified and optionally the date range you have specified.",
+      "enabled": true,
+      "annotation": "get_event_details",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Event ID",
+          "type": "text",
+          "name": "event_id",
+          "description": "The ID of the event whose details you want to retrieve from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "tooltip": "The ID of the event whose details you want to retrieve from the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "Event Fields To Show In Response",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
+          "placeholder": "e.g. phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
+          "description": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
+          "type": "text",
+          "name": "select_clause",
+          "value": "phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg"
+        },
+        {
+          "title": "From",
+          "type": "datetime",
+          "name": "from",
+          "tooltip": "Specify the start DateTime from when you want to retrieve event details from the Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify the start DateTime from when you want to retrieve event details from the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        },
+        {
+          "title": "To",
+          "type": "datetime",
+          "name": "to",
+          "tooltip": "Specify the end DateTime till when you want to retrieve event details from the Fortinet FortiSIEM server. Important: If you do not specify the From and To parameters for this operation, then by default events for the last 2 weeks will be retrieved from the Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify the end DateTime till when you want to retrieve event details from the Fortinet FortiSIEM server. Important: If you do not specify the From and To parameters for this operation, then by default events for the last 2 weeks will be retrieved from the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        }
+      ],
+      "output_schema": {
+        "id": "",
+        "nid": "",
+        "index": "",
+        "custId": "",
+        "dataStr": "",
+        "eventType": "",
+        "attributes": {
+          "uuid": "",
+          "vdom": "",
+          "count": "",
+          "fwRule": "",
+          "eventId": "",
+          "ipProto": "",
+          "srcName": "",
+          "subtype": "",
+          "customer": "",
+          "destName": "",
+          "fwAction": "",
+          "logLevel": "",
+          "memberID": "",
+          "totFlows": "",
+          "trandisp": "",
+          "eventName": "",
+          "eventType": "",
+          "reptModel": "",
+          "sessionId": "",
+          "srcIpAddr": "",
+          "srcIpPort": "",
+          "totPkts64": "",
+          "destGeoOrg": "",
+          "destIpAddr": "",
+          "destIpPort": "",
+          "deviceTime": "",
+          "parserName": "",
+          "phRecvTime": "",
+          "recvPkts64": "",
+          "reptVendor": "",
+          "sentPkts64": "",
+          "totBytes64": "",
+          "collectorId": "",
+          "destGeoCity": "",
+          "eventAction": "",
+          "rawEventMsg": "",
+          "hostIpAddr": "",
+          "hostName": "",
+          "recvBytes64": "",
+          "reptDevName": "",
+          "sentBytes64": "",
+          "serviceName": "",
+          "srcIntfName": "",
+          "timeSkewSec": "",
+          "appGroupName": "",
+          "destGeoState": "",
+          "destIntfName": "",
+          "durationMSec": "",
+          "eventParsedOk": "",
+          "eventSeverity": "",
+          "reptDevIpAddr": "",
+          "destGeoCountry": "",
+          "profileDetails": "",
+          "relayDevIpAddr": "",
+          "destGeoLatitude": "",
+          "phEventCategory": "",
+          "destGeoLongitude": "",
+          "eventRuleTrigger": "",
+          "eventSeverityCat": "",
+          "postNATSrcIpAddr": "",
+          "postNATSrcIpPort": "",
+          "extEventRecvProto": "",
+          "destGeoCountryCodeStr": ""
+        },
+        "receiveTime": ""
+      }
+    },
+    {
+      "operation": "get_devices_details",
+      "title": "Get All Devices",
+      "description": "Retrieves a short description for all devices that are configured on the Fortinet FortiSIEM server.",
+      "enabled": true,
+      "annotation": "get_devices",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Organization",
+          "tooltip": "Specify the name of the organization using which you want to filter the devices retrieved from the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "description": "(Optional) Specify the name of the organization using which you want to filter the devices retrieved from the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "org",
+          "value": ""
+        }
+      ],
+      "output_schema": {
+        "devices": {
+          "device": [
+            {
+              "name": "",
+              "accessIp": "",
+              "approved": "",
+              "creationMethod": "",
+              "discoverMethod": "",
+              "discoverTime": "",
+              "naturalId": "",
+              "unmanaged": "",
+              "updateMethod": "",
+              "version": "",
+              "deviceType": {
+                "accessProtocols": "",
+                "jobWeight": "",
+                "model": "",
+                "vendor": "",
+                "version": ""
+              },
+              "organization": {
+                "@id": "",
+                "@name": ""
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "operation": "get_devices_details_in_address",
+      "title": "Get All Devices For Specified IP Address Range",
+      "description": "Retrieves a short description for devices that are configured on the Fortinet FortiSIEM server, based on the IP address range that you have specified.",
+      "enabled": true,
+      "annotation": "get_devices",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Include IP SET",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "type": "text",
+          "tooltip": "Specify the value of IP addresses based on which you want to retrieve device information from the Fortinet FortiSIEM server. You must provide the value of this field as a range or in the .csv format. For example, enter, 192.168.20.1-192.168.20.100",
+          "description": "Specify the value of IP addresses based on which you want to retrieve device information from the Fortinet FortiSIEM server. You must provide the value of this field as a range or in the .csv format. For example, enter, 192.168.20.1-192.168.20.100",
+          "name": "includeIps",
+          "value": ""
+        },
+        {
+          "title": "Exclude IP SET",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "type": "text",
+          "tooltip": "Specify the value of the range of IP addresses that you want to exclude from this search operation. You must provide the value of this field as a range or in the .csv format.",
+          "description": "(Optional) Specify the value of the range of IP addresses that you want to exclude from this search operation. You must provide the value of this field as a range or in the .csv format.",
+          "name": "excludeIps",
+          "value": ""
+        },
+        {
+          "title": "Organization",
+          "tooltip": "Specify the name of the organization using which you want to filter the devices retrieved from the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "description": "(Optional) Specify the name of the organization using which you want to filter the devices retrieved from the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "org",
+          "value": ""
+        }
+      ],
+      "output_schema": {
+        "devices": {
+          "device": [
+            {
+              "name": "",
+              "accessIp": "",
+              "approved": "",
+              "creationMethod": "",
+              "discoverMethod": "",
+              "discoverTime": "",
+              "naturalId": "",
+              "unmanaged": "",
+              "updateMethod": "",
+              "version": "",
+              "deviceType": {
+                "accessProtocols": "",
+                "jobWeight": "",
+                "model": "",
+                "vendor": "",
+                "version": ""
+              },
+              "organization": {
+                "@id": "",
+                "@name": ""
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "operation": "get_device_info",
+      "title": "Get Device Information",
+      "description": "Retrieves details of a specific device that is configured on the Fortinet FortiSIEM server, based on the Device IP that you have specified.",
+      "enabled": true,
+      "annotation": "get_devices",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Device IP",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "description": "Specify the IP address of the device for which you want to retrieve details from the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "ip",
+          "value": "",
+          "tooltip": "Specify the IP address of the device for which you want to retrieve details from the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "Organization",
+          "tooltip": "Specify the name of the organization for which you want to retrieve details of the device from the Fortinet FortiSIEM server.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "description": "(Optional) Specify the name of the organization for which you want to retrieve details of the device from the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "org",
+          "value": ""
+        }
+      ],
+      "output_schema": {
+        "device": {
+          "luns": "",
+          "name": "",
+          "status": "",
+          "version": "",
+          "accessIp": "",
+          "approved": "",
+          "storages": "",
+          "naturalId": "",
+          "unmanaged": "",
+          "components": "",
+          "deviceType": {
+            "model": "",
+            "vendor": "",
+            "version": "",
+            "category": "",
+            "jobWeight": ""
+          },
+          "interfaces": {
+            "networkinterface": {
+              "adminStatus": "",
+              "description": "",
+              "inSpeed": "",
+              "ipv4Addr": "",
+              "ipv4IsVirtual": "",
+              "ipv4Mask": "",
+              "isCritical": "",
+              "isMonitor": "",
+              "isTrunk": "",
+              "isWAN": "",
+              "macAddr": "",
+              "macIsVirtual": "",
+              "name": "",
+              "operStatus": "",
+              "outSpeed": "",
+              "snmpIndex": "",
+              "speed": "",
+              "type": ""
+            }
+          },
+          "processors": "",
+          "raidGroups": "",
+          "applications": "",
+          "discoverTime": "",
+          "organization": {
+            "@id": "",
+            "@name": ""
+          },
+          "updateMethod": "",
+          "ipToHostNames": "",
+          "storageGroups": "",
+          "creationMethod": "",
+          "description": "",
+          "discoverMethod": "",
+          "winMachineGuid": "",
+          "eventParserList": "",
+          "systemUpTime": "",
+          "softwarePatches": "",
+          "softwareServices": "",
+          "sanControllerPorts": ""
+        }
+      }
+    },
+    {
+      "operation": "get_monitored_devices",
+      "title": "List Monitored Devices and Attributes",
+      "description": "Retrieves a list and attributes of all monitored devices that are configured on the Fortinet FortiSIEM server.",
+      "enabled": true,
+      "annotation": "get_devices",
+      "category": "investigation",
+      "parameters": [],
+      "output_schema": {
+        "monitoredDevices": {
+          "perfMonDevices": {
+            "device": {
+              "accessIp": "",
+              "deviceName": "",
+              "deviceType": "",
+              "monitors": {
+                "monitor": [
+                  {
+                    "category": "",
+                    "method": ""
+                  }
+                ]
+              },
+              "organization": ""
+            }
+          },
+          "eventPullingDevices": ""
+        }
+      }
+    },
+    {
+      "operation": "get_monitored_organizations",
+      "title": "List Monitored Organizations",
+      "description": "Retrieves a list and details of all monitored organizations that are configured on the Fortinet FortiSIEM server.",
+      "enabled": true,
+      "annotation": "get_organization",
+      "category": "investigation",
+      "parameters": [],
+      "output_schema": [
+        {
+          "@id": "",
+          "name": "",
+          "@xmlId": "",
+          "@custId": "",
+          "@ownerId": "",
+          "disabled": "",
+          "domainId": "",
+          "initialized": "",
+          "@creationTime": "",
+          "collectors": {
+            "collector": []
+          },
+          "@lastModified": "",
+          "@entityVersion": "",
+          "custProperties": ""
+        }
+      ]
+    },
+    {
+      "operation": "get_org_name_by_org_id",
+      "title": "Get Organization Details",
+      "description": "Retrieves the details of a specific organization from the Fortinet FortiSIEM server based on the organization ID that you have specified.",
+      "enabled": true,
+      "annotation": "get_organization",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Organization ID",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "description": "Specify the ID of the organization whose details you want to retrieve from the Fortinet FortiSIEM server.",
+          "type": "text",
+          "name": "domain_id",
+          "value": "",
+          "tooltip": "Specify the ID of the organization whose details you want to retrieve from the Fortinet FortiSIEM server."
+        }
+      ],
+      "output_schema": {
+        "@entityVersion": "",
+        "@creationTime": "",
+        "@custId": "",
+        "@id": "",
+        "@lastModified": "",
+        "custProperties": "",
+        "collectors": {
+          "collector": []
+        },
+        "@ownerId": "",
+        "@xmlId": "",
+        "disabled": "",
+        "domainId": "",
+        "initialized": "",
+        "name": ""
+      }
+    },
+    {
+      "operation": "run_report",
+      "title": "Run Advanced Search Query",
+      "description": "Runs an advanced search query on the Fortinet FortiSIEM server, based on the search conditions and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "run_report",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Advanced Search Query",
+          "placeholder": "e.g. (srcIpAddr IN (192.168.60.82, 192.168.60.90) AND phEventCategory &gt;= 0)",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the conditions using which you want to process the search results for the report that you want to run on the Fortinet FortiSIEM server. For example, (incidentDetail CONTAIN \"jobName\" AND phEventCategory = 1) AND (phCustId IN (1)).",
+          "description": "Specify the conditions using which you want to process the search results for the report that you want to run on the Fortinet FortiSIEM server. For example, (incidentDetail CONTAIN \"jobName\" AND phEventCategory = 1) AND (phCustId IN (1)).",
+          "type": "text",
+          "name": "cond",
+          "value": ""
+        },
+        {
+          "title": "Event Fields To Show In Response",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
+          "placeholder": "e.g. phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
+          "description": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
+          "type": "text",
+          "name": "AttrList",
+          "value": "phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg"
+        },
+        {
+          "title": "Group By",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the attributes based on which to group the search results. The sequence and number of attributes should be same as specified in Event Fields To Show In Response. Only COUNT(*) attribute can be excluded. For example: reptDevIpAddr",
+          "placeholder": "e.g. phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
+          "description": "(Optional) Specify the attributes based on which to group the search results. The sequence and number of attributes should be same as specified in Event Fields To Show In Response parameter. Only COUNT(*) attribute can be excluded. For example: reptDevIpAddr",
+          "type": "text",
+          "name": "groupby"
+        },
+        {
+          "title": "Order By",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the field using which you want to sort the search results for the report that you want to run on the Fortinet FortiSIEM server. You can also specify the sort direction of the specified field. For example, phRecvTime DESC",
+          "description": "(Optional) Specify the field using which you want to sort the search results for the report that you want to run on the Fortinet FortiSIEM server. You can also specify the sort direction of the specified field. For example, phRecvTime DESC",
+          "type": "text",
+          "name": "orderby",
+          "value": "phRecvTime DESC",
+          "placeholder": "e.g. phRecvTime DESC"
+        },
+        {
+          "title": "Time Range",
+          "type": "select",
+          "name": "time_selection",
+          "description": "(Optional) Specify the time duration to search for reports to run on the Fortinet FortiSIEM server. By default, this is set as Relative Time. You can select from the following options: Relative Time: Specify values in the following fields: Relative Time: Select the unit of the duration from the following options: Minutes Hours Days Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours. Absolute Time: Specify values in the following fields: From: (Optional) Specify the start DateTime for which to get events from the Fortinet FortiSIEM server. To: (Optional) Specify the end DateTime for which to get events from the Fortinet FortiSIEM server.",
+          "options": [
+            "Relative Time",
+            "Absolute Time"
+          ],
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "Relative Time",
+          "onchange": {
+            "Relative Time": [
+              {
+                "title": "Relative Time",
+                "tooltip": "For example, if you choose Hours and provide the value 2, then this operation run report for last 2 hours, and return the response against the report from the Fortinet FortiSIEM server.",
+                "name": "rel_time",
+                "type": "select",
+                "description": "(Optional) Specify the time range for which you want to run report for the specified time span. For example, if you choose Hours and provide 2 in the value, then this operation run report for last 2 hours, and return the response against the report from the Fortinet FortiSIEM server.",
+                "options": [
+                  "Minutes",
+                  "Hours",
+                  "Days"
+                ],
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "value": "Hours",
+                "isOnChange": true,
+                "onChangeParam": "Time Range",
+                "onChangeOption": "Relative Time"
+              },
+              {
+                "title": "Last",
+                "name": "value",
+                "type": "integer",
+                "description": "",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "value": 2,
+                "isOnChange": true,
+                "onChangeParam": "Time Range",
+                "onChangeOption": "Relative Time"
+              }
+            ],
+            "Absolute Time": [
+              {
+                "title": "From",
+                "type": "datetime",
+                "name": "from",
+                "tooltip": "Provide the start datetime to run report",
+                "description": "(Optional) Specify the start datetime for which you want to run report in the Fortinet FortiSIEM server.",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "value": "",
+                "isOnChange": true,
+                "onChangeParam": "Time Range",
+                "onChangeOption": "Absolute Time"
+              },
+              {
+                "title": "To",
+                "type": "datetime",
+                "name": "to",
+                "tooltip": "Provide the end datetime to run report",
+                "description": "(Optional) Specify the end datetime for which you want to run report in the Fortinet FortiSIEM server.",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "value": "",
+                "isOnChange": true,
+                "onChangeParam": "Time Range",
+                "onChangeOption": "Absolute Time"
+              }
+            ]
+          },
+          "tooltip": "Specify the time duration to search for reports to run on the Fortinet FortiSIEM server. By default, this is set as Relative Time. You can select from the following options: Relative Time: Specify values in the following fields: Relative Time: Select the unit of the duration from the following options: Minutes Hours Days Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours. Absolute Time: Specify values in the following fields: From: Specify the start DateTime for which to get events from the Fortinet FortiSIEM server. To: Specify the end DateTime for which to get events from the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "Number Of Items To Return In Response",
+          "name": "perPage",
+          "tooltip": "Specify the maximum number of events that you want this operation to return in the response. By default, this parameter is set to 50 items.",
+          "value": 50,
+          "type": "integer",
+          "description": "(Optional) Specify the maximum number of events that you want this operation to return in the response. By default, this parameter is set to 50 items.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        },
+        {
+          "title": "Offset",
+          "name": "start",
+          "type": "integer",
+          "tooltip": "Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of events, say events starting from the 10th event. By default, this is set as 0.",
+          "description": "(Optional) Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of events, say events starting from the 10th event. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 0
+        }
+      ],
+      "output_schema": []
+    },
+    {
+      "operation": "get_incident_attributes",
+      "title": "Get Event Attributes",
+      "description": "Retrieves all event attributes from the Fortinet FortiSIEM server.",
+      "enabled": true,
+      "annotation": "get_incident_attributes",
+      "category": "investigation",
+      "parameters": [],
+      "output_schema": {
+        "FQDN": "",
+        "Type": "",
+        "UUID": "",
+        "User": "",
+        "VM IP": "",
+        "Domain": "",
+        "Host IP": "",
+        "ICMP Id": "",
+        "IP Port": "",
+        "Message": "",
+        "User Id": "",
+        "Agent ID": "",
+        "Checksum": "",
+        "Computer": "",
+        "Duration": "",
+        "Event ID": "",
+        "Host MAC": "",
+        "URI Stem": "",
+        "Disk Name": "",
+        "File Name": "",
+        "File Path": "",
+        "Host City": "",
+        "Host Name": "",
+        "Host VLAN": "",
+        "ICMP Code": "",
+        "ICMP Type": "",
+        "Rule Name": "",
+        "Server IP": "",
+        "TCP flags": "",
+        "URI Query": "",
+        "WLAN SSID": "",
+        "Event Name": "",
+        "Event Type": "",
+        "File Owner": "",
+        "Host Model": "",
+        "Host State": "",
+        "IP Version": "",
+        "Image File": "",
+        "Sent Bytes": "",
+        "Source IP ": "",
+        "Source MAC": "",
+        "Source TOS": "",
+        "User Group": "",
+        "VPN Status": "",
+        "Attack Name": "",
+        "Device Port": "",
+        "Device Time": "",
+        "Employee ID": "",
+        "Host Vendor": "",
+        "IP Protocol": "",
+        "Incident ID": "",
+        "Mail Sender": "",
+        "New Host IP": "",
+        "Object Name": "",
+        "Relaying IP": "",
+        "Server Name": "",
+        "Source City": "",
+        "Source VLAN": "",
+        "Target User": "",
+        "Total Bytes": "",
+        "Collector ID": "",
+        "Collector IP": "",
+        "DHCP Gateway": "",
+        "Event Action": ": ",
+        "Event Source": "",
+        "Host Country": "",
+        "Mail Subject": "",
+        "Malware Name": "",
+        "Malware Type": "",
+        "Process Name": "",
+        "Reporting IP": ": ",
+        "Sent Packets": "",
+        "Source State": "",
+        "VM Host Name": "",
+        "Win Logon Id": "",
+        "ARP Source IP": "",
+        "Connection Id": "",
+        "DNS Server IP": "",
+        "IPS Sensor Id": "",
+        "Mail Receiver": "",
+        "Object Handle": "",
+        "Raw Event Log": "",
+        "Software Name": "",
+        "Target Domain": "",
+        "Total Packets": "",
+        "VPN Conn Type": "",
+        "WLAN Radio Id": "",
+        "ARP Source MAC": "",
+        "Account Number": "",
+        "Auth Server IP": "",
+        "Collector Name": "",
+        "DNS Query Type": "",
+        "Destination IP": "",
+        "Event Severity": "",
+        "Hash Algorithm": "",
+        "Incident Title": "",
+        "Malware Action": "",
+        "OS Object Type": "",
+        "Received Bytes": "",
+        "Recv Auth Fail": "",
+        "Reporting City": "",
+        "Sent TCP flags": "",
+        "Snort Event ID": "",
+        "Source Country": "",
+        "TCP Connection": "",
+        "UDP Connection": "",
+        "Win Logon Type": "",
+        "DHCP Server MAC": "",
+        "Destination MAC": "",
+        "Destination TOS": "",
+        "Firewall Action": "",
+        "HTTP User Agent": "",
+        "Host Virtual IP": "",
+        "ICMP Connection": "",
+        "Incident Source": "",
+        "Incident Target": "",
+        "Organization ID": "",
+        "Relaying Device": "",
+        "Reporting Model": "",
+        "Reporting State": "",
+        "Target Computer": "",
+        "Target Host MAC": "",
+        "VPN Tunnel Name": "",
+        "WLAN Channel Id": "",
+        "WLAN User count": "",
+        "Application Name": "",
+        "Application Port": "",
+        "Auth Server Name": "",
+        "Destination City": "",
+        "Destination VLAN": "",
+        "Event Occur Time": "",
+        "Firewall Session": "",
+        "Operating System": "",
+        "Received Packets": "",
+        "Reporting Device": "",
+        "Reporting Vendor": "",
+        "Source Host Name": "",
+        "DHCP Request Type": "",
+        "Destination State": "",
+        "Event Description": "",
+        "Host Organization": "",
+        "Incident Category": "",
+        "Informational URL": "",
+        "Organization Name": "",
+        "Reporting Country": "",
+        "Target User Group": "",
+        "ARP Destination IP": "",
+        "Event Parse Status": "",
+        "Event Receive Time": "",
+        "IP Type of Service": "",
+        "Object Access Type": "",
+        "Post-NAT Source IP": "",
+        "Previous Source IP": "",
+        "Recv Packet Errors": "",
+        "Sent Packet Errors": "",
+        "Source Device Port": "",
+        "Vulnerability Name": "",
+        "Vulnerability Type": "",
+        "ARP Destination MAC": "",
+        "Destination Country": "",
+        "Host Interface Name": "",
+        "Recv Interface Util": "",
+        "Sent Interface Util": "",
+        "Source Organization": "",
+        "Source TCP/UDP Port": "",
+        "Vulnerability Score": "",
+        "Win Logon Fail Code": "",
+        "False Positive Check": "",
+        "IDS Database Version": "",
+        "Post-NAT Source Port": "",
+        "Source Firewall Zone": "",
+        "Vulnerability CVE Id": "",
+        "Business Service Name": "",
+        "Destination Host Name": "",
+        "IPS Event Risk Rating": "",
+        "Incident Reporting IP": "",
+        "Network Access Device": "",
+        "Recv Packet Error Pct": "",
+        "Sent Packet Error Pct": "",
+        "Source Interface Name": "",
+        "System Event Category": "",
+        "Pre-NAT Destination IP": "",
+        "Reporting Organization": "",
+        "Virus Database Version": "",
+        "Destination Device Port": "",
+        "Event Severity Category": "",
+        "IPS Event Threat Rating": ": ",
+        "Post-NAT Destination IP": "",
+        "Destination Organization": "",
+        "Destination Service Name": "",
+        "Destination TCP/UDP Port": "",
+        "Network Access Device IP": "",
+        "Operating System Version": "",
+        "Pre-NAT Destination Port": "",
+        "Destination Firewall Zone": "",
+        "Palo Alto Firewall Action": "",
+        "Destination Interface Name": "",
+        "Extension Database Version": "",
+        "Network Access Device Port": "",
+        "Source Interface SNMP Index": "",
+        "Firewall Session Utilization": "",
+        "Post-NAT Destination Ip Port": "",
+        "Previous Source TCP/UDP Port": "",
+        "Command and Control Host Name": "",
+        "Wireless Attack Signature Name": "",
+        "Incident Trigger Attribute List": "",
+        "Source Autonomous System Number": "",
+        "Command and Control TCP/UDP Port": "",
+        "Destination Interface SNMP Index": "",
+        "Destination Autonomous System Number": "",
+        "Anti-Virus Extension Database Version": ""
+      }
+    },
+    {
+      "operation": "get_events_by_query_id",
+      "title": "Get Events Data By Query ID",
+      "description": "Retrieves data for events or incidents from the Fortinet FortiSIEM server based on the executed query ID you have specified.",
+      "enabled": true,
+      "annotation": "get_events_by_query_id",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Query ID",
+          "type": "text",
+          "name": "query_id",
+          "tooltip": "Specify the ID of the executed query based on which you want to retrieve data of events from the Fortinet FortiSIEM server. You can retrieve the Query ID from the output of actions such as List Incidents, Search Query, etc.",
+          "description": "Specify the ID of the executed query based on which you want to retrieve data of events from the Fortinet FortiSIEM server. You can retrieve the Query ID from the output of actions such as List Incidents, Search Query, etc.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        },
+        {
+          "title": "Number Of Items To Return In Response",
+          "name": "perPage",
+          "tooltip": "Specify the maximum number of items that you want this operation to return in the response. By default, the page size is set to 50 items.",
+          "value": 50,
+          "type": "integer",
+          "description": "(Optional) Specify the maximum number of items that you want this operation to return in the response. By default, the page size is set to 50 items.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        },
+        {
+          "title": "Offset",
+          "name": "start",
+          "type": "integer",
+          "tooltip": "Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say incidents starting from the 10th incident. By default, this is set as 0.",
+          "description": "(Optional) Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say incidents starting from the 10th incident. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 0
+        }
+      ],
+      "output_schema": {}
+    },
+    {
+      "operation": "create_watchlist_group",
+      "title": "Create Watch List",
+      "description": "Creates a watch list in the FortiSIEM database. A watch list can contain one or more watch list entries.",
+      "enabled": true,
+      "annotation": "create_watch_list_group",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Watch List JSON Object",
+          "name": "json_object",
+          "type": "json",
+          "tooltip": "Specify the JSON Object of a watch list with a watch list entry to create in the FortiSIEM database. For example: { \"description\":\"Servers,networkorstoragedevices\", \"displayName\":\"ResourceIssuesTest4\", \"type\":\"DyWatchList\", \"isCaseSensitive\":false, \"dataCreationType\":\"USER\", \"topGroup\":false, \"valuePattern\":null, \"valueType\":\"STRING\", \"ageOut\":\"1d\", \"custId\":1, \"entries\":[ { \"inclusive\":true, \"entryValue\":\"PVVol_A001_A000356_5new\", \"ageOut\":\"1d\", \"count\":1, \"custId\":1, \"firstSeen\":1612901760000, \"lastSeen\":1612901760000, \"triggeringRules\":\"DatastoreSpaceWarning\", \"dataCreationType\":\"USER\" } ] } NOTE: displayName and type are required fields.",
+          "description": "Specify the JSON Object of a watch list with a watch list entry to create in the FortiSIEM database. For example: { \"description\":\"Servers,networkorstoragedevices\", \"displayName\":\"ResourceIssuesTest4\", \"type\":\"DyWatchList\", \"isCaseSensitive\":false, \"dataCreationType\":\"USER\", \"topGroup\":false, \"valuePattern\":null, \"valueType\":\"STRING\", \"ageOut\":\"1d\", \"custId\":1, \"entries\":[ { \"inclusive\":true, \"entryValue\":\"PVVol_A001_A000356_5new\", \"ageOut\":\"1d\", \"count\":1, \"custId\":1, \"firstSeen\":1612901760000, \"lastSeen\":1612901760000, \"triggeringRules\":\"DatastoreSpaceWarning\", \"dataCreationType\":\"USER\" } ] } NOTE: displayName and type are required fields.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "response": [
+          {
+            "isCaseSensitive": "",
+            "naturalId": "",
+            "displayName": "",
+            "description": "",
+            "valuePattern": "",
+            "ageOut": "",
+            "topGroup": "",
+            "entries": [
+              {
+                "naturalId": "",
+                "firstSeen": "",
+                "count": "",
+                "triggeringRules": "",
+                "description": "",
+                "entryValue": "",
+                "expiredTime": "",
+                "ageOut": "",
+                "lastSeen": "",
+                "dataCreationType": "",
+                "custId": "",
+                "id": "",
+                "state": ""
+              }
+            ],
+            "dataCreationType": "",
+            "valueType": "",
+            "custId": "",
+            "name": "",
+            "id": ""
+          }
+        ],
+        "status": ""
+      }
+    },
+    {
+      "operation": "get_watch_lists",
+      "title": "Get Watch Lists",
+      "description": "Retrieves details for all watch lists or for specific watch lists based on input parameters you have specified.",
+      "enabled": true,
+      "annotation": "get_watch_lists",
+      "category": "investigation",
+      "conditional_output_schema": [
+        {
+          "condition": "{{(get_watch_list_by === 'Get All Watch Lists' || get_watch_list_by === 'By Watch List ID' || get_watch_list_by === 'By Watch List Entry Value')}}",
+          "output_schema": {
+            "response": [
+              {
+                "isCaseSensitive": "",
+                "naturalId": "",
+                "displayName": "",
+                "description": "",
+                "valuePattern": "",
+                "ageOut": "",
+                "topGroup": "",
+                "entries": [
+                  {
+                    "naturalId": "",
+                    "firstSeen": "",
+                    "count": "",
+                    "triggeringRules": "",
+                    "description": "",
+                    "entryValue": "",
+                    "expiredTime": "",
+                    "ageOut": "",
+                    "lastSeen": "",
+                    "dataCreationType": "",
+                    "custId": "",
+                    "id": "",
+                    "state": ""
+                  }
+                ],
+                "dataCreationType": "",
+                "valueType": "",
+                "custId": "",
+                "name": "",
+                "id": ""
+              }
+            ],
+            "status": ""
+          }
+        },
+        {
+          "condition": "{{get_watch_list_by === 'By Watch List Entry ID'}}",
+          "output_schema": {
+            "response": {
+              "isCaseSensitive": "",
+              "naturalId": "",
+              "displayName": "",
+              "description": "",
+              "valuePattern": "",
+              "ageOut": "",
+              "topGroup": "",
+              "entries": [
+                {
+                  "naturalId": "",
+                  "firstSeen": "",
+                  "count": "",
+                  "triggeringRules": "",
+                  "description": "",
+                  "entryValue": "",
+                  "expiredTime": "",
+                  "ageOut": "",
+                  "lastSeen": "",
+                  "dataCreationType": "",
+                  "custId": "",
+                  "id": "",
+                  "state": ""
+                }
+              ],
+              "dataCreationType": "",
+              "valueType": "",
+              "custId": "",
+              "name": "",
+              "id": ""
+            },
+            "status": ""
+          }
+        },
+        {
+          "condition": "{{true}}",
+          "output_schema": {
+            "response": [
+              {
+                "isCaseSensitive": "",
+                "naturalId": "",
+                "displayName": "",
+                "description": "",
+                "valuePattern": "",
+                "ageOut": "",
+                "topGroup": "",
+                "entries": [
+                  {
+                    "naturalId": "",
+                    "firstSeen": "",
+                    "count": "",
+                    "triggeringRules": "",
+                    "description": "",
+                    "entryValue": "",
+                    "expiredTime": "",
+                    "ageOut": "",
+                    "lastSeen": "",
+                    "dataCreationType": "",
+                    "custId": "",
+                    "id": "",
+                    "state": ""
+                  }
+                ],
+                "dataCreationType": "",
+                "valueType": "",
+                "custId": "",
+                "name": "",
+                "id": ""
+              }
+            ],
+            "status": ""
+          }
+        }
+      ],
+      "parameters": [
+        {
+          "title": "Get Watch List Data By",
+          "type": "select",
+          "name": "get_watch_list_by",
+          "options": [
+            "Get All Watch Lists",
+            "By Watch List ID",
+            "By Watch List Entry Value",
+            "By Watch List Entry ID"
+          ],
+          "onchange": {
+            "By Watch List ID": [
+              {
+                "title": "Watch List ID",
+                "name": "watch_list_id",
+                "type": "text",
+                "tooltip": "Watch list id of a specific watch list.",
+                "description": "Watch list id of a specific watch list.",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Get Watch List Data By",
+                "onChangeOption": "By Watch List ID"
+              }
+            ],
+            "By Watch List Entry Value": [
+              {
+                "title": "Entry Value",
+                "name": "entryValue",
+                "type": "text",
+                "tooltip": "Entry value of watch list entry.",
+                "description": "Entry value of watch list entry.",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Get Watch List Data By",
+                "onChangeOption": "By Watch List Entry Value"
+              }
+            ],
+            "By Watch List Entry ID": [
+              {
+                "title": "Watch List Entry ID",
+                "name": "watch_list_entry_id",
+                "type": "text",
+                "tooltip": "Watch list entry id to get watch list data",
+                "description": "Retrieves a specific watch list which contains a watch list entry with given entry ID",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "isOnChange": true,
+                "onChangeParam": "Get Watch List Data By",
+                "onChangeOption": "By Watch List Entry ID"
+              }
+            ]
+          },
+          "value": "Get All Watch Lists",
+          "description": "Select the parameters using which you want to retrieve watch list data from Fortinet FortiSIEM. If you choose Get All Watch Lists, then data for all watch lists are retrieved from Fortinet FortiSIEM. If you choose By Watch List ID, then in the Watch List IDfield you must specify the ID of the watch list whose details you want to retrieve from Fortinet FortiSIEM. If you choose By Watch List Entry Value, then in the Entry Valuefield you must specify the value of the watch list entry whose watch list details you want to retrieve from Fortinet FortiSIEM. If you choose By Watch List Entry ID, then in the Watch List Entry IDfield you must specify the ID of the watch list entry whose watch list details you want to retrieve from Fortinet FortiSIEM.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Select the parameters using which you want to retrieve watch list data from Fortinet FortiSIEM. If you choose Get All Watch Lists, then data for all watch lists are retrieved from Fortinet FortiSIEM. If you choose By Watch List ID, then in the Watch List IDfield you must specify the ID of the watch list whose details you want to retrieve from Fortinet FortiSIEM. If you choose By Watch List Entry Value, then in the Entry Valuefield you must specify the value of the watch list entry whose watch list details you want to retrieve from Fortinet FortiSIEM. If you choose By Watch List Entry ID, then in the Watch List Entry IDfield you must specify the ID of the watch list entry whose watch list details you want to retrieve from Fortinet FortiSIEM."
+        }
+      ]
+    },
+    {
+      "operation": "get_watch_list_entries_count",
+      "title": "Get Watch List Entries Count",
+      "description": "Returns the count of all watch list entries from all watch lists in Fortinet FortiSIEM.",
+      "enabled": true,
+      "annotation": "get_watch_list_entries_count",
+      "category": "investigation",
+      "parameters": [],
+      "output_schema": {
+        "status": "",
+        "response": {
+          "entry_count": ""
+        }
+      }
+    },
+    {
+      "operation": "get_watch_list_entry",
+      "title": "Get Watch List Entry",
+      "description": "Retrieves the specific watch list entry from Fortinet FortiSIEM based on the watch list entry ID you have specified.",
+      "enabled": true,
+      "annotation": "get_watch_list_entry",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Watch List Entry ID",
+          "name": "watch_list_entry_id",
+          "type": "text",
+          "tooltip": "Specify the ID of the watch list entry that you want to retrieve from the Fortinet FortiSIEM server.",
+          "description": "Specify the ID of the watch list entry that you want to retrieve from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "status": "",
+        "response": {
+          "id": "",
+          "count": "",
+          "state": "",
+          "ageOut": "",
+          "custId": "",
+          "lastSeen": "",
+          "firstSeen": "",
+          "naturalId": "",
+          "entryValue": "",
+          "description": "",
+          "expiredTime": "",
+          "triggeringRules": "",
+          "dataCreationType": ""
+        }
+      }
+    },
+    {
+      "operation": "add_watch_list_entries_to_watch_list_groups",
+      "title": "Add Watch List Entries to Watch List",
+      "description": "Adds watch list entries to one or more watch lists based on watch list ID and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "update_watch_list_group",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Watch List ID",
+          "name": "watch_list_id",
+          "type": "text",
+          "tooltip": "Specify the ID of the watch list to which you want to add watch list entries.",
+          "description": "Specify the ID of the watch list to which you want to add watch list entries.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Other parameters",
+          "name": "other_params",
+          "type": "json",
+          "tooltip": "Specify a JSON Array of watch list entry objects that you want to add to specific watch lists. For example, { \"inclusive\": false, \"count\": 10, \"custId\": 1, \"triggeringRules\": \"Datastore Space Warning\", \"entryValue\": \"PVVol_A001_A000356_POWER2\", \"ageOut\": \"1d\", \"lastSeen\": 1613601369215, \"firstSeen\": 1613601369215, \"disableAgeout\": false, \"dataCreationType\": \"USER\" }",
+          "description": "Specify a JSON Array of watch list entry objects that you want to add to specific watch lists. For example, { \"inclusive\": false, \"count\": 10, \"custId\": 1, \"triggeringRules\": \"Datastore Space Warning\", \"entryValue\": \"PVVol_A001_A000356_POWER2\", \"ageOut\": \"1d\", \"lastSeen\": 1613601369215, \"firstSeen\": 1613601369215, \"disableAgeout\": false, \"dataCreationType\": \"USER\" }",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "response": "",
+        "status": ""
+      }
+    },
+    {
+      "operation": "update_watch_list_entry",
+      "title": "Update Watch List Entry",
+      "description": "Updates a watch list entry in the FortiSIEM database based on the watch list entry ID and other input parameters you have provided.",
+      "enabled": true,
+      "annotation": "update_watch_list_entry",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Watch List Entry ID",
+          "name": "watch_list_entry_id",
+          "type": "text",
+          "tooltip": "Specify the ID of the watch list entry that you want to update in the FortiSIEM database.",
+          "description": "Specify the ID of the watch list entry that you want to update in the FortiSIEM database.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Count",
+          "name": "count",
+          "type": "integer",
+          "placeholder": "e.g 50",
+          "tooltip": "Specify the occurrence count of the watch list entry that you want to update in the FortiSIEM database.",
+          "description": "(Optional) Specify the occurrence count of the watch list entry that you want to update in the FortiSIEM database.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Last Seen Time",
+          "name": "lastSeenTime",
+          "placeholder": "Timestamp in milliseconds, e.g. 1613601369215",
+          "type": "text",
+          "tooltip": "Specify the value of the last seen time, i.e., the Unix timestamp, of the specific watch list that you want to update in the FortiSIEM database.",
+          "description": "(Optional) Specify the value of the last seen time, i.e., the Unix timestamp, of the specific watch list that you want to update in the FortiSIEM database.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "State",
+          "name": "state",
+          "type": "select",
+          "options": [
+            "Active",
+            "Inactive"
+          ],
+          "tooltip": "From the State drop-down list select Active to set the specific watch list to the Active state; select Inactive to set the specific watch list to the Inactive state.",
+          "description": "From the State drop-down list select Active to set the specific watch list to the Active state; select Inactive to set the specific watch list to the Inactive state.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Other Parameters",
+          "name": "other_params",
+          "type": "json",
+          "tooltip": "JSON Object of a watch list with a watch list entry that you want to update in the FortiSIEM database. For example { \"lastSeen\": 1612901760002, \"dataCreationType\": \"USER\", \"firstSeen\": 1612901760001, \"count\": 100, \"custId\": 1, \"triggeringRules\": \"Datastore Space Warning\", \"description\": \"Testing again\", \"id\": 889400, \"inclusive\": true, \"entryValue\": \"PVVol_A001_A000356_POWER23\", \"expiredTime\": 1612988160001, \"ageOut\": \"2d\" }",
+          "description": "JSON Object of a watch list with a watch list entry that you want to update in the FortiSIEM database. For example { \"lastSeen\": 1612901760002, \"dataCreationType\": \"USER\", \"firstSeen\": 1612901760001, \"count\": 100, \"custId\": 1, \"triggeringRules\": \"Datastore Space Warning\", \"description\": \"Testing again\", \"id\": 889400, \"inclusive\": true, \"entryValue\": \"PVVol_A001_A000356_POWER23\", \"expiredTime\": 1612988160001, \"ageOut\": \"2d\" }",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "response": {
+          "naturalId": "",
+          "firstSeen": "",
+          "count": "",
+          "triggeringRules": "",
+          "description": "",
+          "entryValue": "",
+          "expiredTime": "",
+          "ageOut": "",
+          "lastSeen": "",
+          "dataCreationType": "",
+          "custId": "",
+          "id": "",
+          "state": ""
+        },
+        "status": ""
+      }
+    },
+    {
+      "operation": "delete_watch_list_entry",
+      "title": "Delete Watch List Entry",
+      "description": "Deletes watch list entries from the FortiSIEM database based on the ID of the watch list entries you have specified.",
+      "enabled": true,
+      "annotation": "delete_watch_list_entry",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Watch List Entry IDs",
+          "name": "watch_list_entry_ids",
+          "type": "text",
+          "placeholder": "e.g [500000, 500001]",
+          "tooltip": "Specify the IDs of the watch list entries, in the CSV or list format, that you want to delete from the FortiSIEM database. For example, [5.0.10, 5.0.11]",
+          "description": "Specify the IDs of the watch list entries, in the CSV or list format, that you want to delete from the FortiSIEM database. For example, [5.0.10, 5.0.11]",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "response": "",
+        "status": ""
+      }
+    },
+    {
+      "operation": "delete_watch_list",
+      "title": "Delete Watch List",
+      "description": "Deletes watch lists from the FortiSIEM database based on the ID of the watch lists you have specified.",
+      "enabled": true,
+      "annotation": "delete_watch_list",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Watch List IDs",
+          "name": "watch_list_ids",
+          "type": "text",
+          "placeholder": "e.g [500000, 500001]",
+          "tooltip": "IDs of the watch lists, in the CSV or list format, that you want to delete from the FortiSIEM database. For example, [5.0.10, 5.0.11]",
+          "description": "IDs of the watch lists, in the CSV or list format, that you want to delete from the FortiSIEM database. For example, [5.0.10, 5.0.11]",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "response": "",
+        "status": ""
+      }
+    },
+    {
+      "operation": "create_lookup_table",
+      "title": "Create Lookup Table",
+      "description": "Creates the definition of a lookup table in the FortiSIEM server based on the name, column list, and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "create_lookup_table",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Name",
+          "name": "name",
+          "type": "text",
+          "tooltip": "Specify the name of the lookup table that you want to create in FortiSIEM. NOTE: The table name must contain only alphabets and numbers.",
+          "description": "Specify the name of the lookup table that you want to create in FortiSIEM. NOTE: The table name must contain only alphabets and numbers.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Column List",
+          "name": "columnList",
+          "type": "json",
+          "tooltip": "Specify the list of column definitions for the lookup table to create in FortiSIEM. For each column, you must specify the following three values: key: Specify a key indicating whether the column is a primary column name: Specify the name of the column type: Specify the type of the column, for example, STRING, LONG, or DOUBLE. For example, [ { \"key\": true, \"name\": \"url\", \"type\": \"STRING\" }, { \"key\": false, \"name\": \"wfCategoryID\", \"type\": \"LONG\" } ]",
+          "description": "Specify the list of column definitions for the lookup table to create in FortiSIEM. For each column, you must specify the following three values: key: Specify a key indicating whether the column is a primary column name: Specify the name of the column type: Specify the type of the column, for example, STRING, LONG, or DOUBLE. For example, [ { \"key\": true, \"name\": \"url\", \"type\": \"STRING\" }, { \"key\": false, \"name\": \"wfCategoryID\", \"type\": \"LONG\" } ]",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Description",
+          "name": "description",
+          "type": "text",
+          "tooltip": "Specify the description of the lookup table that you want to create in FortiSIEM.",
+          "description": "(Optional) Specify the description of the lookup table that you want to create in FortiSIEM.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Organization Name",
+          "name": "organizationName",
+          "type": "text",
+          "tooltip": "Specify the organization name to be assigned to the lookup table that you want to create in FortiSIEM. By default, this is set to the organization of the current user.",
+          "description": "(Optional) Specify the organization name to be assigned to the lookup table that you want to create in FortiSIEM. By default, this is set to the organization of the current user.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "id": "",
+        "name": "",
+        "columnList": [
+          {
+            "key": "",
+            "name": "",
+            "type": ""
+          }
+        ],
+        "description": "",
+        "lastUpdated": "",
+        "organizationName": ""
+      }
+    },
+    {
+      "operation": "get_all_lookup_tables",
+      "title": "Get All Lookup Table",
+      "description": "Retrieves the list of all lookupTable definitions from the FortiSIEM server based on the input parameters you have specified.",
+      "enabled": true,
+      "annotation": "get_all_lookup_tables",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Offset",
+          "name": "stat",
+          "type": "integer",
+          "tooltip": "Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say lookup table definitions starting from the 10th position. By default, this is set as 0.",
+          "description": "(Optional) Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say lookup table definitions starting from the 10th position. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 0
+        },
+        {
+          "title": "Number Of Items To Return",
+          "name": "size",
+          "tooltip": "Specify the maximum number of items that you want this operation to return in the response. By default, the page size is set to 25 items, and the maximum is set at 1000.",
+          "value": 25,
+          "type": "integer",
+          "description": "(Optional) Specify the maximum number of items that you want this operation to return in the response. By default, the page size is set to 25 items, and the maximum is set at 1000.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        }
+      ],
+      "output_schema": {
+        "data": [
+          {
+            "id": "",
+            "name": "",
+            "columnList": [
+              {
+                "key": "",
+                "name": "",
+                "type": ""
+              }
+            ],
+            "description": "",
+            "lastUpdated": "",
+            "organizationName": ""
+          }
+        ],
+        "size": "",
+        "start": "",
+        "total": ""
+      }
+    },
+    {
+      "operation": "delete_lookup_table",
+      "title": "Delete Lookup Table",
+      "description": "Deletes the lookupTable definition from the FortiSIEM server based on the lookup table ID you have specified.",
+      "enabled": true,
+      "annotation": "delete_lookup_table",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Lookup Table ID",
+          "name": "lookupTableId",
+          "type": "text",
+          "tooltip": "Specify the unique identifier representing the lookup Table whose definitions you want to delete from the Fortinet FortiSIEM server.",
+          "description": "Specify the unique identifier representing the lookup Table whose definitions you want to delete from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "status": "",
+        "message": ""
+      }
+    },
+    {
+      "operation": "import_lookup_table_data",
+      "title": "Import Lookup Table Data",
+      "description": "Imports the data of a specific CSV file in FortiSOAR to a specific lookup table in FortiSIEM based on the File/Attachment IRI, lookup table ID, and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "import_lookup_table_data",
+      "category": "investigation",
+      "parameters": [
+        {
+          "name": "input",
+          "title": "File IRI/Attachment ID",
+          "type": "select",
+          "description": "Select the method using which you want to import the CSV file present in FortiSOAR to the Fortinet FortiSIEM server lookup table. You can choose between Attachment ID and File IRI. If you choose Attachment ID, then in the Attachment ID field specify the Attachment ID of the CSV file that you want to import into the specified lookup table in FortiSIEM. If you choose File IRI, then in the File IRI field specify the CSV file that you want to import into the specified lookup table in FortiSIEM.",
+          "options": [
+            "Attachment ID",
+            "File IRI"
+          ],
+          "editable": true,
+          "visible": true,
+          "required": true,
+          "value": "File IRI",
+          "onchange": {
+            "Attachment ID": [
+              {
+                "name": "file",
+                "title": "Attachment ID",
+                "tooltip": "Attachment ID of the csv file that you want to import into lookup table",
+                "description": "Specify the Attachment ID of the CSV file that you want to import into the specified lookup table in FortiSIEM",
+                "type": "text",
+                "editable": true,
+                "visible": true,
+                "required": true,
+                "isOnChange": true,
+                "onChangeParam": "File IRI/Attachment ID",
+                "onChangeOption": "Attachment ID"
+              }
+            ],
+            "File IRI": [
+              {
+                "name": "file",
+                "title": "File IRI",
+                "tooltip": "File IRI of the csv file that you want to import into lookup table",
+                "description": "Specify the CSV file that you want to import into the specified lookup table in FortiSIEM",
+                "type": "text",
+                "editable": true,
+                "visible": true,
+                "required": true,
+                "isOnChange": true,
+                "onChangeParam": "File IRI/Attachment ID",
+                "onChangeOption": "File IRI"
+              }
+            ]
+          },
+          "tooltip": "Select the method using which you want to import the CSV file present in FortiSOAR to the Fortinet FortiSIEM server lookup table. You can choose between Attachment ID and File IRI. If you choose Attachment ID, then in the Attachment ID field specify the Attachment ID of the CSV file that you want to import into the specified lookup table in FortiSIEM. If you choose File IRI, then in the File IRI field specify the CSV file that you want to import into the specified lookup table in FortiSIEM."
+        },
+        {
+          "title": "Lookup Table ID",
+          "name": "lookupTableId",
+          "type": "text",
+          "tooltip": "Specify the unique identifier representing the lookup table in FortiSIEM into which you want to import the CSV file in the Fortinet FortiSIEM server.",
+          "description": "Specify the unique identifier representing the lookup table in FortiSIEM into which you want to import the CSV file in the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Mapping",
+          "name": "mapping",
+          "type": "json",
+          "tooltip": "Specify the configuration that matches the position of columns in the CSV file to columns in the specified lookup table. The format of the mapping is as follows: {\"\":,\"\":}. For example, { \"url\": 1, \"wfCategoryID\": 2 }",
+          "description": "Specify the configuration that matches the position of columns in the CSV file to columns in the specified lookup table. The format of the mapping is as follows: {\"\":,\"\":}. For example, { \"url\": 1, \"wfCategoryID\": 2 }",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "File Separator",
+          "name": "fileSeparator",
+          "type": "text",
+          "tooltip": "Specify the file separator for the specified CSV file. By default, this is set as the comma character(,)",
+          "description": "Specify the file separator for the specified CSV file. By default, this is set as the comma character(,)",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "File Quote Char",
+          "name": "fileQuoteChar",
+          "type": "text",
+          "tooltip": "Specify the file quote character for the specified CSV file. By default, this is set as the double quotation character(\")",
+          "description": "Specify the file quote character for the specified CSV file. By default, this is set as the double quotation character(\")",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Skip Header",
+          "name": "skipHeader",
+          "type": "checkbox",
+          "tooltip": "Select this option to ignore the header of the specified CSV file.",
+          "description": "Select this option to ignore the header of the specified CSV file.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": false
+        },
+        {
+          "title": "Update Type",
+          "name": "updateType",
+          "type": "select",
+          "options": [
+            "Overwrite",
+            "Append"
+          ],
+          "tooltip": "Select the method of updating the data in the Fortinet FortiSIEM server. You can choose between Overwrite (default) or Append.",
+          "description": "Select the method of updating the data in the Fortinet FortiSIEM server. You can choose between Overwrite (default) or Append.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "Overwrite"
+        }
+      ],
+      "output_schema": {
+        "taskId": ""
+      }
+    },
+    {
+      "operation": "check_import_task_status",
+      "title": "Check Import Task Status",
+      "description": "Checks the status of the import lookup table data task in FortiSIEM based on the lookup table ID and task ID you have specified.",
+      "enabled": true,
+      "annotation": "check_import_task_status",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Lookup Table ID",
+          "name": "lookupTableId",
+          "type": "text",
+          "tooltip": "Specify the unique identifier representing the lookup table in the Fortinet FortiSIEM server for which you want to check the import task status.",
+          "description": "Specify the unique identifier representing the lookup table in the Fortinet FortiSIEM server for which you want to check the import task status.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Task ID",
+          "name": "taskId",
+          "type": "text",
+          "tooltip": "Specify the task id of the importing data to the specified lookup table. You can retrieve the task ID from the response of the \"Import Lookup Table Data\" action.",
+          "description": "Specify the task id of the importing data to the specified lookup table. You can retrieve the task ID from the response of the \"Import Lookup Table Data\" action.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "actionResult": "",
+        "id": "",
+        "progress": "",
+        "status": ""
+      }
+    },
+    {
+      "operation": "get_lookup_table_data",
+      "title": "Get Lookup Table Data",
+      "description": "Retrieves items of the specified lookup table from FortiSIEM based on the lookup table ID and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "get_lookup_table_data",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Lookup Table ID",
+          "name": "lookupTableId",
+          "type": "text",
+          "tooltip": "Specify the unique identifier representing the lookup table for which you want to retrieve items from the Fortinet FortiSIEM server.",
+          "description": "Specify the unique identifier representing the lookup table for which you want to retrieve items from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Start",
+          "name": "start",
+          "type": "integer",
+          "tooltip": "Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say lookup table items starting from the 10th position. By default, this is set as 0.",
+          "description": "(Optional) Specify the index of the first item to be returned by this operation. This parameter is useful if you want to get a subset of records, say lookup table items starting from the 10th position. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 0
+        },
+        {
+          "title": "Number Of Items To Return",
+          "name": "size",
+          "tooltip": "Specify the maximum number of items that you want this operation to return in the response. By default, the page size is set to 25 items, and the maximum is set at 1000.",
+          "value": 25,
+          "type": "integer",
+          "description": "(Optional) Specify the maximum number of items that you want this operation to return in the response. By default, the page size is set to 25 items, and the maximum is set at 1000.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        },
+        {
+          "title": "Search Text",
+          "name": "searchText",
+          "tooltip": "Specify the Search text using which you want to filter items of the specified lookup table in the Fortinet FortiSIEM server.",
+          "type": "text",
+          "description": "(Optional) Specify the Search text using which you want to filter items of the specified lookup table in the Fortinet FortiSIEM server.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        },
+        {
+          "title": "Sort By",
+          "name": "sortBy",
+          "tooltip": "Specify the lookup table columns using which you want to sort the search results retrieved from the Fortinet FortiSIEM server. You can also specify the sort direction of the specified lookup table columns, i.e., descending (DESC) or ascending (ASC).",
+          "type": "text",
+          "description": "(Optional) Specify the lookup table columns using which you want to sort the search results retrieved from the Fortinet FortiSIEM server. You can also specify the sort direction of the specified lookup table columns, i.e., descending (DESC) or ascending (ASC).",
+          "visible": true,
+          "editable": true,
+          "required": false
+        }
+      ],
+      "output_schema": {
+        "data": [],
+        "size": "",
+        "start": "",
+        "total": ""
+      }
+    },
+    {
+      "operation": "update_lookup_table_data",
+      "title": "Update Lookup Table Data",
+      "description": "Updates items of a specified lookup table based on the lookup table ID, key, column data, and other input parameters you have specified.",
+      "enabled": true,
+      "annotation": "update_lookup_table_data",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Lookup Table ID",
+          "name": "lookupTableId",
+          "type": "text",
+          "tooltip": "Specify the unique identifier representing the lookup table whose items you want to update in the Fortinet FortiSIEM server.",
+          "description": "Specify the unique identifier representing the lookup table whose items you want to update in the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Key",
+          "name": "key",
+          "type": "text",
+          "tooltip": "Specify the primary key of the item column and its value that you want to update in the specified lookup table. The format is <keyColumn_1>:<value> For example, key={\"url\":\"http://example.com\"}",
+          "description": "Specify the primary key of the item column and its value that you want to update in the specified lookup table. The format is <keyColumn_1>:<value> For example, key={\"url\":\"http://example.com\"}",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Column Data",
+          "name": "columnData",
+          "type": "json",
+          "tooltip": "Specify the dictionary of column values to update in the specified lookup table. For example, { \"url\": \"www.test.com\", \"wfCategoryID\": 30, \"score\": 0.50119 }",
+          "description": "Specify the dictionary of column values to update in the specified lookup table. For example, { \"url\": \"www.test.com\", \"wfCategoryID\": 30, \"score\": 0.50119 }",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "response": "",
+        "message": ""
+      }
+    },
+    {
+      "operation": "delete_lookup_table_data",
+      "title": "Delete Lookup Table Data",
+      "description": "Delete items of the specified lookup table in FortiSIEM based on the lookup table ID and primary keys you have specified.",
+      "enabled": true,
+      "annotation": "delete_lookup_table_data",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Lookup Table ID",
+          "name": "lookupTableId",
+          "type": "text",
+          "tooltip": "Specify the unique identifier representing the lookup table whose items you want to delete from the Fortinet FortiSIEM server.",
+          "description": "Specify the unique identifier representing the lookup table whose items you want to delete from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Primary Keys",
+          "name": "keys_data",
+          "type": "json",
+          "tooltip": "Specify the list of primary keys of the item columns and their values that you want to delete from the specified lookup table. The format is: [ { \"keyColumn_1\": \"value\", \"keyColumn_2\": \"value\" } ]",
+          "description": "Specify the list of primary keys of the item columns and their values that you want to delete from the specified lookup table. The format is: [ { \"keyColumn_1\": \"value\", \"keyColumn_2\": \"value\" } ]",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "status": "",
+        "message": ""
+      }
+    },
+    {
+      "operation": "get_ip_context",
+      "title": "Get IP Context",
+      "description": "Retrieves the contextual data of the specified IP such as hostname, device type, location, device properties and known device information.",
+      "enabled": true,
+      "annotation": "get_ip_context",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "IP Address",
+          "name": "value",
+          "type": "text",
+          "tooltip": "Specify the IP address for which to retrieve context from FortiSIEM server.",
+          "description": "Specify the IP address for which to retrieve context from FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "contexts": [
+          {
+            "value": "",
+            "location": {
+              "city": "",
+              "region": "",
+              "latitude": "",
+              "longitude": "",
+              "countryCode": "",
+              "countryName": ""
+            },
+            "parameter": "",
+            "whoisInfo": "",
+            "topEventTypes": [],
+            "externalLookups": {
+              "ip": "",
+              "FortiGuardIOCResult": {
+                "av_cate": "",
+                "verdict": "",
+                "wf_cate": "",
+                "ioc_cate": "",
+                "ioc_tags": "",
+                "confidence": "",
+                "spam_cates": ""
+              }
+            },
+            "topVulnerabilities": []
+          }
+        ]
+      }
+    },
+    {
+      "operation": "get_host_context",
+      "title": "Get Host Context",
+      "description": "Retrieves the contextual data of the specified hostname such as device type, and domain lookup information if an FQDN is supplied.",
+      "enabled": true,
+      "annotation": "get_host_context",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Host Name",
+          "name": "value",
+          "type": "text",
+          "tooltip": "Specify the host name for which to retrieve context from FortiSIEM server.",
+          "description": "Specify the host name for which to retrieve context from FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "contexts": [
+          {
+            "value": "",
+            "hostName": "",
+            "parameter": "",
+            "deviceType": "",
+            "importance": "",
+            "externalLookups": {
+              "domain": "",
+              "FortiGuardIOCResult": {
+                "av_cate": "",
+                "verdict": "",
+                "wf_cate": "",
+                "ioc_cate": "",
+                "ioc_tags": "",
+                "confidence": "",
+                "spam_cates": ""
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "operation": "get_user_context",
+      "title": "Get User Context",
+      "description": "Retrieves the contextual data of the specified user such as known groups, location data, and top event types associated with this user account.",
+      "enabled": true,
+      "annotation": "get_user_context",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "User Name",
+          "name": "value",
+          "type": "text",
+          "tooltip": "Specify the user name for which to retrieve context from FortiSIEM server.",
+          "description": "Specify the user name for which to retrieve context from FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "contexts": [
+          {
+            "value": "",
+            "location": {
+              "latitude": "",
+              "longitude": ""
+            },
+            "userInfo": {
+              "groups": [],
+              "company": "",
+              "fullName": "",
+              "jobTitle": ""
+            },
+            "parameter": "",
+            "topEventTypes": []
+          }
+        ]
+      }
+    },
+    {
+      "operation": "get_incidents_by_entity",
+      "title": "Get Incidents By Entity",
+      "description": "Retrieves incidents from the Fortinet FortiSIEM server associated with a specific entity (IP, Hostname, or Username) within the specified lookback time window. Powered by the MCP investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_incidents_by_entity",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Entity Type",
+          "type": "select",
+          "name": "entity_type",
+          "description": "Select the type of entity to retrieve incidents for.",
+          "tooltip": "Select the type of entity to retrieve incidents for.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": "IP",
+          "options": [
+            "IP",
+            "Hostname",
+            "Username"
+          ]
+        },
+        {
+          "title": "IP Address",
+          "type": "text",
+          "name": "ip",
+          "description": "Specify the IP address of the entity. This is used when Entity Type is IP.",
+          "tooltip": "Specify the IP address of the entity. Used when Entity Type is IP.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Hostname",
+          "type": "text",
+          "name": "hostname",
+          "description": "Specify the hostname of the entity. This is used when Entity Type is Hostname.",
+          "tooltip": "Specify the hostname of the entity. Used when Entity Type is Hostname.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Username",
+          "type": "text",
+          "name": "username",
+          "description": "Specify the username of the entity. This is used when Entity Type is Username.",
+          "tooltip": "Specify the username of the entity. Used when Entity Type is Username.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Time Value",
+          "type": "integer",
+          "name": "time_value",
+          "description": "Specify the lookback time value. Combined with the Time Unit, this defines how far back to search for incidents. By default, this is set to 24.",
+          "tooltip": "Specify the lookback time value for the incident search window.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 24
+        },
+        {
+          "title": "Time Unit",
+          "type": "select",
+          "name": "time_unit",
+          "description": "Select the unit for the lookback time value. By default, this is set to hours.",
+          "tooltip": "Select the unit for the lookback time value.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "hours",
+          "options": [
+            "hours",
+            "days"
+          ]
+        }
+      ],
+      "output_schema": [
+        {
+          "incidentId": "",
+          "incidentTitle": "",
+          "eventSeverity": "",
+          "incidentStatus": "",
+          "incidentFirstSeen": "",
+          "incidentLastSeen": "",
+          "phIncidentCategory": "",
+          "incidentSrc": "",
+          "incidentTarget": ""
+        }
+      ]
+    },
+    {
+      "operation": "get_related_incidents",
+      "title": "Get Related Incidents",
+      "description": "Retrieves incidents related to a specific incident from the Fortinet FortiSIEM server based on the incident ID you have specified. Powered by the MCP investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_related_incidents",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident whose related incidents you want to retrieve from the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the ID of the incident whose related incidents you want to retrieve.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": [
+        {
+          "incidentId": "",
+          "incidentTitle": "",
+          "eventSeverity": "",
+          "incidentStatus": "",
+          "incidentFirstSeen": "",
+          "incidentLastSeen": "",
+          "phIncidentCategory": "",
+          "incidentSrc": "",
+          "incidentTarget": ""
+        }
+      ]
+    },
+    {
+      "operation": "get_trigger_events",
+      "title": "Get Trigger Events",
+      "description": "Retrieves the trigger (raw) events for a specific incident from the Fortinet FortiSIEM server based on the incident ID you have specified. Powered by the MCP investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_trigger_events",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident whose trigger events you want to retrieve from the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the ID of the incident whose trigger events you want to retrieve.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "columns": [],
+        "records": [
+          {}
+        ]
+      }
+    },
+    {
+      "operation": "get_entity_context",
+      "title": "Get Entity Context",
+      "description": "Retrieves contextual data for a specified entity (IP, Hostname, or Username) such as hostname, device type, location, device properties, and known device information from the Fortinet FortiSIEM server. Powered by the MCP investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_entity_context",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Entity Type",
+          "type": "select",
+          "name": "entity_type",
+          "description": "Select the type of entity to retrieve context for.",
+          "tooltip": "Select the type of entity to retrieve context for.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": "IP",
+          "options": [
+            "IP",
+            "Hostname",
+            "Username"
+          ]
+        },
+        {
+          "title": "IP Address",
+          "type": "text",
+          "name": "ip",
+          "description": "Specify the IP address of the entity. Used when Entity Type is IP.",
+          "tooltip": "Specify the IP address of the entity. Used when Entity Type is IP.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Hostname",
+          "type": "text",
+          "name": "hostname",
+          "description": "Specify the hostname of the entity. Used when Entity Type is Hostname.",
+          "tooltip": "Specify the hostname of the entity. Used when Entity Type is Hostname.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Username",
+          "type": "text",
+          "name": "username",
+          "description": "Specify the username of the entity. Used when Entity Type is Username.",
+          "tooltip": "Specify the username of the entity. Used when Entity Type is Username.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "contexts": [
+          {
+            "value": "",
+            "location": {
+              "city": "",
+              "region": "",
+              "latitude": "",
+              "longitude": "",
+              "countryCode": "",
+              "countryName": ""
+            },
+            "parameter": "",
+            "hostName": "",
+            "deviceType": "",
+            "importance": "",
+            "whoisInfo": "",
+            "topEventTypes": [],
+            "externalLookups": {},
+            "topVulnerabilities": []
+          }
+        ]
+      }
+    },
+    {
+      "operation": "get_entity_reputation",
+      "title": "Get Entity Reputation",
+      "description": "Retrieves reputation information for a specified entity (IP, URL, Domain, or Hash) from the Fortinet FortiSIEM server. Powered by the MCP investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_entity_reputation",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Entity Type",
+          "type": "select",
+          "name": "entity_type",
+          "description": "Select the type of entity to retrieve reputation for.",
+          "tooltip": "Select the type of entity to retrieve reputation for.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": "IP",
+          "options": [
+            "IP",
+            "URL",
+            "Domain",
+            "Hash"
+          ]
+        },
+        {
+          "title": "IP Address",
+          "type": "text",
+          "name": "ip",
+          "description": "Specify the IP address of the entity. Used when Entity Type is IP.",
+          "tooltip": "Specify the IP address of the entity. Used when Entity Type is IP.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "URL",
+          "type": "text",
+          "name": "url",
+          "description": "Specify the URL of the entity. Used when Entity Type is URL.",
+          "tooltip": "Specify the URL of the entity. Used when Entity Type is URL.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Domain",
+          "type": "text",
+          "name": "domain",
+          "description": "Specify the domain of the entity. Used when Entity Type is Domain.",
+          "tooltip": "Specify the domain of the entity. Used when Entity Type is Domain.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Hash",
+          "type": "text",
+          "name": "hash",
+          "description": "Specify the hash of the entity. Used when Entity Type is Hash.",
+          "tooltip": "Specify the hash of the entity. Used when Entity Type is Hash.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": [
+        {
+          "value": "",
+          "type": "",
+          "verdict": "",
+          "category": "",
+          "confidence": "",
+          "source": "",
+          "tags": []
+        }
+      ]
+    },
+    {
+      "operation": "get_iocs_for_incidents",
+      "title": "Get IOCs For Incidents",
+      "description": "Retrieves Indicators of Compromise (IOCs) for one or more incidents from the Fortinet FortiSIEM server based on the incident IDs you have specified. Powered by the MCP investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_iocs_for_incidents",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident IDs",
+          "type": "text",
+          "name": "incident_ids",
+          "description": "Comma-separated incident IDs for which you want to retrieve IOCs from the Fortinet FortiSIEM server.",
+          "tooltip": "Comma-separated incident IDs for which you want to retrieve IOCs.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "placeholder": "e.g. 12345, 12346"
+        }
+      ],
+      "output_schema": [
+        {
+          "ioc_value": "",
+          "ioc_type": "",
+          "incident_id": "",
+          "source": "",
+          "first_seen": "",
+          "last_seen": ""
+        }
+      ]
+    },
+    {
+      "operation": "get_top_risky_users",
+      "title": "Get Top Risky Users",
+      "description": "Retrieves the top risky users from the Fortinet FortiSIEM server along with their risk scores and associated incidents. Powered by the MCP investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_top_risky_users",
+      "category": "investigation",
+      "parameters": [],
+      "output_schema": [
+        {
+          "name": "",
+          "score": "",
+          "incidents": []
+        }
+      ]
+    },
+    {
+      "operation": "get_top_risky_devices",
+      "title": "Get Top Risky Devices",
+      "description": "Retrieves the top risky devices from the Fortinet FortiSIEM server along with their risk scores and associated incidents. Powered by the MCP investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_top_risky_devices",
+      "category": "investigation",
+      "parameters": [],
+      "output_schema": [
+        {
+          "name": "",
+          "score": "",
+          "incidents": []
+        }
+      ]
+    },
+    {
+      "operation": "query_postgres",
+      "title": "Query Postgres",
+      "description": "Runs a SQL query against the FortiSIEM PostgreSQL database and returns the matching rows. Powered by the MCP SQL investigation toolkit.",
+      "enabled": true,
+      "annotation": "query_postgres",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "SQL Query",
+          "type": "text",
+          "name": "sql",
+          "description": "Specify the SQL query to run against the FortiSIEM PostgreSQL database.",
+          "tooltip": "Specify the SQL query to run against the FortiSIEM PostgreSQL database.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "placeholder": "e.g. SELECT * FROM ph_incidents LIMIT 10"
+        }
+      ],
+      "output_schema": [
+        {}
+      ]
+    },
+    {
+      "operation": "query_clickhouse",
+      "title": "Query ClickHouse",
+      "description": "Runs a SQL query against the FortiSIEM ClickHouse database and returns the matching rows. Powered by the MCP SQL investigation toolkit.",
+      "enabled": true,
+      "annotation": "query_clickhouse",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "SQL Query",
+          "type": "text",
+          "name": "sql",
+          "description": "Specify the SQL query to run against the FortiSIEM ClickHouse database.",
+          "tooltip": "Specify the SQL query to run against the FortiSIEM ClickHouse database.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "placeholder": "e.g. SELECT eventTime, eventType FROM events LIMIT 10"
+        }
+      ],
+      "output_schema": {
+        "columns": [],
+        "records": [
+          {}
+        ]
+      }
+    },
+    {
+      "operation": "get_postgres_prompts",
+      "title": "Get Postgres Prompts",
+      "description": "Retrieves the available prompt templates for the FortiSIEM PostgreSQL database that can be used to guide SQL query construction. Powered by the MCP SQL investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_postgres_prompts",
+      "category": "investigation",
+      "parameters": [],
+      "output_schema": ""
+    },
+    {
+      "operation": "get_clickhouse_prompts",
+      "title": "Get ClickHouse Prompts",
+      "description": "Retrieves the available prompt templates for the FortiSIEM ClickHouse database that can be used to guide SQL query construction. Powered by the MCP SQL investigation toolkit.",
+      "enabled": true,
+      "annotation": "get_clickhouse_prompts",
+      "category": "investigation",
+      "parameters": [],
+      "output_schema": ""
+    },
+    {
+      "operation": "update_incident_severity",
+      "title": "Update Incident Severity (MCP)",
+      "description": "Updates the severity of a specific incident on the Fortinet FortiSIEM server based on the incident ID you have specified. Powered by the MCP mutation toolkit.",
+      "enabled": true,
+      "annotation": "update_incident_severity",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident whose severity you want to update on the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the ID of the incident whose severity you want to update.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Severity",
+          "type": "select",
+          "name": "severity",
+          "description": "Select the severity to assign to the specified incident.",
+          "tooltip": "Select the severity to assign to the specified incident.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": "LOW",
+          "options": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        }
+      ],
+      "output_schema": {
+        "result": ""
+      }
+    },
+    {
+      "operation": "update_incident_resolution",
+      "title": "Update Incident Resolution (MCP)",
+      "description": "Updates the resolution of a specific incident on the Fortinet FortiSIEM server based on the incident ID you have specified. Powered by the MCP mutation toolkit.",
+      "enabled": true,
+      "annotation": "update_incident_resolution",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident whose resolution you want to update on the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the ID of the incident whose resolution you want to update.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Resolution",
+          "type": "select",
+          "name": "resolution",
+          "description": "Select the resolution to assign to the specified incident.",
+          "tooltip": "Select the resolution to assign to the specified incident.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": "TruePositive",
+          "options": [
+            "TruePositive",
+            "FalsePositive"
+          ]
+        }
+      ],
+      "output_schema": {
+        "result": ""
+      }
+    },
+    {
+      "operation": "append_incident_comment_mcp",
+      "title": "Append Incident Comment (MCP)",
+      "description": "Appends a comment to a specific incident on the Fortinet FortiSIEM server based on the incident ID you have specified. Powered by the MCP mutation toolkit.",
+      "enabled": true,
+      "annotation": "append_incident_comment_mcp",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident to which you want to append the comment on the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the ID of the incident to which you want to append the comment.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Comment",
+          "type": "text",
+          "name": "comment",
+          "description": "Specify the comment text that you want to append to the specified incident on the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the comment text that you want to append to the specified incident.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "result": ""
+      }
+    },
+    {
+      "operation": "clear_incident_mcp",
+      "title": "Clear Incident (MCP)",
+      "description": "Clears a specific incident on the Fortinet FortiSIEM server based on the incident ID you have specified. Powered by the MCP mutation toolkit.",
+      "enabled": true,
+      "annotation": "clear_incident_mcp",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident that you want to clear on the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the ID of the incident that you want to clear.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "result": ""
+      }
+    },
+    {
+      "operation": "list_oauth_credentials",
+      "title": "List OAuth Credentials",
+      "description": "Lists all OAuth2 API key credentials that are configured on the Fortinet FortiSIEM server.",
+      "enabled": true,
+      "annotation": "list_oauth_credentials",
+      "category": "configuration",
+      "parameters": [],
+      "output_schema": [
+        {
+          "id": "",
+          "name": "",
+          "client_id": "",
+          "status": "",
+          "created_at": ""
+        }
+      ]
+    },
+    {
+      "operation": "create_oauth_credential",
+      "title": "Create OAuth Credential",
+      "description": "Creates a new OAuth2 API key credential on the Fortinet FortiSIEM server based on the name you have specified and returns the generated client ID and client secret.",
+      "enabled": true,
+      "annotation": "create_oauth_credential",
+      "category": "configuration",
+      "parameters": [
+        {
+          "title": "Name",
+          "type": "text",
+          "name": "name",
+          "description": "Specify the name of the OAuth2 API key credential that you want to create on the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the name of the OAuth2 API key credential that you want to create.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "id": "",
+        "name": "",
+        "client_id": "",
+        "client_secret": ""
+      }
+    },
+    {
+      "operation": "revoke_oauth_credential",
+      "title": "Revoke OAuth Credential",
+      "description": "Revokes an existing OAuth2 API key credential from the Fortinet FortiSIEM server based on the credential ID you have specified.",
+      "enabled": true,
+      "annotation": "revoke_oauth_credential",
+      "category": "configuration",
+      "parameters": [
+        {
+          "title": "Credential ID",
+          "type": "text",
+          "name": "credential_id",
+          "description": "Specify the ID of the OAuth2 API key credential that you want to revoke from the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the ID of the OAuth2 API key credential that you want to revoke.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "message": "",
+        "credential_id": ""
+      }
+    },
+    {
+      "operation": "ingest_incidents",
+      "title": "Ingest Incidents",
+      "description": "Ingests incidents from the Fortinet FortiSIEM server as native FortiSOAR alerts based on the time range and filter criteria you have specified. This operation maps FortiSIEM incidents, and optionally their trigger events, into FortiSOAR alert records.",
+      "enabled": true,
+      "annotation": "ingest_incidents",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "From",
+          "type": "datetime",
+          "name": "from",
+          "description": "Specify the start datetime from which to retrieve and ingest incidents from the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the start datetime from which to retrieve and ingest incidents.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "To",
+          "type": "datetime",
+          "name": "to",
+          "description": "Specify the end datetime till which to retrieve and ingest incidents from the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the end datetime till which to retrieve and ingest incidents.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Incident Status",
+          "type": "multiselect",
+          "name": "incidentStatus",
+          "description": "Select one or more incident statuses to filter the incidents that are ingested.",
+          "tooltip": "Select one or more incident statuses to filter the incidents that are ingested.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "Active",
+            "Auto Cleared",
+            "Manually Cleared",
+            "System Cleared"
+          ]
+        },
+        {
+          "title": "Incident Category",
+          "type": "multiselect",
+          "name": "incidentCategory",
+          "description": "Select one or more incident categories to filter the incidents that are ingested.",
+          "tooltip": "Select one or more incident categories to filter the incidents that are ingested.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "Availability",
+            "Performance",
+            "Change",
+            "Security",
+            "Other"
+          ]
+        },
+        {
+          "title": "Incident Severity",
+          "type": "multiselect",
+          "name": "severity",
+          "description": "Select one or more incident severities to filter the incidents that are ingested.",
+          "tooltip": "Select one or more incident severities to filter the incidents that are ingested.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "High",
+            "Medium",
+            "Low"
+          ]
+        },
+        {
+          "title": "Include Events",
+          "type": "checkbox",
+          "name": "include_events",
+          "description": "Specifies whether to include the related trigger events as evidence with each ingested incident. By default, this option is set to True.",
+          "tooltip": "Specifies whether to include the related trigger events as evidence with each ingested incident.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": true
+        },
+        {
+          "title": "Event Count",
+          "type": "integer",
+          "name": "event_count",
+          "description": "Specify the maximum number of trigger events to include as evidence for each ingested incident. By default, this is set to 5.",
+          "tooltip": "Specify the maximum number of trigger events to include as evidence for each ingested incident.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 5
+        },
+        {
+          "title": "Number Of Items To Return In Response or Size Per Page",
+          "type": "integer",
+          "name": "size",
+          "description": "Specify the maximum number of incidents to ingest per page. By default, this is set to 100.",
+          "tooltip": "Specify the maximum number of incidents to ingest per page.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 100
+        },
+        {
+          "title": "Use Query Lifecycle",
+          "type": "checkbox",
+          "name": "use_query_lifecycle",
+          "description": "Specifies whether to use the FortiSIEM query lifecycle (async query) API to retrieve incidents. By default, this option is set to False.",
+          "tooltip": "Specifies whether to use the FortiSIEM query lifecycle (async query) API to retrieve incidents.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": false
+        }
+      ],
+      "output_schema": [
+        {
+          "external_id": "",
+          "name": "",
+          "alert_state": "",
+          "severity": "",
+          "category": "",
+          "alert_type": "",
+          "source_ip": "",
+          "source_hostname": "",
+          "dest_ip": "",
+          "dest_hostname": "",
+          "target_user": "",
+          "rule_name": "",
+          "rule_description": "",
+          "reporting_device": "",
+          "reporting_ip": "",
+          "description": "",
+          "evidence": [],
+          "mitre_technique_id": "",
+          "mitre_technique_name": ""
+        }
+      ]
+    },
+    {
+      "operation": "get_incident_with_events",
+      "title": "Get Incident With Events",
+      "description": "Retrieves a specific incident and its associated trigger events from the Fortinet FortiSIEM server based on the incident ID you have specified. Powered by pyfortisiem.",
+      "enabled": true,
+      "annotation": "get_incident_with_events",
+      "category": "investigation",
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident, along with its events, that you want to retrieve from the Fortinet FortiSIEM server.",
+          "tooltip": "Specify the ID of the incident, along with its events, that you want to retrieve.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Event Count",
+          "type": "integer",
+          "name": "event_count",
+          "description": "Specify the maximum number of associated events to retrieve with the incident. By default, this is set to 10.",
+          "tooltip": "Specify the maximum number of associated events to retrieve with the incident.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": 10
+        },
+        {
+          "title": "Use Query Lifecycle",
+          "type": "checkbox",
+          "name": "use_query_lifecycle",
+          "description": "Specifies whether to use the FortiSIEM query lifecycle (async query) API to retrieve the events. By default, this option is set to False.",
+          "tooltip": "Specifies whether to use the FortiSIEM query lifecycle (async query) API to retrieve the events.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": false
+        },
+        {
+          "title": "Time From",
+          "type": "datetime",
+          "name": "timeFrom",
+          "description": "(Optional) Specify the start datetime to search for the incident events. Used with the query lifecycle API.",
+          "tooltip": "Specify the start datetime to search for the incident events.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Time To",
+          "type": "datetime",
+          "name": "timeTo",
+          "description": "(Optional) Specify the end datetime to search for the incident events. Used with the query lifecycle API.",
+          "tooltip": "Specify the end datetime to search for the incident events.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "output_schema": {
+        "incidentId": "",
+        "incidentTitle": "",
+        "eventSeverity": "",
+        "incidentStatus": "",
+        "incidentFirstSeen": "",
+        "incidentLastSeen": "",
+        "phIncidentCategory": "",
+        "phSubIncidentCategory": "",
+        "incidentSrc": "",
+        "incidentTarget": "",
+        "incidentReso": "",
+        "incidentDetail": "",
+        "incidentRptDevName": "",
+        "incidentRptIp": "",
+        "events": [
+          {
+            "id": "",
+            "nid": "",
+            "eventType": "",
+            "eventName": "",
+            "srcIpAddr": "",
+            "destIpAddr": "",
+            "eventSeverity": "",
+            "phRecvTime": "",
+            "rawEventMsg": "",
+            "receiveTime": ""
+          }
+        ]
+      }
+    }
+  ]
+}

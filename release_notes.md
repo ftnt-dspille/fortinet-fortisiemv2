@@ -1,0 +1,55 @@
+#### 6.0.4
+
+- Fixes a regression in 6.0.2: `sourcedata` was stored as the literal string
+  `Array` on every alert. 6.0.2 had the mapper pre-serialise the payload and
+  the playbook assign it with a bare `{{ }}`, which makes FortiSOAR parse the
+  leading `{...}` and collapse the value -- the same trap the rendered
+  description hit in 6.0.1. The mapper now emits `source_payload` as a dict
+  and the playbook renders it with `| toJSON`, which keeps the description out
+  of the blob without tripping the parse.
+
+#### 6.0.3
+
+- Ingestion no longer cold-starts forever when the watermark macro is missing.
+  `Environment Setup` ran only on the wizard's `vars.request.env_setup` first
+  pass, and `Update Last Alert Pull Time` only updates an existing macro -- so a
+  configuration whose macro never got created would re-read the same `minutes`
+  window on every run and silently ingest nothing. Observed on a live 8.0.0
+  appliance as 100 scheduled runs, all reporting `finished`, with zero records
+  created. `Get Macro Value` now runs first so the macro's absence is visible,
+  and `Environment Setup` fires on that condition too.
+
+#### 6.0.2
+
+- `sourcedata` no longer carries a second copy of the rendered `description`.
+  It is serialised in `field_mapping` with that key excluded, instead of by
+  `| toJSON` in the ingestion playbook. The HTML is presentation derived from
+  values already in the payload, and storing it twice accounted for roughly
+  30% of every alert's source data.
+
+#### 6.0.1
+
+Alert field mapping.
+
+- `description` is now rich text built from the incident (headline, overview
+  table, MITRE ATT&CK list, incident detail) instead of FortiSIEM's raw
+  `incidentDetail` JSON. The raw value was being parsed by FortiSOAR's
+  templating and collapsed to the literal string `Array` on every alert.
+- `alert_type` now resolves only to members of the `AlertType` picklist. It
+  previously emitted `Security`, `Availability`, `Change` and
+  `Anomaly Detection`, none of which are picklist values.
+- The ingestion playbook maps `type`, `alertDetectionDate`, `eventTime`,
+  `hostName`, `hostIPAddress`, `destinationIp`, `destinationPort`,
+  `mitreattackid` and `mitreTechnique` in addition to the previous fields.
+- Incident timestamps are also emitted as epoch seconds
+  (`alert_generation_epoch`, `last_observed_epoch`) so the playbook assigns
+  FortiSOAR's integer date columns directly.
+
+#### What's Fixed
+- Added a parameter Group By in the action Run Advanced Search Query.
+- Fixed the issue where widget spinner would always show the following message on the alert's detailed view when an alert was updated during re-ingestion: Please wait while Indicators are being extracted. NOTE: You need to reconfigure data ingestion for this to work.
+
+> **Notes**
+> - Only FortiSIEM versions 7.1.0 and later are supported by this connector version.
+> - The FortiSIEM API no longer supports filtering incidents based on sub-categories in the List Incidents action.
+> - The Time From and Time To parameters in the Get Events For Incident action are supported only in the FortiSIEM v6.7.6.
