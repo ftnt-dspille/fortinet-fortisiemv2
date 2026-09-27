@@ -1,0 +1,265 @@
+{
+ "_source": "fortinet-fortisiem 6.0.0 info.json -- parameter names per operation",
+ "add_watch_list_entries_to_watch_list_groups": [
+  "other_params",
+  "watch_list_id"
+ ],
+ "check_import_task_status": [
+  "lookupTableId",
+  "taskId"
+ ],
+ "clear_incident": [
+  "comment_text",
+  "id"
+ ],
+ "create_case": [
+  "assignee",
+  "caseMgmtPolicy",
+  "dueDate",
+  "incidentIds",
+  "note",
+  "organization",
+  "severity",
+  "stage",
+  "status",
+  "summary"
+ ],
+ "create_lookup_table": [
+  "columnList",
+  "description",
+  "name",
+  "organizationName"
+ ],
+ "create_task": [
+  "assignedToUser",
+  "comment",
+  "task_metadata",
+  "triggeredByUser"
+ ],
+ "create_watchlist_group": [
+  "json_object"
+ ],
+ "delete_lookup_table": [
+  "lookupTableId"
+ ],
+ "delete_lookup_table_data": [
+  "keys_data",
+  "lookupTableId"
+ ],
+ "delete_watch_list": [
+  "watch_list_ids"
+ ],
+ "delete_watch_list_entry": [
+  "watch_list_entry_ids"
+ ],
+ "execute_api_request": [
+  "content_type",
+  "endpoint",
+  "method",
+  "payload",
+  "query_params"
+ ],
+ "get_all_lookup_tables": [
+  "size",
+  "stat"
+ ],
+ "get_associated_events": [
+  "incident_id",
+  "perPage",
+  "timeFrom",
+  "timeTo"
+ ],
+ "get_associated_events_new": [
+  "incident_id",
+  "perPage",
+  "timeFrom",
+  "timeTo"
+ ],
+ "get_case_analysts": [
+  "organization",
+  "size",
+  "start",
+  "timeFrom",
+  "timeTo"
+ ],
+ "get_case_field_schema": [],
+ "get_device_info": [
+  "ip",
+  "org"
+ ],
+ "get_devices_details": [
+  "org"
+ ],
+ "get_devices_details_in_address": [
+  "excludeIps",
+  "includeIps",
+  "org"
+ ],
+ "get_event_details": [
+  "event_id",
+  "from",
+  "select_clause",
+  "to"
+ ],
+ "get_events_by_query_id": [
+  "perPage",
+  "query_id",
+  "start"
+ ],
+ "get_host_context": [
+  "value"
+ ],
+ "get_incident_attributes": [],
+ "get_incident_details": [
+  "incidentId"
+ ],
+ "get_incidents": [
+  "eventType",
+  "fields",
+  "incidentCategory",
+  "incidentStatus",
+  "incidentSubCategory",
+  "orderBy",
+  "search",
+  "severity",
+  "size",
+  "start",
+  "timeFrom",
+  "timeTo"
+ ],
+ "get_ip_context": [
+  "value"
+ ],
+ "get_list_cases": [
+  "condition",
+  "orderBy",
+  "runForOrganization",
+  "selectFields",
+  "size",
+  "start"
+ ],
+ "get_lookup_table_data": [
+  "lookupTableId",
+  "searchText",
+  "size",
+  "sortBy",
+  "start"
+ ],
+ "get_monitored_devices": [],
+ "get_monitored_organizations": [],
+ "get_org_name_by_org_id": [
+  "domain_id"
+ ],
+ "get_user_context": [
+  "value"
+ ],
+ "get_watch_list_entries_count": [],
+ "get_watch_list_entry": [
+  "watch_list_entry_id"
+ ],
+ "get_watch_lists": [
+  "entryValue",
+  "get_watch_list_by",
+  "watch_list_entry_id",
+  "watch_list_id"
+ ],
+ "import_lookup_table_data": [
+  "file",
+  "fileQuoteChar",
+  "fileSeparator",
+  "input",
+  "lookupTableId",
+  "mapping",
+  "skipHeader",
+  "updateType"
+ ],
+ "incident_comment": [
+  "comment_text",
+  "id"
+ ],
+ "run_report": [
+  "AttrList",
+  "cond",
+  "from",
+  "groupby",
+  "orderby",
+  "perPage",
+  "query_type",
+  "rel_time",
+  "sql_query",
+  "start",
+  "time_selection",
+  "to",
+  "value"
+ ],
+ "search_events": [
+  "attribute",
+  "destination_ip_value",
+  "destination_port_value",
+  "event_action_value",
+  "event_id_value",
+  "file_name_value",
+  "from",
+  "host_name_value",
+  "incident_id_value",
+  "organization_name_value",
+  "perPage",
+  "post_nat_source_ip_value",
+  "process_name_value",
+  "raw_event_log_value",
+  "rel_time",
+  "relay_ip_value",
+  "reporting_ip_value",
+  "select_clause",
+  "source_ip_value",
+  "source_mac_value",
+  "source_port_value",
+  "start",
+  "time_selection",
+  "to",
+  "user_value",
+  "value"
+ ],
+ "update_cases": [
+  "assignee",
+  "caseId",
+  "caseMgmtPolicy",
+  "dueDate",
+  "incidentIds",
+  "note",
+  "severity",
+  "stage",
+  "status",
+  "summary"
+ ],
+ "update_incident": [
+  "actionStatus",
+  "comments",
+  "externalAssignedUser",
+  "externalTicketId",
+  "externalTicketState",
+  "externalTicketType",
+  "incidentId",
+  "incidentStatus",
+  "resolution",
+  "severity"
+ ],
+ "update_lookup_table_data": [
+  "columnData",
+  "key",
+  "lookupTableId"
+ ],
+ "update_watch_list_entry": [
+  "count",
+  "lastSeenTime",
+  "other_params",
+  "state",
+  "watch_list_entry_id"
+ ],
+ "upload_attachment_for_case": [
+  "caseID",
+  "file_iri",
+  "file_path",
+  "upload_option"
+ ]
+}

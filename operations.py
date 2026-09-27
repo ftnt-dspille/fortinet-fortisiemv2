@@ -8,11 +8,12 @@ Copyright end
 
 from .attributes_list import *
 from .lookup_table_actions import *
-from .schema import report_schema, schema_by_event_id, search_event_schema
+from .schema import report_schema, schema_by_event_id, search_event_schema, sql_query_schema
 from .watch_list_actions import *
 from .ingestion import ingest_incidents
 from .utils import DATETIME_PATTERNS, parse_datetime_to_epoch
 from .field_mapping import map_incident_to_alert, parse_mitre, parse_attrib_pairs
+from .v1_compat import V1_COMPAT_OPERATIONS
 
 requests.packages.urllib3.disable_warnings()
 
@@ -113,11 +114,19 @@ def get_org_name_by_org_id(config, params):
 def run_report(config, params):
     try:
         fortisiem_obj = FortiSIEM(config)
-        xml_request_payload = report_schema.format(AttrList=params.get('AttrList') if params.get('AttrList') else '',
-                                                   orderby=params.get('orderby') if params.get('orderby') else '',
-                                                   conditions=params.get('cond', ''), groupby=params.get('groupby', ''),
-                                                   time_duration=handle_time(params)
-                                                   )
+        # v1 parity: `query_type: SQL Query` runs a ClickHouse SQL report.
+        # Absent or `Basic Query` is the attribute/condition form, which is
+        # all v2 used to accept -- so existing v2 playbooks are unaffected.
+        if (params.get('query_type') or '').lower() == 'sql query':
+            if not params.get('sql_query'):
+                raise ConnectorError('sql_query is required when query_type is SQL Query')
+            xml_request_payload = sql_query_schema.format(sql_query=params.get('sql_query'))
+        else:
+            xml_request_payload = report_schema.format(
+                AttrList=params.get('AttrList') if params.get('AttrList') else '',
+                orderby=params.get('orderby') if params.get('orderby') else '',
+                conditions=params.get('cond', ''), groupby=params.get('groupby', ''),
+                time_duration=handle_time(params))
         xml_request_payload = xml_request_payload.replace('None', '')
         query_id, headers = get_event_query(fortisiem_obj, xml_request_payload)
         query_id = parse_query_progress(query_id)
@@ -429,7 +438,9 @@ def get_associated_events(config, params):
     from .connections import get_async_client, run_async
 
     incident_id = int(params.get('incident_id'))
-    size = params.get('perPage', 10) or 10
+    # info.json names this `per_page`; v1 (and older v2 playbooks) send
+    # `perPage`. Reading only `perPage` silently ignored the designer's value.
+    size = params.get('per_page') or params.get('perPage') or 10
     time_from = convert_time_to_miliseconds(params.get("timeFrom"))
     time_to = convert_time_to_miliseconds(params.get("timeTo"))
 
@@ -1140,3 +1151,6 @@ operations = {
     # Version
     'get_fsm_version': get_fsm_version,
 }
+
+# v1 (fortinet-fortisiem) operations v2 had dropped -- see v1_compat.py.
+operations.update(V1_COMPAT_OPERATIONS)

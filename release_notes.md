@@ -1,3 +1,23 @@
+#### 6.1.0
+
+- v2 now runs playbooks written for `fortinet-fortisiem` (v1) with only the
+  connector name changed. Every v1 6.0.0 operation exists here under the same
+  name and accepts the same parameters:
+  - Case management (`create_case`, `update_cases`, `get_list_cases`,
+    `get_case_analysts`, `get_case_field_schema`, `upload_attachment_for_case`),
+    `create_task` and `execute_api_request` are ported from v1 onto v2's REST
+    client.
+  - `run_report` accepts v1's `query_type: SQL Query` / `sql_query` (ClickHouse
+    SQL report). Omitting `query_type` keeps the attribute/condition form.
+  - `get_associated_events_new` is a hidden alias. New playbooks should use
+    `get_associated_events`, which already runs the start/progress/result
+    lifecycle.
+  - `update_incident` declares v1's `actionStatus`.
+- Fix: `get_associated_events` ignored its page size. info.json names the
+  parameter `per_page`, but the code read only `perPage`. Both spellings now work.
+- `create_task` with no metadata raises a clear error. The v1 code it was ported
+  from failed with a NameError there.
+
 #### 6.0.4
 
 - Fixes a regression in 6.0.2: `sourcedata` was stored as the literal string

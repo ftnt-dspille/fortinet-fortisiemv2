@@ -1,7 +1,7 @@
 {
   "name": "fortinet-fortisiemv2",
   "label": "Fortinet FortiSIEM v2",
-  "version": "6.0.4",
+  "version": "6.1.0",
   "description": "FortiSIEM v2 provides integrations that allow you to query and make changes to the CMDB, query events, and send incident notifications. This revamped connector adds async operations, MCP (Model Context Protocol) investigation tools, and native ingestion support, along with actions like get incidents, comment incident, clear incident, get device details, get monitored organizations, report-related actions, and get all associated events for an incident from FortiSIEM.",
   "publisher": "Fortinet",
   "cs_approved": true,
@@ -674,6 +674,17 @@
           "editable": true,
           "visible": true,
           "tooltip": "Specify the assigned user of the external ticket to update in the specified incident you want to update on the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "Automation Status",
+          "type": "text",
+          "name": "actionStatus",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the status of the automation playbook that you want to update.",
+          "description": "Specify the status of the automation playbook that you want to update.",
+          "placeholder": "RunPlaybook:TEST01:Success"
         }
       ],
       "output_schema": {
@@ -1800,132 +1811,153 @@
       "category": "investigation",
       "parameters": [
         {
-          "title": "Advanced Search Query",
-          "placeholder": "e.g. (srcIpAddr IN (192.168.60.82, 192.168.60.90) AND phEventCategory &gt;= 0)",
-          "required": true,
-          "editable": true,
-          "visible": true,
-          "tooltip": "Specify the conditions using which you want to process the search results for the report that you want to run on the Fortinet FortiSIEM server. For example, (incidentDetail CONTAIN \"jobName\" AND phEventCategory = 1) AND (phCustId IN (1)).",
-          "description": "Specify the conditions using which you want to process the search results for the report that you want to run on the Fortinet FortiSIEM server. For example, (incidentDetail CONTAIN \"jobName\" AND phEventCategory = 1) AND (phCustId IN (1)).",
-          "type": "text",
-          "name": "cond",
-          "value": ""
-        },
-        {
-          "title": "Event Fields To Show In Response",
-          "required": true,
-          "editable": true,
-          "visible": true,
-          "tooltip": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
-          "placeholder": "e.g. phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
-          "description": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
-          "type": "text",
-          "name": "AttrList",
-          "value": "phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg"
-        },
-        {
-          "title": "Group By",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "tooltip": "Specify the attributes based on which to group the search results. The sequence and number of attributes should be same as specified in Event Fields To Show In Response. Only COUNT(*) attribute can be excluded. For example: reptDevIpAddr",
-          "placeholder": "e.g. phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
-          "description": "(Optional) Specify the attributes based on which to group the search results. The sequence and number of attributes should be same as specified in Event Fields To Show In Response parameter. Only COUNT(*) attribute can be excluded. For example: reptDevIpAddr",
-          "type": "text",
-          "name": "groupby"
-        },
-        {
-          "title": "Order By",
-          "required": false,
-          "editable": true,
-          "visible": true,
-          "tooltip": "Specify the field using which you want to sort the search results for the report that you want to run on the Fortinet FortiSIEM server. You can also specify the sort direction of the specified field. For example, phRecvTime DESC",
-          "description": "(Optional) Specify the field using which you want to sort the search results for the report that you want to run on the Fortinet FortiSIEM server. You can also specify the sort direction of the specified field. For example, phRecvTime DESC",
-          "type": "text",
-          "name": "orderby",
-          "value": "phRecvTime DESC",
-          "placeholder": "e.g. phRecvTime DESC"
-        },
-        {
-          "title": "Time Range",
+          "title": "Query Type",
           "type": "select",
-          "name": "time_selection",
-          "description": "(Optional) Specify the time duration to search for reports to run on the Fortinet FortiSIEM server. By default, this is set as Relative Time. You can select from the following options: Relative Time: Specify values in the following fields: Relative Time: Select the unit of the duration from the following options: Minutes Hours Days Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours. Absolute Time: Specify values in the following fields: From: (Optional) Specify the start DateTime for which to get events from the Fortinet FortiSIEM server. To: (Optional) Specify the end DateTime for which to get events from the Fortinet FortiSIEM server.",
+          "name": "query_type",
+          "description": "Select the query type to execute on FortiSIEM: Basic Query for simple data retrieval or SQL Query for custom, advanced operations.",
+          "tooltip": "Select the query type to execute on FortiSIEM: Basic Query for simple data retrieval or SQL Query for custom, advanced operations.",
           "options": [
-            "Relative Time",
-            "Absolute Time"
+            "Basic Query",
+            "SQL Query"
           ],
           "required": false,
           "editable": true,
           "visible": true,
-          "value": "Relative Time",
+          "value": "Basic Query",
           "onchange": {
-            "Relative Time": [
+            "Basic Query": [
               {
-                "title": "Relative Time",
-                "tooltip": "For example, if you choose Hours and provide the value 2, then this operation run report for last 2 hours, and return the response against the report from the Fortinet FortiSIEM server.",
-                "name": "rel_time",
+                "title": "Advanced Search Query",
+                "placeholder": "e.g. (srcIpAddr IN (192.168.60.82, 192.168.60.90) AND phEventCategory &gt;= 0)",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "tooltip": "Specify the conditions using which you want to process the search results for the report that you want to run on the Fortinet FortiSIEM server. For example, (incidentDetail CONTAIN \"jobName\" AND phEventCategory = 1) AND (phCustId IN (1)).",
+                "description": "Specify the conditions using which you want to process the search results for the report that you want to run on the Fortinet FortiSIEM server. For example, (incidentDetail CONTAIN \"jobName\" AND phEventCategory = 1) AND (phCustId IN (1)).",
+                "type": "text",
+                "name": "cond",
+                "value": ""
+              },
+              {
+                "title": "Event Fields To Show In Response",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "tooltip": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
+                "placeholder": "e.g. phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
+                "description": "Specify the comma-separated list of event fields that you want to include in the response retrieved from the FortiSIEM server.",
+                "type": "text",
+                "name": "AttrList",
+                "value": "phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg"
+              },
+              {
+                "title": "Group By",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "tooltip": "Specify the attributes based on which to group the search results. The sequence and number of attributes should be same as specified in Event Fields To Show In Response. Only COUNT(*) attribute can be excluded. For example: reptDevIpAddr",
+                "placeholder": "e.g. phRecvTime,reptDevIpAddr,eventType,eventName,srcIpAddr,destIpAddr,user,rawEventMsg",
+                "description": "(Optional) Specify the attributes based on which to group the search results. The sequence and number of attributes should be same as specified in Event Fields To Show In Response parameter. Only COUNT(*) attribute can be excluded. For example: reptDevIpAddr",
+                "type": "text",
+                "name": "groupby"
+              },
+              {
+                "title": "Order By",
+                "required": false,
+                "editable": true,
+                "visible": true,
+                "tooltip": "Specify the field using which you want to sort the search results for the report that you want to run on the Fortinet FortiSIEM server. You can also specify the sort direction of the specified field. For example, phRecvTime DESC",
+                "description": "(Optional) Specify the field using which you want to sort the search results for the report that you want to run on the Fortinet FortiSIEM server. You can also specify the sort direction of the specified field. For example, phRecvTime DESC",
+                "type": "text",
+                "name": "orderby",
+                "value": "phRecvTime DESC",
+                "placeholder": "e.g. phRecvTime DESC"
+              },
+              {
+                "title": "Time Range",
                 "type": "select",
-                "description": "(Optional) Specify the time range for which you want to run report for the specified time span. For example, if you choose Hours and provide 2 in the value, then this operation run report for last 2 hours, and return the response against the report from the Fortinet FortiSIEM server.",
+                "name": "time_selection",
+                "description": "(Optional) Specify the time duration to search for reports to run on the Fortinet FortiSIEM server. By default, this is set as Relative Time. You can select from the following options: Relative Time: Specify values in the following fields: Relative Time: Select the unit of the duration from the following options: Minutes Hours Days Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours. Absolute Time: Specify values in the following fields: From: (Optional) Specify the start DateTime for which to get events from the Fortinet FortiSIEM server. To: (Optional) Specify the end DateTime for which to get events from the Fortinet FortiSIEM server.",
                 "options": [
-                  "Minutes",
-                  "Hours",
-                  "Days"
+                  "Relative Time",
+                  "Absolute Time"
                 ],
                 "required": false,
                 "editable": true,
                 "visible": true,
-                "value": "Hours",
-                "isOnChange": true,
-                "onChangeParam": "Time Range",
-                "onChangeOption": "Relative Time"
-              },
-              {
-                "title": "Last",
-                "name": "value",
-                "type": "integer",
-                "description": "",
-                "required": false,
-                "editable": true,
-                "visible": true,
-                "value": 2,
-                "isOnChange": true,
-                "onChangeParam": "Time Range",
-                "onChangeOption": "Relative Time"
+                "value": "Relative Time",
+                "onchange": {
+                  "Relative Time": [
+                    {
+                      "title": "Relative Time",
+                      "tooltip": "For example, if you choose Hours and provide the value 2, then this operation run report for last 2 hours, and return the response against the report from the Fortinet FortiSIEM server.",
+                      "name": "rel_time",
+                      "type": "select",
+                      "description": "(Optional) Specify the time range for which you want to run report for the specified time span. For example, if you choose Hours and provide 2 in the value, then this operation run report for last 2 hours, and return the response against the report from the Fortinet FortiSIEM server.",
+                      "options": [
+                        "Minutes",
+                        "Hours",
+                        "Days"
+                      ],
+                      "required": false,
+                      "editable": true,
+                      "visible": true,
+                      "value": "Hours"
+                    },
+                    {
+                      "title": "Last",
+                      "name": "value",
+                      "type": "integer",
+                      "description": "Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours.",
+                      "tooltip": "Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours.",
+                      "required": false,
+                      "editable": true,
+                      "visible": true,
+                      "value": 2
+                    }
+                  ],
+                  "Absolute Time": [
+                    {
+                      "title": "From",
+                      "type": "datetime",
+                      "name": "from",
+                      "tooltip": "Provide the start datetime to run report",
+                      "description": "(Optional) Specify the start datetime for which you want to run report in the Fortinet FortiSIEM server.",
+                      "required": false,
+                      "editable": true,
+                      "visible": true,
+                      "value": ""
+                    },
+                    {
+                      "title": "To",
+                      "type": "datetime",
+                      "name": "to",
+                      "tooltip": "Provide the end datetime to run report",
+                      "description": "(Optional) Specify the end datetime for which you want to run report in the Fortinet FortiSIEM server.",
+                      "required": false,
+                      "editable": true,
+                      "visible": true,
+                      "value": ""
+                    }
+                  ]
+                },
+                "tooltip": "Specify the time duration to search for reports to run on the Fortinet FortiSIEM server. By default, this is set as Relative Time. You can select from the following options: Relative Time: Specify values in the following fields: Relative Time: Select the unit of the duration from the following options: Minutes Hours Days Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours. Absolute Time: Specify values in the following fields: From: Specify the start DateTime for which to get events from the Fortinet FortiSIEM server. To: Specify the end DateTime for which to get events from the Fortinet FortiSIEM server."
               }
             ],
-            "Absolute Time": [
+            "SQL Query": [
               {
-                "title": "From",
-                "type": "datetime",
-                "name": "from",
-                "tooltip": "Provide the start datetime to run report",
-                "description": "(Optional) Specify the start datetime for which you want to run report in the Fortinet FortiSIEM server.",
-                "required": false,
+                "title": "SQL Query",
+                "type": "textarea",
+                "name": "sql_query",
+                "tooltip": "Specify the SQL query to execute for complex data retrieval. Note Currently, SQL Query is supported only for ClickHouse storage. Please refer this document for a sample query https://help.fortinet.com/fsiem/7-3-1/Online-Help/HTML5_Help/advanced-search-examples.htm.",
+                "description": "Specify the SQL query to execute for complex data retrieval. Note Currently, SQL Query is supported only for ClickHouse storage. Please refer this document for a sample query https://help.fortinet.com/fsiem/7-3-1/Online-Help/HTML5_Help/advanced-search-examples.htm.",
+                "required": true,
                 "editable": true,
                 "visible": true,
-                "value": "",
-                "isOnChange": true,
-                "onChangeParam": "Time Range",
-                "onChangeOption": "Absolute Time"
-              },
-              {
-                "title": "To",
-                "type": "datetime",
-                "name": "to",
-                "tooltip": "Provide the end datetime to run report",
-                "description": "(Optional) Specify the end datetime for which you want to run report in the Fortinet FortiSIEM server.",
-                "required": false,
-                "editable": true,
-                "visible": true,
-                "value": "",
-                "isOnChange": true,
-                "onChangeParam": "Time Range",
-                "onChangeOption": "Absolute Time"
+                "value": ""
               }
             ]
-          },
-          "tooltip": "Specify the time duration to search for reports to run on the Fortinet FortiSIEM server. By default, this is set as Relative Time. You can select from the following options: Relative Time: Specify values in the following fields: Relative Time: Select the unit of the duration from the following options: Minutes Hours Days Last: Select the quantity of the units for the duration selected. For example, if the unit selected was hours, select 2 to set the relative time duration as 2 hours. Absolute Time: Specify values in the following fields: From: Specify the start DateTime for which to get events from the Fortinet FortiSIEM server. To: Specify the end DateTime for which to get events from the Fortinet FortiSIEM server."
+          }
         },
         {
           "title": "Number Of Items To Return In Response",
@@ -4150,6 +4182,794 @@
           }
         ]
       }
+    },
+    {
+      "operation": "get_associated_events_new",
+      "title": "Get Events For Incident",
+      "description": "v1 compatibility alias of Get Events For Incident, kept so playbooks migrated from fortinet-fortisiem run unchanged. New playbooks should use get_associated_events.",
+      "enabled": true,
+      "annotation": "get_associated_events",
+      "category": "investigation",
+      "output_schema": [
+        {
+          "id": "",
+          "nid": "",
+          "index": "",
+          "custId": "",
+          "dataStr": {},
+          "eventType": "",
+          "attributes": {
+            "User": "",
+            "Process Name": "",
+            "Raw Event Log Size": "",
+            "Short Process Name": "",
+            "Log Level": "",
+            "Count": "",
+            "Domain": "",
+            "Event ID": "",
+            "Source IP": "",
+            "Time skew": "",
+            "Event Type": "",
+            "Attack Name": "",
+            "Device Time": "",
+            "Relaying IP": "",
+            "Collector ID": "",
+            "Malware Name": "",
+            "Reporting IP": "",
+            "Raw Event Log": "",
+            "Destination IP": "",
+            "Event Severity": "",
+            "Organization ID": "",
+            "Reporting Model": "",
+            "Reporting Device": "",
+            "Reporting Vendor": "",
+            "Source Host Name": "",
+            "Virus/Malware ID": "",
+            "Event Parser Name": "",
+            "Organization Name": "",
+            "Event Parse Status": "",
+            "Event Receive Time": "",
+            "Event Rule Trigger": "",
+            "Source TCP/UDP Port": "",
+            "Destination Host Name": "",
+            "System Event Category": "",
+            "Event Severity Category": "",
+            "Destination TCP/UDP Port": "",
+            "External Event Receive Protocol": ""
+          },
+          "rawMessage": "",
+          "receiveTime": "",
+          "eventAttributes": []
+        }
+      ],
+      "parameters": [
+        {
+          "title": "Incident ID",
+          "type": "text",
+          "name": "incident_id",
+          "description": "Specify the ID of the incident for which you want to retrieve all associated events from the Fortinet FortiSIEM server.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "value": "",
+          "tooltip": "Specify the ID of the incident for which you want to retrieve all associated events from the Fortinet FortiSIEM server."
+        },
+        {
+          "title": "Time From",
+          "type": "datetime",
+          "name": "timeFrom",
+          "tooltip": "Select the start time range from when you want to search raw events for the given incident ID. NOTE: This parameter is supported only in the FortiSIEM 6.7.6 version. Also, note that the max interval between the Time To and Time From cannot exceed 24 hours.",
+          "description": "Select the start time range from when you want to search raw events for the given incident ID. NOTE: This parameter is supported only in the FortiSIEM 6.7.6 version. Also, note that the max interval between the Time To and Time From cannot exceed 24 hours.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        },
+        {
+          "title": "Time To",
+          "type": "datetime",
+          "name": "timeTo",
+          "tooltip": "Select the end time range till when you want to search raw events for the given incident ID. NOTE: This parameter is supported only in the FortiSIEM 6.7.6 version. Also, note that the max interval between the Time To and Time From cannot exceed 24 hours.",
+          "description": "Select the end time range till when you want to search raw events for the given incident ID. NOTE: This parameter is supported only in the FortiSIEM 6.7.6 version. Also, note that the max interval between the Time To and Time From cannot exceed 24 hours.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": ""
+        },
+        {
+          "title": "Number Of Items To Return In Response",
+          "name": "perPage",
+          "tooltip": "The maximum number of events that you want this operation to return in the response. By default, this parameter is set to 10 items.",
+          "value": 10,
+          "type": "integer",
+          "description": "(Optional) The maximum number of events that you want this operation to return in the response. By default, this parameter is set to 10 items.",
+          "visible": true,
+          "editable": true,
+          "required": false
+        }
+      ],
+      "visible": false
+    },
+    {
+      "operation": "execute_api_request",
+      "title": "Execute an API Request",
+      "annotation": "execute_api_request",
+      "description": "Execute any FortiSIEM REST API using the specified API method, endpoint, and payload as input parameters.",
+      "category": "investigation",
+      "visible": true,
+      "enabled": true,
+      "parameters": [
+        {
+          "name": "endpoint",
+          "title": "Endpoint",
+          "type": "text",
+          "editable": true,
+          "visible": true,
+          "required": true,
+          "tooltip": "Specify the REST API endpoint for the action you want to perform. For example, /rest/pub/case/analysts, rest/pub/lookupTable, etc. The complete list of supported actions is available on FNDN at https://fndn.fortinet.net/index.php?/fortiapi/2627-fortisiem/2629/. Note: Do not specify a REST API endpoint path starting with '/phoenix', as this is internally handled.",
+          "description": "Specify the REST API endpoint for the action you want to perform. For example, /rest/pub/case/analysts, rest/pub/lookupTable, etc. The complete list of supported actions is available on FNDN at https://fndn.fortinet.net/index.php?/fortiapi/2627-fortisiem/2629/. Note: Do not specify a REST API endpoint path starting with '/phoenix', as this is internally handled."
+        },
+        {
+          "name": "method",
+          "title": "Method",
+          "type": "select",
+          "editable": true,
+          "visible": true,
+          "required": true,
+          "value": "GET",
+          "tooltip": "Select the HTTP method to use for executing the API request. You can choose from the following options: DELETE, GET, PATCH, POST, or PUT.",
+          "description": "Select the HTTP method to use for executing the API request. You can choose from the following options: DELETE, GET, PATCH, POST, or PUT.",
+          "options": [
+            "DELETE",
+            "GET",
+            "PATCH",
+            "POST",
+            "PUT"
+          ]
+        },
+        {
+          "name": "content_type",
+          "title": "Content Type",
+          "type": "select",
+          "editable": true,
+          "visible": true,
+          "required": false,
+          "value": "GET",
+          "tooltip": "Select the Content-Type header to specify the media type of the request body. Common options include None, application/json, and application/xml.",
+          "description": "Select the Content-Type header for your API request to define the format of the data being sent. For example, use application/json for JSON payloads or application/xml for XML data.",
+          "options": [
+            "None",
+            "application/json",
+            "application/xml"
+          ]
+        },
+        {
+          "title": "Query Parameters",
+          "name": "query_params",
+          "type": "json",
+          "editable": true,
+          "visible": true,
+          "required": false,
+          "placeholder": {},
+          "value": {},
+          "tooltip": "(Optional) Specify the Rest API query parameters as a JSON object.",
+          "description": "(Optional) Specify the Rest API query parameters as a JSON object. "
+        },
+        {
+          "name": "payload",
+          "title": "Payload",
+          "type": "json",
+          "editable": true,
+          "visible": true,
+          "required": false,
+          "placeholder": {},
+          "value": {},
+          "tooltip": "Specify the payload for the API call. Use empty brackets if no payload is required.",
+          "description": "(Optional) Specify the payload for the API call. Use empty brackets if no payload is required."
+        }
+      ],
+      "output_schema": {}
+    },
+    {
+      "operation": "create_task",
+      "title": "Create Task",
+      "description": "Creates a task in the FortiSIEM database.",
+      "enabled": true,
+      "visible": true,
+      "annotation": "create_task",
+      "category": "investigation",
+      "output_schema": {},
+      "parameters": [
+        {
+          "title": "Task Metadata",
+          "name": "task_metadata",
+          "type": "json",
+          "tooltip": "Specify the metadata of a task to create in the FortiSIEM database. For example: ",
+          "description": "Specify the metadata of a task to create in the FortiSIEM database. For example: ",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Triggered By User",
+          "name": "triggeredByUser",
+          "type": "text",
+          "tooltip": "Specify the user who triggered the playbook. For example: email of the user or userId",
+          "description": "Specify the user who triggered the playbook. For example: email of the user or userId",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Assigned To user",
+          "name": "assignedToUser",
+          "type": "text",
+          "tooltip": "Specify the user for whom the input is assigned. For example: email of the user or userId",
+          "description": "Specify the user for whom the input is assigned. For example: email of the user or userId",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Comment",
+          "name": "comment",
+          "type": "text",
+          "tooltip": "Provide justification for the task",
+          "description": "Provide justification for the task",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ]
+    },
+    {
+      "operation": "create_case",
+      "title": "Create Case",
+      "description": "Creates a incident case in the FortiSIEM case management.",
+      "enabled": true,
+      "annotation": "create_case",
+      "category": "investigation",
+      "output_schema": {
+        "caseId": ""
+      },
+      "parameters": [
+        {
+          "title": "Organization",
+          "name": "organization",
+          "type": "text",
+          "tooltip": "Specify the name of the organization where you want to create a case in the FortiSIEM database.",
+          "description": "Specify the name of the organization where you want to create a case in the FortiSIEM database.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "placeholder": "e.g. super or org1"
+        },
+        {
+          "title": "Assignee",
+          "name": "assignee",
+          "type": "text",
+          "tooltip": "Specify the analyst to whom you want to assign this case. Note: If no analysts are available, you must define at least one FortiSIEM user as an analyst in the FortiSIEM UI.",
+          "description": "Specify the analyst to whom you want to assign this case. Note: If no analysts are available, you must define at least one FortiSIEM user as an analyst in the FortiSIEM UI. ",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Summary",
+          "name": "summary",
+          "type": "text",
+          "tooltip": "Specify the summary for the case you want to create in FortiSIEM.",
+          "description": "Specify the summary for the case you want to create in FortiSIEM.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Severity",
+          "name": "severity",
+          "type": "select",
+          "tooltip": "Select the severity for the case you want to create in FortiSIEM. You can choose from the following options: Critical, High, Medium, or Low.",
+          "description": "Select the severity for the case you want to create in FortiSIEM. You can choose from the following options: Critical, High, Medium, or Low.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "Critical",
+            "High",
+            "Medium",
+            "Low"
+          ]
+        },
+        {
+          "title": "Status",
+          "name": "status",
+          "type": "select",
+          "tooltip": "Select the status for the case you want to create in FortiSIEM. You can choose from the following options: New, Assigned, Closed, InProgress, Reopened, OverDue, Unassigned, PendCustFeedback, or RecvCustFeedback.",
+          "description": "(Optional) Select the status for the case you want to create in FortiSIEM. You can choose from the following options: New, Assigned, Closed, InProgress, Reopened, OverDue, Unassigned, PendCustFeedback, or RecvCustFeedback.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "New",
+            "Assigned",
+            "Closed",
+            "InProgress",
+            "Reopened",
+            "OverDue",
+            "Unassigned",
+            "PendCustFeedback",
+            "RecvCustFeedback"
+          ]
+        },
+        {
+          "title": "Stage",
+          "name": "stage",
+          "type": "select",
+          "tooltip": "Select the stage for the case you want to create in FortiSIEM. You can choose from the following options: Analysis, Containment, Detection, Eradication, LessonsLearned, or Recovery.",
+          "description": "(Optional) Select the stage for the case you want to create in FortiSIEM. You can choose from the following options: Analysis, Containment, Detection, Eradication, LessonsLearned, or Recovery.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "Analysis",
+            "Containment",
+            "Detection",
+            "Eradication",
+            "LessonLearned",
+            "Recovery"
+          ]
+        },
+        {
+          "title": "Incident IDs",
+          "name": "incidentIds",
+          "type": "text",
+          "tooltip": "(Optional) Specify a CSV list of incident IDs to be added to the case you want to create in FortiSIEM. Note: An incident ID can be assigned to only one case at a time, not multiple cases.",
+          "description": "(Optional) Specify a CSV list of incident IDs to be added to the case you want to create in FortiSIEM. Note: An incident ID can be assigned to only one case at a time, not multiple cases.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Note",
+          "name": "note",
+          "type": "text",
+          "tooltip": "Specify the note that you want to add to the case you want to create in FortiSIEM.",
+          "description": "(Optional) Specify the note that you want to add to the case you want to create in FortiSIEM.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Policy Name",
+          "name": "caseMgmtPolicy",
+          "type": "text",
+          "tooltip": "Specify the case management policy name to be used to create a case in FortiSIEM. Note: Case Management Policies are defined in FortiSIEM: Admin -> Settings -> General -> Case Management -> Case Management Policy.",
+          "description": "(Optional) Specify the case management policy name to be used to create a case in FortiSIEM. Note: Case Management Policies are defined in FortiSIEM: Admin -> Settings -> General -> Case Management -> Case Management Policy.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Due Date",
+          "name": "dueDate",
+          "type": "datetime",
+          "tooltip": "Specify the due date for the case you want to create in FortiSIEM. ",
+          "description": "(Optional) Specify the due date for the case you want to create in FortiSIEM.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "visible": true
+    },
+    {
+      "operation": "update_cases",
+      "title": "Update Case",
+      "description": "Update a incident case information in the FortiSIEM case Management.",
+      "enabled": true,
+      "annotation": "update_case",
+      "category": "investigation",
+      "output_schema": {
+        "caseId": ""
+      },
+      "parameters": [
+        {
+          "title": "Case ID",
+          "name": "caseId",
+          "type": "text",
+          "tooltip": "Specify the ID of the case whose details you want to update in FortiSIEM.",
+          "description": "Specify the ID of the case whose details you want to update in FortiSIEM.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Assignee",
+          "name": "assignee",
+          "type": "text",
+          "tooltip": "Specify the analyst to whom you want to assign this case. Note: If no analysts are available, you must define at least one FortiSIEM user as an analyst in the FortiSIEM UI.",
+          "description": "(Optional) Specify the analyst to whom you want to assign this case. Note: If no analysts are available, you must define at least one FortiSIEM user as an analyst in the FortiSIEM UI.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Summary",
+          "name": "summary",
+          "type": "text",
+          "tooltip": "Specify the summary for the case you want to update in FortiSIEM.",
+          "description": "(Optional) Specify the summary for the case you want to update in FortiSIEM.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Severity",
+          "name": "severity",
+          "type": "select",
+          "tooltip": "Select the severity for the case you want to update in FortiSIEM. You can choose from the following options: Critical, High, Medium, or Low.",
+          "description": "(Optional) Select the severity for the case you want to update in FortiSIEM. You can choose from the following options: Critical, High, Medium, or Low.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "Critical",
+            "High",
+            "Medium",
+            "Low"
+          ]
+        },
+        {
+          "title": "Status",
+          "name": "status",
+          "type": "select",
+          "tooltip": "Select the status for the case you want to update in FortiSIEM. You can choose from the following options: New, Assigned, Closed, InProgress, Reopened, OverDue, Unassigned, PendCustFeedback, or RecvCustFeedback.",
+          "description": "(Optional) Select the status for the case you want to update in FortiSIEM. You can choose from the following options: New, Assigned, Closed, InProgress, Reopened, OverDue, Unassigned, PendCustFeedback, or RecvCustFeedback.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "New",
+            "Assigned",
+            "Closed",
+            "InProgress",
+            "Reopened",
+            "OverDue",
+            "Unassigned",
+            "PendCustFeedback",
+            "RecvCustFeedback"
+          ]
+        },
+        {
+          "title": "Stage",
+          "name": "stage",
+          "type": "select",
+          "tooltip": "Select the stage for the case you want to update in FortiSIEM. You can choose from the following options: Analysis, Containment, Detection, Eradication, LessonsLearned, or Recovery.",
+          "description": "(Optional) Select the stage for the case you want to update in FortiSIEM. You can choose from the following options: Analysis, Containment, Detection, Eradication, LessonsLearned, or Recovery.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "options": [
+            "Analysis",
+            "Containment",
+            "Detection",
+            "Eradication",
+            "LessonLearned",
+            "Recovery"
+          ]
+        },
+        {
+          "title": "Incident IDs",
+          "name": "incidentIds",
+          "type": "text",
+          "tooltip": "Specify a CSV list of incident IDs to be added to the case you want to update in FortiSIEM. Note: An incident ID can be assigned to only one case at a time, not multiple cases. This is an append operation and does not overwrite or remove any previously added incident IDs.",
+          "description": "Specify a CSV list of incident IDs to be added to the case you want to update in FortiSIEM. Note: An incident ID can be assigned to only one case at a time, not multiple cases. This is an append operation and does not overwrite or remove any previously added incident IDs.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Note",
+          "name": "note",
+          "type": "text",
+          "tooltip": "Specify the note that you want to add to the case you want to update in FortiSIEM.  Note: This is an append operation that adds a new note without modifying existing ones.",
+          "description": "(Optional) Specify the note that you want to add to the case you want to update in FortiSIEM.  Note: This is an append operation that adds a new note without modifying existing ones.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Policy Name",
+          "name": "caseMgmtPolicy",
+          "type": "text",
+          "tooltip": "Specify the case management policy name which you use to create update in the FortiSIEM. These are defined under Admin -> Settings -> General -> Case Management -> Case Management Policy.",
+          "description": "(Optional) Specify the case management policy name to be used to update a case in FortiSIEM. Note: Case Management Policies are defined in FortiSIEM: Admin -> Settings -> General -> Case Management -> Case Management Policy",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Due Date",
+          "name": "dueDate",
+          "type": "datetime",
+          "tooltip": "Specify the due date for the case you want to update in FortiSIEM.",
+          "description": "(Optional) Specify the due date for the case you want to update in FortiSIEM. ",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "visible": true
+    },
+    {
+      "operation": "get_case_analysts",
+      "title": "Get Case Analysts",
+      "description": "Retrieving a list of analysts from the FortiSIEM.",
+      "enabled": true,
+      "annotation": "get_case_analysts",
+      "category": "investigation",
+      "output_schema": {
+        "data": [
+          {
+            "userId": "",
+            "userName": "",
+            "overdueCount": "",
+            "assignedCount": ""
+          }
+        ],
+        "size": "",
+        "start": "",
+        "total": ""
+      },
+      "parameters": [
+        {
+          "title": "Organization",
+          "name": "organization",
+          "type": "text",
+          "tooltip": "Specify the organization name to retrieve a list of case analysts from FortiSIEM. Note: This parameter is mandatory in Service Provider mode and optional in Enterprise mode.",
+          "description": "(Optional) Specify the organization name to retrieve a list of case analysts from FortiSIEM. Note: This parameter is mandatory in Service Provider mode and optional in Enterprise mode.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Time From",
+          "name": "timeFrom",
+          "type": "datetime",
+          "tooltip": "Select the start time range to fetch the case analyst list from FortiSIEM. Note: You can specify a maximum of 90 days. If left blank, the default is 30 days.",
+          "description": "(Optional) Select the start time range to fetch the case analyst list from FortiSIEM. Note: You can specify a maximum of 90 days. If left blank, the default is 30 days.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Time To",
+          "name": "timeTo",
+          "type": "datetime",
+          "tooltip": "Select the end time range to fetch the case analyst list from FortiSIEM.",
+          "description": "(Optional) Select the end time range to fetch the case analyst list from FortiSIEM.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Offset",
+          "name": "start",
+          "type": "integer",
+          "tooltip": "Specify the index of the first item to be returned by this operation. This parameter is useful for retrieving a subset of analysts, such as starting from the 10th analyst. By default, this is set as 0.",
+          "description": "(Optional) Specify the index of the first item to be returned by this operation. This parameter is useful for retrieving a subset of analysts, such as starting from the 10th analyst. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Limit",
+          "name": "size",
+          "type": "integer",
+          "tooltip": "Specify the maximum number of results this operation should return per page. The default is 100.",
+          "description": "(Optional) Specify the maximum number of results this operation should return per page. The default is 100.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "visible": true
+    },
+    {
+      "operation": "upload_attachment_for_case",
+      "title": "Upload Attachment for Case",
+      "description": "Upload an attachment for a case.",
+      "enabled": true,
+      "annotation": "upload_attachment_for_case",
+      "category": "investigation",
+      "output_schema": {
+        "status": "",
+        "message": ""
+      },
+      "parameters": [
+        {
+          "title": "Case ID",
+          "name": "caseID",
+          "type": "text",
+          "tooltip": "Specify the case ID to which you want to upload the attachment.",
+          "description": "Specify the case ID to which you want to upload the attachment.",
+          "required": true,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Upload File From",
+          "name": "upload_option",
+          "type": "select",
+          "tooltip": "Select the input file upload option: IRI or Path.",
+          "description": "Select the input file upload option: IRI or Path.",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "value": "IRI",
+          "options": [
+            "IRI",
+            "Path"
+          ],
+          "onchange": {
+            "IRI": [
+              {
+                "title": "File IRI",
+                "name": "file_iri",
+                "type": "text",
+                "tooltip": "If you choose 'IRI,' specify the file or attachment IRI in the File IRI field.",
+                "description": "If you choose 'IRI,' specify the file or attachment IRI in the File IRI field.",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "placeholder": "/api/3/attachments/<attachment_id> or /api/3/files/<file_id>"
+              }
+            ],
+            "Path": [
+              {
+                "title": "File Path",
+                "name": "file_path",
+                "type": "text",
+                "tooltip": "If you choose 'Path,' specify the file path from the /tmp directory in the File Path field.",
+                "description": "If you choose 'Path,' specify the file path from the /tmp directory in the File Path field.",
+                "required": true,
+                "editable": true,
+                "visible": true,
+                "placeholder": "/tmp/filename"
+              }
+            ]
+          }
+        }
+      ],
+      "visible": true
+    },
+    {
+      "operation": "get_list_cases",
+      "title": "Get List Cases",
+      "description": "Retrieves a list of all available cases from FortiSIEM.",
+      "enabled": true,
+      "annotation": "get_list_cases",
+      "category": "investigation",
+      "output_schema": {
+        "columnNames": [],
+        "columnTypes": [],
+        "data": [
+          {
+            "Assignee": "",
+            "Assigned": "",
+            "Case_Entity": "",
+            "Customer_Name": "",
+            "Created": "",
+            "Incident_IDs": "",
+            "Stage": "",
+            "Case_ID": "",
+            "Rule_Name": "",
+            "State": "",
+            "Close_Code": "",
+            "Rule_Tag": "",
+            "Resolution_Time": "",
+            "Creator": "",
+            "Due": "",
+            "Case_Title": "",
+            "Severity": "",
+            "Age": "",
+            "Customer_ID": "",
+            "Closed": ""
+          }
+        ],
+        "errorCode": "",
+        "errorMessage": "",
+        "totalCount": ""
+      },
+      "parameters": [
+        {
+          "title": "Fields to Return in Response",
+          "type": "text",
+          "name": "selectFields",
+          "tooltip": "Specify a comma-separated list of case fields to retrieve only the specified fields in the case list response.  NOTE: You can use the action Get Case Field Schema to retrieve the available field schema.",
+          "description": "Specify a comma-separated list of case fields to retrieve only the specified fields in the case list response.  NOTE: You can use the action Get Case Field Schema to retrieve the available field schema.",
+          "required": true,
+          "editable": true,
+          "visible": true,
+          "placeholder": "Case_ID,Case_Title,Customer_ID,State,Assignee,Due",
+          "value": "Case_ID,Case_Title,Customer_ID,State,Assignee,Due"
+        },
+        {
+          "title": "Filter Query",
+          "type": "text",
+          "name": "condition",
+          "tooltip": "Specify a filter query string to filter the cases retrieved from Fortinet FortiSIEM server.",
+          "description": "(Optional) Specify a filter query string to filter the cases retrieved from Fortinet FortiSIEM server. ",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "placeholder": "State IN (0,1,3,7,8)"
+        },
+        {
+          "title": "Order By",
+          "required": false,
+          "editable": true,
+          "visible": true,
+          "tooltip": "Specify the field to use as the sorting criteria for cases retrieved from the Fortinet FortiSIEM server. Specify the sort order (ASC for ascending order and DESC for descending order) of the specified field. For example: Case_ID ASC.",
+          "description": "(Optional) Specify the field to use as the sorting criteria for cases retrieved from the Fortinet FortiSIEM server. Specify the sort order (ASC for ascending order and DESC for descending order) of the specified field. For example: Case_ID ASC.",
+          "type": "text",
+          "name": "orderBy",
+          "value": "Case_ID ASC",
+          "placeholder": "Case_ID ASC"
+        },
+        {
+          "title": "Organization",
+          "name": "runForOrganization",
+          "type": "text",
+          "tooltip": "Specify the organization name from which to retrieve the list of cases.",
+          "description": "(Optional) Specify the organization name from which to retrieve the list of cases.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Offset",
+          "name": "start",
+          "type": "integer",
+          "tooltip": "Specify the number of items to skip before returning results. It is typically used for pagination to fetch records starting from a specific point. By default, this is set as 0.",
+          "description": "(Optional) Specify the number of items to skip before returning results. It is typically used for pagination to fetch records starting from a specific point. By default, this is set as 0.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        },
+        {
+          "title": "Limit",
+          "name": "size",
+          "type": "integer",
+          "tooltip": "Specify the maximum number of cases to return per page in a response. It is used to restrict the number of results returned, often for pagination or performance optimization.",
+          "description": "(Optional) Specify the maximum number of cases to return per page in a response. It is used to restrict the number of results returned, often for pagination or performance optimization.",
+          "required": false,
+          "editable": true,
+          "visible": true
+        }
+      ],
+      "visible": true
+    },
+    {
+      "operation": "get_case_field_schema",
+      "title": "Get Case Field Schema",
+      "description": "Retrieves an entire schema of possible fields for a case.",
+      "enabled": true,
+      "annotation": "get_case_field_schema",
+      "category": "investigation",
+      "output_schema": [
+        {
+          "table": "",
+          "fields": [
+            {
+              "name": "",
+              "type": ""
+            }
+          ]
+        }
+      ],
+      "parameters": [],
+      "visible": true
     }
   ]
 }

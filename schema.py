@@ -121,3 +121,19 @@ search_event_schema = """<?xml version="1.0" encoding="UTF-8"?>
         </ReportInterval>
     </Report>
 </Reports>"""
+
+
+# v1 parity: run_report `query_type: SQL Query` (ClickHouse SQL report).
+sql_query_schema = """<?xml version="1.0" encoding="UTF-8"?>
+    <Reports>
+        <Report>
+            <Name>Spike in outbound denied network traffic from a source</Name>
+            <PatternClause/>
+            <ClickHouseSQL>
+                <SQL>
+                    <![CDATA[{sql_query}]]>
+                </SQL>
+                <CTES/>
+            </ClickHouseSQL>
+        </Report>
+    </Reports>"""
