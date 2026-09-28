@@ -1,3 +1,11 @@
+#### 6.1.1
+
+- A non-JSON error body now reaches the caller as itself. FortiSIEM answers some
+  bad requests (an incident id that is not an integer, for one) with plain text,
+  and the JSON REST path parsed the body even to log it. The real error was lost
+  behind "Expecting value: line 1 column 1". Bare JSON-string responses (the
+  pre-7.5 query id) still decode as before.
+
 #### 6.1.0
 
 - v2 now runs playbooks written for `fortinet-fortisiem` (v1) with only the

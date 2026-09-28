@@ -331,22 +331,36 @@ class FortiSIEM:
                                         files=files
                                         )
 
+            # Decode once, defensively: FortiSIEM answers some bad requests (an
+            # incident id that is not an integer, say) with a non-JSON body,
+            # and parsing it as JSON -- even just to log it -- replaced the
+            # real error with "Expecting value: line 1 column 1".
+            try:
+                body, is_json = response.json(), True
+            except Exception:
+                # Before 7.5 some endpoints answer with a bare JSON string
+                # ("q-1"), which decodes fine; only an undecodable body lands
+                # here, and it is reported as the text it is.
+                body, is_json = response.content.decode('utf-8', 'replace'), False
             logger.debug(
-                f"\nres_status:{response.status_code} response: {response.json()} \n----------------req end----------------\n")
+                f"\nres_status:{response.status_code} response: {body} \n----------------req end----------------\n")
 
-            if response.ok:
+            if response.ok and is_json:
                 logger.info('FortiSIEM successfully retrieved page: {0}'.format(response.url))
-                return response.status_code, response.json()
+                return response.status_code, body
+            elif response.ok:
+                raise ConnectorError('FortiSIEM returned a non-JSON response '
+                                     '(HTTP {0}): {1}'.format(response.status_code, body[:500]))
             elif response.status_code in [400, 404, 429, 503]:
                 logger.error(
                     'Status Code: {0}, Query URL: {1} Response Data: {2}'.format(response.status_code, response.url,
-                                                                                 response.json()))
+                                                                                 body))
                 logger.error(
                     'FortiSIEM may sometimes return a 404 in older versions, in place of a 429 or 503, indicating that more time is needed for the server to be ready to serve more pages. Connector will retry the page after a short wait')
-                return response.status_code, response.json()
+                return response.status_code, body
             else:
                 logger.error('{0}'.format(response.content))
-                raise ConnectorError('status code: {0}, error: {1}'.format(response.status_code, response.json()))
+                raise ConnectorError('status code: {0}, error: {1}'.format(response.status_code, body))
         except requests.exceptions.SSLError as e:
             logger.exception('{0}'.format(e))
             raise ConnectorError('{0}'.format(self.error_msg['ssl_error']))

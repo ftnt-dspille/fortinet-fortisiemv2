@@ -242,3 +242,16 @@ def test_get_incidents_keeps_every_raw_api_field(ops, fake, basic_config, monkey
         assert key in got, key
         if key not in derived and value is not None:
             assert got[key] == value, key
+
+
+def test_a_non_json_error_body_surfaces_as_itself(compat, config, wire):
+    """Live: FortiSIEM answered a non-integer incident id with a plain-text
+    body, and the caller saw only "Expecting value: line 1 column 1"."""
+    from connectors.core.connector import ConnectorError
+    _, routes = wire
+    routes.append((("GET", "/triggeringEvents/start"),
+                   _Resp(status=400, body="Invalid incident id", ctype="text/plain")))
+    with pytest.raises(ConnectorError) as exc:
+        compat.get_associated_events_new(config, {"incident_id": "abc"})
+    assert "Invalid incident id" in str(exc.value)
+    assert "Expecting value" not in str(exc.value)
