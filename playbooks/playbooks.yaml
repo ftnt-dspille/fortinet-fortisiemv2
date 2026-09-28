@@ -17,6 +17,15 @@ description: >-
   those playbooks and move them to a different collection, since the sample
   playbook collection gets deleted during connector upgrade and delete.
 visible: true
+# The Data Ingestion Wizard discovers a connector's sample collection by
+# filtering `/api/3/workflow_collections` on `recordTags=dataingestion` -- so
+# the ingestion tags must live in the collection's `recordTags` (and each
+# ingestion playbook's `recordTags`), not just in `exported_tags` (which is
+# only the export's top-level metadata and is never queried by the wizard).
+tags:
+  - fortinet-fortisiemv2
+  - Fortinet
+  - dataingestion
 exported_tags:
   - fortinet-fortisiemv2
   - Fortinet
@@ -735,7 +744,8 @@ playbooks:
 #   * Fetch's Start step carries `_configuration_schema`, the JSON that
 #     renders the wizard's configuration form;
 #   * Fetch ends in a set_variable ("Save Result") publishing `data` plus the
-#     carry-through vars -- Ingest reads them back as `vars.result.*`;
+#     carry-through vars -- Ingest reads them back off the workflow_reference
+#     step ("List Incident") as `vars.steps.List_Incident.<key>`;
 #   * the incremental-pull watermark lives in a per-playbook dynamic variable
 #     (macro) that Init Macros creates, Fetch reads, and Ingest advances.
 #
@@ -747,7 +757,9 @@ playbooks:
   description: >-
     Creates the FortiSIEM last-pull-time macro if it does not already exist.
     Called by Fetch during the wizard's environment-setup pass.
-  tag: '#fortinet-fortisiemv2 #dataingestion'
+  tags:
+  - fortinet-fortisiemv2
+  - dataingestion
   is_active: true
   parameters:
   - FortiSIEMMacroName
@@ -810,7 +822,10 @@ playbooks:
   description: >-
     Reads the last-pull-time watermark and fetches FortiSIEM incidents since
     then, already mapped to FortiSOAR alert shape with triggering events.
-  tag: '#fortinet-fortisiemv2 #fetch #dataingestion'
+  tags:
+  - fortinet-fortisiemv2
+  - fetch
+  - dataingestion
   is_active: true
   steps:
   - name: Start
@@ -833,8 +848,8 @@ playbooks:
           required: true
           editable: true
           visible: true
-          value: 10
-          tooltip: Cold-start lookback used on the first run, before a last-pull-time watermark exists. e.g. 10
+          value: 60
+          tooltip: Cold-start lookback used on the first run, before a last-pull-time watermark exists. e.g. 60
         - title: Incident Status
           name: incidentStatus
           type: multiselect
@@ -923,11 +938,12 @@ playbooks:
     type: set_variable
     comment: |
       Wizard-editable defaults. `minutes` is the cold-start lookback used the
-      first time this ingestion runs (macro still '0'); after that the macro
-      supplies the window. The macro name is scoped to this playbook's UUID so
-      two ingestion configurations never share a watermark.
+      first time this ingestion runs (macro still '0'); the default is 60 (an
+      hour back from now). After the first run the macro supplies the window.
+      The macro name is scoped to this playbook's UUID so two ingestion
+      configurations never share a watermark.
     vars:
-      minutes: '10'
+      minutes: '60'
       size: 100
       event_count: 5
       include_events: true
@@ -988,9 +1004,12 @@ playbooks:
     vars:
       curr_timestamp: "{{ arrow.utcnow().format('YYYY-MM-DDTHH:mm:ss') }}Z"
       last_pull_time: "{% if not vars.steps.Get_Macro_Value.data['hydra:member'] or vars.steps.Get_Macro_Value.data['hydra:member'][0].value == '0' or vars.request.env_setup %}{{ arrow.utcnow().shift(minutes=-(vars.minutes | int)).format('YYYY-MM-DDTHH:mm:ss') }}Z{% else %}{{ vars.steps.Get_Macro_Value.data['hydra:member'][0].value }}{% endif %}"
-    next: Fetch Incidents
+    # The Data Ingestion Wizard's prepareFetchSampleConfig reads a step whose
+    # name (case-insensitive) is exactly "fetch" to load the fetch operation +
+    # params for the sample-data fetch, so the step is named "Fetch".
+    next: Fetch
 
-  - name: Fetch Incidents
+  - name: Fetch
     type: connector
     connector: fortinet-fortisiemv2
     operation: ingest_incidents
@@ -1011,19 +1030,24 @@ playbooks:
   - name: Save Result
     type: set_variable
     comment: |
-      The Fetch -> Ingest contract. Ingest reads every one of these back as
-      `vars.result.<key>`.
+      The Fetch -> Ingest contract. Ingest reads every one of these back off
+      the workflow_reference step ("List Incident") as `vars.steps.List_Incident.<key>`.
     vars:
-      data: '{{vars.steps.Fetch_Incidents.data}}'
+      data: '{{vars.steps.Fetch.data}}'
       current_time: '{{vars.curr_timestamp}}'
       event_count: '{{vars.event_count}}'
       FortiSIEMMacroName: '{{vars.FortiSIEMMacroName}}'
 
 - name: FortiSIEM v2 > Ingest
   description: >-
-    Orchestrator: calls Fetch, creates the alerts, then advances the
-    last-pull-time watermark.
-  tag: '#fortinet-fortisiemv2 #ingest #dataingestion #create'
+    Orchestrator: calls Fetch, then either returns a sample record for the
+    wizard's Data Mapping preview (env_setup mode) or creates the alerts and
+    advances the last-pull-time watermark.
+  tags:
+  - fortinet-fortisiemv2
+  - ingest
+  - dataingestion
+  - create
   is_active: true
   steps:
   - name: Start
@@ -1039,7 +1063,42 @@ playbooks:
     apply_async: false
     pass_parent_env: false
     pass_input_record: false
-    next: Configuration
+    next: Mapping Preview
+
+  - name: Mapping Preview
+    type: decision
+    comment: |
+      The Data Ingestion Wizard runs the Ingest playbook with
+      `vars.request.env_setup == true` while the analyst designs the field
+      mapping in the UI. In that mode we return the first fetched,
+      already-mapped incident so the wizard can render the Data Mapping
+      preview with real alert fields -- no alerts are written. `false` (or
+      missing) is the real ingestion path.
+    conditions:
+    - display: Mapping Preview
+      when: '{{ vars.request.env_setup | default(false) | bool }}'
+      next: Return Sample
+    - display: Ingest
+      default: true
+      next: Configuration
+
+  - name: Return Sample
+    type: set_variable
+    comment: |
+      The sample for the wizard's Data Mapping preview.
+      `vars.steps.List_Incident.data[0]` is the first mapped incident from the
+      Fetch window; its keys are the alert field names
+      `field_mapping.map_incident_to_alert` emits (external_id, name, severity,
+      source_ip, dest_ip, rule_name, mitre_* ...), which the wizard maps onto
+      the alerts module. Falls back to a representative hardcoded record when
+      the window is empty so the preview still renders.
+    vars:
+      sample: >-
+        {% if vars.steps.List_Incident.data | default([]) | length > 0 %}
+          {{ vars.steps.List_Incident.data[0] }}
+        {% else %}
+          {{ { 'name': 'Sample FortiSIEM Incident', 'external_id': '1800000000000000001', 'severity': 'Medium', 'alert_type': 'Other / Unknown', 'alert_state': 'Open', 'category': 'Security', 'subcategory': 'reconnaissance', 'source_ip': '192.168.5.25', 'dest_ip': '10.0.0.1', 'dest_port': 443, 'source_hostname': 'web01', 'target_user': 'admin', 'rule_name': 'Sample Rule', 'rule_description': 'Sample rule fired', 'alert_generation_epoch': 1790000000, 'last_observed_epoch': 1790000001, 'event_count': 1, 'mitre_technique_ids': ['T1046'], 'mitre_technique_names': ['Network Service Scanning'] } }}
+        {% endif %}
 
   - name: Configuration
     type: set_variable
@@ -1050,15 +1109,20 @@ playbooks:
       alert_type to VALID_ALERT_TYPES for exactly this reason, so the two lists
       have to be changed together.
     vars:
-      incident_source_data: '{{ vars.result.data }}'
-      event_count: '{{ vars.result.event_count }}'
-      FortiSIEMMacroName: '{{ vars.result.FortiSIEMMacroName }}'
+      incident_source_data: '{{ vars.steps.List_Incident.data }}'
+      event_count: '{{ vars.steps.List_Incident.event_count }}'
+      FortiSIEMMacroName: '{{ vars.steps.List_Incident.FortiSIEMMacroName }}'
       alerts_severity_map: "{'Minimal': {{'Severity'| picklist('Minimal')}}, 'Low': {{'Severity'| picklist('Low')}}, 'Medium': {{'Severity'| picklist('Medium')}}, 'High': {{'Severity'| picklist('High')}}, 'Critical': {{'Severity'| picklist('Critical')}}}"
       alerts_status_map: "{'Open': {{'AlertStatus'| picklist('Open')}}, 'Resolved': {{'AlertStatus'| picklist('Closed')}}, 'Closed': {{'AlertStatus'| picklist('Closed')}}}"
       alerts_type_map: "{'Actionable Threat Feeds': {{'AlertType'| picklist('Actionable Threat Feeds')}}, 'Brute Force Attempts': {{'AlertType'| picklist('Brute Force Attempts')}}, 'Command and Control': {{'AlertType'| picklist('Command and Control')}}, 'Concurrent Login': {{'AlertType'| picklist('Concurrent Login')}}, 'Data Exfiltration': {{'AlertType'| picklist('Data Exfiltration')}}, 'Denial of Service': {{'AlertType'| picklist('Denial of Service')}}, 'Lateral Movement': {{'AlertType'| picklist('Lateral Movement')}}, 'MITRE ATT&CK': {{'AlertType'| picklist('MITRE ATT&CK')}}, 'Malware': {{'AlertType'| picklist('Malware')}}, 'Other / Unknown': {{'AlertType'| picklist('Other / Unknown')}}, 'Phishing': {{'AlertType'| picklist('Phishing')}}, 'Policy Violation': {{'AlertType'| picklist('Policy Violation')}}, 'Ransomware': {{'AlertType'| picklist('Ransomware')}}, 'Reconnaissance': {{'AlertType'| picklist('Reconnaissance')}}}"
-    next: Create Alerts
+    # The step must be named "Create Record" (not e.g. "Create Alerts"): the
+    # Data Ingestion Wizard's page check (`isStepAvailableInPlaybook`) shows the
+    # Data Mapping page only when the create playbook has a step whose name is
+    # exactly "create record", and it reads `arguments.collection` off that step
+    # to detect the target module.
+    next: Create Record
 
-  - name: Create Alerts
+  - name: Create Record
     type: create_record
     module: alerts
     operation: Overwrite
@@ -1110,7 +1174,7 @@ playbooks:
     type: connector
     comment: |
       Advances the watermark only after the alerts are written, so a failed
-      Create Alerts leaves the window to be retried.
+      Create Record leaves the window to be retried.
     connector: cyops_utilities
     operation: updatemacro
     operationTitle: 'FSR: Update Global Variables'

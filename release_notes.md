@@ -1,3 +1,47 @@
+#### 6.1.6
+
+- Declared the ingestion target module in `info.json`. The Data Ingestion
+  Wizard filters the modules it offers for a connector by
+  `ingestion_preferences.modules`; without it the wizard falls back to an
+  arbitrary create-permission module instead of the one the ingestion
+  playbooks actually write to. Added
+  `ingestion_preferences.modules: ["alerts"]` to match the `Create Record`
+  step's `/api/3/upsert/alerts` collection so the wizard's Data Mapping page
+  targets the correct module.
+
+#### 6.1.5
+
+- The Data Ingestion Wizard now shows its Data Mapping page for this connector.
+  The wizard only renders that page when the create playbook contains a step
+  named exactly `Create Record` (checked case-insensitively), and it reads that
+  step's `arguments.collection` to detect the target module. The `Ingest`
+  playbook's record-creation step was renamed from `Create Alerts` to
+  `Create Record` so the wizard's page gate passes and the module is detected
+  from `/api/3/upsert/alerts`. Previously the step name caused the wizard to
+  silently skip the Data Mapping page.
+
+#### 6.1.4
+
+- The Data Ingestion Wizard's Data Mapping section now renders. The `Ingest`
+  playbook gained an env_setup branch: when the wizard runs it with
+  `vars.request.env_setup == true` (while the analyst designs the field
+  mapping), it returns the first fetched, already-mapped incident as the
+  sample so the wizard can preview real alert fields instead of silently
+  proceeding to create records. Falls back to a representative hardcoded
+  record when the pull window is empty.
+
+#### 6.1.3
+
+- The Data Ingestion sample collection and its ingestion playbooks now carry
+  `dataingestion` in their `recordTags`, so the Data Ingestion Wizard can find
+  them. The wizard discovers a collection by querying
+  `/api/3/workflow_collections?recordTags=dataingestion`; previously the
+  ingestion tags lived only in `exported_tags` and the playbooks' legacy `tag`
+  field, so the collection's `recordTags` was empty and the wizard returned
+  nothing. The collection is tagged `dataingestion` / `fortinet-fortisiemv2` /
+  `Fortinet`, and the Fetch / Ingest / Init Macros playbooks carry
+  `fetch` / `ingest` / `create` alongside `dataingestion`.
+
 #### 6.1.2
 
 - The Data Ingestion sample playbooks now build with the current version in

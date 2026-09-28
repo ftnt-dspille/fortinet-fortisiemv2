@@ -1,7 +1,7 @@
 {
   "name": "fortinet-fortisiemv2",
   "label": "Fortinet FortiSIEM v2",
-  "version": "6.1.2",
+  "version": "6.1.6",
   "description": "FortiSIEM v2 provides integrations that allow you to query and make changes to the CMDB, query events, and send incident notifications. This revamped connector adds async operations, MCP (Model Context Protocol) investigation tools, and native ingestion support, along with actions like get incidents, comment incident, clear incident, get device details, get monitored organizations, report-related actions, and get all associated events for an incident from FortiSIEM.",
   "publisher": "Fortinet",
   "cs_approved": true,
@@ -14,6 +14,11 @@
     "scheduled",
     "polling"
   ],
+  "ingestion_preferences": {
+    "modules": [
+      "alerts"
+    ]
+  },
   "help_online": "https://docs.fortinet.com/document/fortisoar/6.0.0/fortinet-fortisiemv2",
   "configuration": {
     "fields": [
