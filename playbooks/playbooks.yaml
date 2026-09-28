@@ -1004,12 +1004,16 @@ playbooks:
     vars:
       curr_timestamp: "{{ arrow.utcnow().format('YYYY-MM-DDTHH:mm:ss') }}Z"
       last_pull_time: "{% if not vars.steps.Get_Macro_Value.data['hydra:member'] or vars.steps.Get_Macro_Value.data['hydra:member'][0].value == '0' or vars.request.env_setup %}{{ arrow.utcnow().shift(minutes=-(vars.minutes | int)).format('YYYY-MM-DDTHH:mm:ss') }}Z{% else %}{{ vars.steps.Get_Macro_Value.data['hydra:member'][0].value }}{% endif %}"
-    # The Data Ingestion Wizard's prepareFetchSampleConfig reads a step whose
-    # name (case-insensitive) is exactly "fetch" to load the fetch operation +
-    # params for the sample-data fetch, so the step is named "Fetch".
-    next: Fetch
+    # The step is deliberately NOT named exactly "fetch". prepareFetchSampleConfig
+    # treats a step named "fetch" (case-insensitive) as the operation source and
+    # breaks out of its step scan -- which would render the raw connector params
+    # (from/to = {{vars.last_pull_time}}/{{vars.curr_timestamp}}) instead of the
+    # Start step's _configuration_schema. Keeping a longer name lets the scan
+    # fall through to Start (schema -> fetchOperation) and Configuration
+    # (defaults -> fetchConfiguration), so the wizard's config form is the schema.
+    next: Fetch Incidents
 
-  - name: Fetch
+  - name: Fetch Incidents
     type: connector
     connector: fortinet-fortisiemv2
     operation: ingest_incidents
@@ -1033,7 +1037,7 @@ playbooks:
       The Fetch -> Ingest contract. Ingest reads every one of these back off
       the workflow_reference step ("List Incident") as `vars.steps.List_Incident.<key>`.
     vars:
-      data: '{{vars.steps.Fetch.data}}'
+      data: '{{vars.steps.Fetch_Incidents.data}}'
       current_time: '{{vars.curr_timestamp}}'
       event_count: '{{vars.event_count}}'
       FortiSIEMMacroName: '{{vars.FortiSIEMMacroName}}'
