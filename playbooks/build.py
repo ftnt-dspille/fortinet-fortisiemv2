@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """Build playbooks.json from playbooks.yaml.
 
-Compiles the YAML with the fsrpb compiler, then patches on the three pieces of
-the Data Ingestion Wizard contract that the YAML dialect has no spelling for:
+Compiles the YAML with the fsrpb compiler. The Data Ingestion Wizard contract
+is now expressed natively in the YAML dialect, so there is nothing to patch on
+after the fact:
 
   1. collection-level ``exported_tags`` -- the wizard filters the connector's
      playbook export by these before it will offer an ingestion configuration;
-  2. ``_configuration_schema`` on the Fetch playbook's Start step -- the JSON
-     that renders the wizard's configuration form;
-  3. the manual-trigger fields on the Ingest playbook's Start step (``route``,
-     ``resources``, ``displayConditions``, ``noRecordExecution`` ...) which the
-     FortiSOAR designer normally synthesizes.
+  2. ``configuration_schema`` on the Fetch playbook's Start step -- the YAML
+     the compiler serializes to ``step_variables._configuration_schema`` (the
+     JSON that renders the wizard's configuration form);
+  3. the action-trigger fields on the Ingest playbook's Start step (``module``,
+     ``button_label``, ``requires_record`` ...) which the compiler expands to
+     the canonical ``route``/``resources``/``displayConditions``/...
+     ``noRecordExecution``/``singleRecordExecution`` shape.
+
+The only post-compile work left is deterministic housekeeping: stamping the
+sample collection name with the version from ``info.json`` and pinning
+``lastModifyDate`` so a rebuild is byte-identical.
 
 Usage:  python playbooks/build.py [--fsrpb /path/to/fsrpb]
 """
@@ -22,192 +29,12 @@ import os
 import re
 import subprocess
 import sys
-import uuid
 
 HERE = pathlib.Path(__file__).resolve().parent
 YAML_IN = HERE / "playbooks.yaml"
 JSON_OUT = HERE / "playbooks.json"
 
 CONNECTOR = "fortinet-fortisiemv2"
-
-EXPORTED_TAGS = [CONNECTOR, "Fortinet", "dataingestion", "fetch", "create", "ingest"]
-
-FETCH_PLAYBOOK = "> FortiSIEM v2 > Fetch"
-INGEST_PLAYBOOK = "FortiSIEM v2 > Ingest"
-
-# Rendered as the wizard's configuration form. Mirrors the params that the
-# Fetch playbook's `Configuration` set_variable step defaults.
-CONFIGURATION_SCHEMA = [
-    {
-        "title": "Fetch Mode",
-        "required": True,
-        "editable": True,
-        "visible": True,
-        "type": "select",
-        "name": "fetch_mode",
-        "options": ["By Updates In Last X Minutes", "By Sample Incident ID"],
-        "onchange": {
-            "By Updates In Last X Minutes": [
-                {
-                    "title": "Pull Incidents Created/Updated In Last X Minutes",
-                    "name": "minutes",
-                    "type": "text",
-                    "required": True,
-                    "editable": True,
-                    "visible": True,
-                    "value": 10,
-                    "tooltip": "Cold-start lookback used on the first run, before a "
-                               "last-pull-time watermark exists. e.g. 10",
-                },
-                {
-                    "title": "Incident Status",
-                    "name": "incidentStatus",
-                    "type": "multiselect",
-                    "required": False,
-                    "editable": True,
-                    "visible": True,
-                    "value": ["Active"],
-                    "options": ["Active", "Auto Cleared", "Manually Cleared",
-                                "System Cleared"],
-                },
-                {
-                    "title": "Severity",
-                    "name": "severity",
-                    "type": "multiselect",
-                    "required": False,
-                    "editable": True,
-                    "visible": True,
-                    "value": ["High", "Medium", "Low"],
-                    "options": ["High", "Medium", "Low"],
-                },
-                {
-                    "title": "Incident Category",
-                    "name": "incidentCategory",
-                    "type": "multiselect",
-                    "required": False,
-                    "editable": True,
-                    "visible": True,
-                    "options": ["Availability", "Performance", "Change",
-                                "Security", "Other"],
-                },
-                {
-                    "title": "Incidents Per Page",
-                    "name": "size",
-                    "type": "text",
-                    "required": False,
-                    "editable": True,
-                    "visible": True,
-                    "value": 100,
-                    "tooltip": "Page size for the incident query. The run pages "
-                               "through the whole window, so this tunes request "
-                               "batching -- it is not a cap on incidents ingested.",
-                },
-                {
-                    "title": "Fetch Triggering Events",
-                    "name": "include_events",
-                    "type": "checkbox",
-                    "required": False,
-                    "editable": True,
-                    "visible": True,
-                    "value": True,
-                    "tooltip": "Enrich each incident with its triggering events. "
-                               "Adds roughly one FortiSIEM query per incident.",
-                },
-                {
-                    "title": "Maximum Events To Pull Per Incident",
-                    "name": "event_count",
-                    "type": "text",
-                    "required": False,
-                    "editable": True,
-                    "visible": True,
-                    "value": 5,
-                },
-            ],
-            "By Sample Incident ID": [
-                {
-                    "title": "Incident ID",
-                    "name": "incidentId",
-                    "type": "text",
-                    "required": True,
-                    "editable": True,
-                    "visible": True,
-                    "tooltip": "Incident ID to use for building the field mapping",
-                },
-                {
-                    "title": "From",
-                    "name": "from",
-                    "type": "datetime",
-                    "required": False,
-                    "editable": True,
-                    "visible": True,
-                },
-                {
-                    "title": "To",
-                    "name": "to",
-                    "type": "datetime",
-                    "required": False,
-                    "editable": True,
-                    "visible": True,
-                },
-            ],
-        },
-    },
-]
-
-
-def _iter_workflows(doc):
-    for coll in doc.get("data", []):
-        for wf in coll.get("workflows", []):
-            yield coll, wf
-
-
-def _start_step(wf):
-    for step in wf.get("steps", []):
-        if step.get("name") == "Start":
-            return step
-    raise SystemExit(f"no Start step in playbook {wf['name']!r}")
-
-
-def patch(doc):
-    """Apply the wizard-contract patches in place."""
-    doc["exported_tags"] = list(EXPORTED_TAGS)
-
-    seen = set()
-    for _coll, wf in _iter_workflows(doc):
-        name = wf.get("name")
-        if name == FETCH_PLAYBOOK:
-            args = _start_step(wf).setdefault("arguments", {})
-            sv = args.setdefault("step_variables", {})
-            if not isinstance(sv, dict):
-                sv = {"input": {"params": []}}
-                args["step_variables"] = sv
-            sv["_configuration_schema"] = json.dumps(CONFIGURATION_SCHEMA, indent=2)
-            seen.add(name)
-        elif name == INGEST_PLAYBOOK:
-            step = _start_step(wf)
-            args = step.setdefault("arguments", {})
-            # Deterministic route id so re-running the build does not churn the
-            # diff or orphan the wizard's binding.
-            args["route"] = str(uuid.uuid5(uuid.NAMESPACE_URL,
-                                           f"{CONNECTOR}/{INGEST_PLAYBOOK}/route"))
-            args["title"] = INGEST_PLAYBOOK
-            args["resources"] = ["alerts"]
-            args["inputVariables"] = []
-            args["displayConditions"] = {
-                "alerts": {"sort": [], "limit": 30, "logic": "AND", "filters": []},
-            }
-            args["executeButtonText"] = "Execute"
-            args["noRecordExecution"] = True
-            args["singleRecordExecution"] = False
-            args.setdefault("step_variables", {})["input"] = {
-                "records": "{{vars.input.records}}",
-            }
-            seen.add(name)
-
-    missing = {FETCH_PLAYBOOK, INGEST_PLAYBOOK} - seen
-    if missing:
-        raise SystemExit(f"expected playbooks not found in compiled output: {sorted(missing)}")
-    return doc
 
 
 def _freeze_timestamps(doc):
@@ -290,10 +117,10 @@ def main():
     doc = json.loads(JSON_OUT.read_text())
     doc = _sync_collection_version(doc)
     doc = _freeze_timestamps(doc)
-    JSON_OUT.write_text(json.dumps(patch(doc), indent=2) + "\n")
+    JSON_OUT.write_text(json.dumps(doc, indent=2) + "\n")
 
     total = sum(len(c.get("workflows", [])) for c in doc.get("data", []))
-    print(f"wrote {JSON_OUT} ({total} playbooks, exported_tags={EXPORTED_TAGS})")
+    print(f"wrote {JSON_OUT} ({total} playbooks, exported_tags={doc.get('exported_tags')})")
     return 0
 
 

@@ -1,3 +1,15 @@
+#### 6.1.2
+
+- The Data Ingestion sample playbooks now build with the current version in
+  the collection name, so they auto-import on connector upgrade. Previously the
+  committed `playbooks.json` was still stamped for 6.0.4; FortiSOAR deletes a
+  connector's sample collection on upgrade and re-imports it under the new
+  version-derived name, so the ingestion playbooks (Fetch / Ingest / Init
+  Macros) were missing after updating. The wizard contract
+  (`exported_tags`, the Fetch config schema, and the Ingest Execute-menu
+  trigger) is now expressed in the YAML source and compiled natively, with
+  `playbooks/build.py` reduced to deterministic version stamping.
+
 #### 6.1.1
 
 - A non-JSON error body now reaches the caller as itself. FortiSIEM answers some

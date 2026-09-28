@@ -17,6 +17,13 @@ description: >-
   those playbooks and move them to a different collection, since the sample
   playbook collection gets deleted during connector upgrade and delete.
 visible: true
+exported_tags:
+  - fortinet-fortisiemv2
+  - Fortinet
+  - dataingestion
+  - fetch
+  - create
+  - ingest
 playbooks:
 
 # ---------------------------------------------------------------------------
@@ -808,6 +815,108 @@ playbooks:
   steps:
   - name: Start
     type: start
+    configuration_schema:
+    - title: Fetch Mode
+      required: true
+      editable: true
+      visible: true
+      type: select
+      name: fetch_mode
+      options:
+      - By Updates In Last X Minutes
+      - By Sample Incident ID
+      onchange:
+        By Updates In Last X Minutes:
+        - title: Pull Incidents Created/Updated In Last X Minutes
+          name: minutes
+          type: text
+          required: true
+          editable: true
+          visible: true
+          value: 10
+          tooltip: Cold-start lookback used on the first run, before a last-pull-time watermark exists. e.g. 10
+        - title: Incident Status
+          name: incidentStatus
+          type: multiselect
+          required: false
+          editable: true
+          visible: true
+          value:
+          - Active
+          options:
+          - Active
+          - Auto Cleared
+          - Manually Cleared
+          - System Cleared
+        - title: Severity
+          name: severity
+          type: multiselect
+          required: false
+          editable: true
+          visible: true
+          value:
+          - High
+          - Medium
+          - Low
+          options:
+          - High
+          - Medium
+          - Low
+        - title: Incident Category
+          name: incidentCategory
+          type: multiselect
+          required: false
+          editable: true
+          visible: true
+          options:
+          - Availability
+          - Performance
+          - Change
+          - Security
+          - Other
+        - title: Incidents Per Page
+          name: size
+          type: text
+          required: false
+          editable: true
+          visible: true
+          value: 100
+          tooltip: Page size for the incident query. The run pages through the whole window, so this tunes request batching -- it is not a cap on incidents ingested.
+        - title: Fetch Triggering Events
+          name: include_events
+          type: checkbox
+          required: false
+          editable: true
+          visible: true
+          value: true
+          tooltip: Enrich each incident with its triggering events. Adds roughly one FortiSIEM query per incident.
+        - title: Maximum Events To Pull Per Incident
+          name: event_count
+          type: text
+          required: false
+          editable: true
+          visible: true
+          value: 5
+        By Sample Incident ID:
+        - title: Incident ID
+          name: incidentId
+          type: text
+          required: true
+          editable: true
+          visible: true
+          tooltip: Incident ID to use for building the field mapping
+        - title: From
+          name: from
+          type: datetime
+          required: false
+          editable: true
+          visible: true
+        - title: To
+          name: to
+          type: datetime
+          required: false
+          editable: true
+          visible: true
     next: Configuration
 
   - name: Configuration
@@ -919,6 +1028,9 @@ playbooks:
   steps:
   - name: Start
     type: start
+    module: alerts
+    button_label: 'FortiSIEM v2 > Ingest'
+    requires_record: false
     next: List Incident
 
   - name: List Incident
