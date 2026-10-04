@@ -1,3 +1,13 @@
+#### 6.1.7
+
+- The alert description is restyled. Severity, status, category and event
+  count render as coloured chips under the headline, MITRE ATT&CK techniques
+  as tags, and the overview and incident-detail tables get section headings,
+  row dividers and monospace values for IPs, rule ids and timestamps. Styling
+  is inline CSS only (the description is sanitised rich text) with
+  translucent colours that read on both the dark and light themes, and the
+  output contains no Jinja braces.
+
 #### 6.1.6
 
 - Declared the ingestion target module in `info.json`. The Data Ingestion
