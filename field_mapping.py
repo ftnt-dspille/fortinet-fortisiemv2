@@ -292,18 +292,63 @@ def _detail_dict(raw):
     return {}
 
 
-def _rows(pairs):
-    """Render label/value pairs as table rows, dropping the empty ones."""
+# Inline CSS only (the alert description is sanitised rich text, so no <style>
+# or classes).  Colours are translucent tints over `inherit`, so the block reads
+# on both the dark and light FortiSOAR themes.
+_MUTED = "opacity:.62"
+_HAIRLINE = "1px solid rgba(128,128,128,.22)"
+_SEVERITY_COLOR = {
+    "critical": "#e5484d", "high": "#f76b15", "medium": "#e2a400",
+    "low": "#30a46c", "info": "#3e63dd", "informational": "#3e63dd",
+}
+_MONO = "font-family:SFMono-Regular,Menlo,Consolas,monospace;font-size:12px"
+
+
+def _chip(text, color, mono=False):
+    """A small rounded tag tinted with `color`."""
+    style = (
+        "display:inline-block;margin:0 6px 4px 0;padding:2px 10px;border-radius:999px;"
+        "font-size:11px;font-weight:600;letter-spacing:.4px;"
+        "border:1px solid {c};background:{c}26;color:{c};{m}"
+    ).format(c=color, m=_MONO if mono else "")
+    return '<span style="{}">{}</span>'.format(style, _esc(text))
+
+
+def _heading(text):
+    """Small section heading with an accent bar."""
+    return (
+        '<p style="margin:14px 0 6px 0;padding-left:8px;border-left:3px solid #3e63dd;'
+        'font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;'
+        'opacity:.8">{}</p>'.format(text)
+    )
+
+
+def _table(rows):
+    return (
+        '<table style="width:100%;max-width:760px;border-collapse:collapse;'
+        'border:0;margin:0">{}</table>'.format("".join(rows))
+    )
+
+
+def _rows(pairs, mono=()):
+    """Render label/value pairs as table rows, dropping the empty ones.
+
+    Labels in `mono` get a monospace value (paths, IPs, rule ids).
+    """
     out = []
     for label, value in pairs:
         if value in (None, "", [], {}):
             continue
+        value_style = "padding:6px 0;border:0;border-bottom:{};vertical-align:top;word-break:break-word".format(_HAIRLINE)
+        if label in mono:
+            value_style += ";" + _MONO
         out.append(
             "<tr>"
-            '<td style="padding:2px 12px 2px 0;vertical-align:top;'
-            'white-space:nowrap"><b>{}</b></td>'
-            '<td style="padding:2px 0;vertical-align:top">{}</td>'
-            "</tr>".format(_esc(label), _esc(value))
+            '<td style="width:150px;padding:6px 16px 6px 0;border:0;border-bottom:{};'
+            "vertical-align:top;white-space:nowrap;font-size:11px;font-weight:600;"
+            'letter-spacing:.5px;text-transform:uppercase;{}">{}</td>'
+            '<td style="{}">{}</td>'
+            "</tr>".format(_HAIRLINE, _MUTED, _esc(label), value_style, _esc(value))
         )
     return out
 
@@ -318,14 +363,24 @@ def build_description(raw, alert):
     parts = []
 
     headline = alert.get("rule_description") or alert.get("name") or "FortiSIEM incident"
-    parts.append('<p style="margin:0 0 8px 0"><b>{}</b></p>'.format(_esc(headline)))
+    parts.append('<p style="margin:0 0 8px 0;font-size:16px;font-weight:700">{}</p>'.format(_esc(headline)))
+
+    chips = []
+    severity = alert.get("severity")
+    if severity:
+        chips.append(_chip(severity, _SEVERITY_COLOR.get(str(severity).lower(), "#8b8d98")))
+    if alert.get("alert_state"):
+        chips.append(_chip(alert.get("alert_state"), "#3e63dd"))
+    category = " / ".join(x for x in (alert.get("category"), alert.get("subcategory")) if x)
+    if category:
+        chips.append(_chip(category, "#8b8d98"))
+    if alert.get("event_count"):
+        chips.append(_chip("{} event(s)".format(alert.get("event_count")), "#8b8d98"))
+    if chips:
+        parts.append('<p style="margin:0 0 10px 0">{}</p>'.format("".join(chips)))
 
     overview = _rows([
         ("Incident", alert.get("external_id")),
-        ("Category", " / ".join(x for x in (alert.get("category"),
-                                            alert.get("subcategory")) if x)),
-        ("Severity", alert.get("severity")),
-        ("Status", alert.get("alert_state")),
         ("Reporting device", alert.get("reporting_device")),
         ("Reporting IP", alert.get("reporting_ip")),
         ("Source", _endpoint(alert.get("source_hostname"), alert.get("source_ip"),
@@ -335,39 +390,38 @@ def build_description(raw, alert):
                              alert.get("dest_port"), alert.get("target_user"))),
         ("First seen", alert.get("alert_generation_time")),
         ("Last seen", alert.get("last_observed_time")),
-        ("Event count", alert.get("event_count")),
         ("Rule", alert.get("rule_name")),
-    ])
+    ], mono=("Reporting IP", "Rule", "First seen", "Last seen"))
     if overview:
-        parts.append("<table>{}</table>".format("".join(overview)))
+        parts.append(_table(overview))
 
     techniques = alert.get("mitre_techniques") or []
-    if techniques:
-        items = []
-        for t in techniques:
-            if not isinstance(t, dict):
-                continue
-            tid = t.get("techniqueid") or t.get("techniqueId") or t.get("id")
-            name = t.get("name") or t.get("techniqueName")
-            items.append("<li>{}</li>".format(
-                _esc(" - ".join(x for x in (tid, name) if x))))
-        if items:
-            parts.append('<p style="margin:8px 0 2px 0"><b>MITRE ATT&amp;CK</b></p>')
-            parts.append("<ul>{}</ul>".format("".join(items)))
+    tags = []
+    for t in techniques:
+        if not isinstance(t, dict):
+            continue
+        tid = t.get("techniqueid") or t.get("techniqueId") or t.get("id")
+        name = t.get("name") or t.get("techniqueName")
+        label = " - ".join(x for x in (tid, name) if x)
+        if label:
+            tags.append(_chip(label, "#8e4ec6"))
+    if tags:
+        parts.append(_heading("MITRE ATT&amp;CK"))
+        parts.append('<p style="margin:0">{}</p>'.format("".join(tags)))
 
     detail_rows = _rows([
         (_label_for(k), v) for k, v in sorted(_detail_dict(raw).items())
         if k not in _DETAIL_SKIP and v not in (None, "", [], {})
-    ])
+    ], mono=tuple(_label_for(k) for k in _detail_dict(raw)))
     if detail_rows:
-        parts.append('<p style="margin:8px 0 2px 0"><b>Incident detail</b></p>')
-        parts.append("<table>{}</table>".format("".join(detail_rows)))
+        parts.append(_heading("Incident detail"))
+        parts.append(_table(detail_rows))
 
     evidence = alert.get("evidence") or []
     if evidence:
         parts.append(
-            '<p style="margin:8px 0 0 0"><i>{} triggering event(s) captured in '
-            "the alert's source data.</i></p>".format(len(evidence))
+            '<p style="margin:12px 0 0 0;font-size:12px;{}"><i>{} triggering event(s) captured in '
+            "the alert's source data.</i></p>".format(_MUTED, len(evidence))
         )
 
     return "".join(parts)

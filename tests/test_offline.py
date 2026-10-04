@@ -122,6 +122,17 @@ class TestFieldMapping:
         assert alert["reporting_device"] == "HOST-10.10.10.10"
         assert alert["reporting_ip"] == "10.10.10.10"
 
+    def test_description_is_styled_and_jinja_safe(self, sample_incident_mitre):
+        from fortisiemv2.field_mapping import map_incident_to_alert
+
+        desc = map_incident_to_alert(sample_incident_mitre)["description"]
+        # Inline CSS only: the field is sanitised rich text.
+        assert "<style" not in desc and "class=" not in desc
+        assert "border-radius:999px" in desc  # severity / status / MITRE chips
+        assert "MITRE ATT&amp;CK" in desc
+        # A brace would be read by FortiSOAR's Jinja when the playbook assigns it.
+        assert "{" not in desc and "}" not in desc
+
     def test_map_incident_mitre(self, sample_incident_mitre):
         from fortisiemv2.field_mapping import map_incident_to_alert
 
